@@ -34,3 +34,15 @@
   /* RSuite's default focus ring is 25% transparent; make it fully visible for keyboard users. */
   --rs-focus-ring-color: var(--rs-primary-500);
 }
+.rs-input,
+.rs-input-group {
+  --rs-border-primary: var(--rs-gray-500);
+}
+
+:is([data-theme='dark'], .rs-theme-dark) :is(.rs-input, .rs-input-group) {
+  --rs-border-primary: var(--rs-gray-400);
+}
+
+:is([data-theme='high-contrast'], .rs-theme-high-contrast) :is(.rs-input, .rs-input-group) {
+  --rs-border-primary: var(--rs-gray-100);
+}
