@@ -1,7 +1,7 @@
 import { useState, type CSSProperties, type ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
-import { Button, ButtonGroup, ButtonToolbar, IconButton } from 'rsuite';
+import { Button, ButtonGroup, ButtonToolbar, IconButton } from '@mgs/ui';
 import ArrowLeftIcon from '@rsuite/icons/ArrowLeft';
 import ArrowRightIcon from '@rsuite/icons/ArrowRight';
 import CloseIcon from '@rsuite/icons/Close';

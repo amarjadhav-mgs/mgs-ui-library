@@ -1,31 +1,34 @@
 # @mgs/ui
 
-MGS design system, built on [RSuite 6](https://rsuitejs.com). This package provides the **MGS theme for RSuite**;
-the Storybook documents how we use each RSuite component.
+The MGS UI component library. Its components are [RSuite 6](https://rsuitejs.com) components, re-exported with the
+MGS theme, so apps use **only `@mgs/ui`**. The Storybook documents each component.
 
 ## Using it in an app
 
 ```bash
-npm install rsuite @mgs/ui
+npm install @mgs/ui
 ```
 
 ```tsx
 // App entry (e.g. main.tsx)
-import 'rsuite/dist/rsuite.css'; // RSuite styles
-import '@mgs/ui/styles.css'; // MGS theme (after RSuite)
+import '@mgs/ui/styles.css'; // component styles + MGS theme
 
-// Components come straight from RSuite
-import { Button } from 'rsuite';
+// Anywhere
+import { Button } from '@mgs/ui';
 
 <Button appearance="primary">Save</Button>;
 ```
 
-Optional: `<CustomProvider theme="light | dark | high-contrast">` from `rsuite` switches themes.
+Optional: `<CustomProvider theme="light | dark | high-contrast">` from `@mgs/ui` switches themes.
+
+### Available components
+
+`Button`, `IconButton`, `ButtonGroup`, `ButtonToolbar`, `CustomProvider` (and their `...Props` types).
 
 ### Theming
 
-The theme only overrides RSuite's CSS variables (`--rs-*`), see `src/theme/mgs-theme.css`. Never override
-`.rs-*` class selectors.
+`styles.css` contains RSuite's styles plus the MGS theme (`src/theme/mgs-theme.css`), which only overrides RSuite's
+CSS variables (`--rs-*`). Never override `.rs-*` class selectors.
 
 ## Developing
 
@@ -44,13 +47,16 @@ npm run dev          # Storybook at http://localhost:6006
 | `npm run lint`            | Lint with oxlint                                |
 | `npm run format`          | Format with Prettier                            |
 | `npm run typecheck`       | TypeScript check                                |
-| `npm run build`           | Build the theme package into `dist/`            |
+| `npm run build`           | Build the library into `dist/`                  |
 | `npm run build-storybook` | Build static Storybook into `storybook-static/` |
 | `npm run changeset`       | Record a change for the next release            |
 
 A pre-commit hook (Husky + lint-staged) lints and formats staged files automatically.
 
-## Documenting an RSuite component
+## Adding a component
+
+1. Re-export it from RSuite in `src/index.ts` (component and its `...Props` type).
+2. Document it:
 
 ```
 src/stories/<Component>/
@@ -62,6 +68,7 @@ src/stories/<Component>/
 Rules:
 
 - Use the installed RSuite version's API only; check its type definitions in `node_modules/rsuite/esm/<Component>`.
+- Apps, stories and docs import from `@mgs/ui`, never from `rsuite` directly.
 - Don't wrap or re-implement RSuite components unless there's a clear MGS requirement.
 - Brand changes go in `src/theme/mgs-theme.css` via `--rs-*` variables.
 

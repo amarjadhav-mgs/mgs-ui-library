@@ -12,7 +12,10 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "types": ["vite/client"],
-    "noEmit": true
+    "noEmit": true,
+    "paths": {
+      "@mgs/ui": ["./src/index.ts"]
+    }
   },
   "include": ["src", ".storybook"]
 }
