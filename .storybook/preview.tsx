@@ -1,7 +1,5 @@
 import type { Preview } from '@storybook/react-vite';
-import { CustomProvider } from 'rsuite';
-import 'rsuite/dist/rsuite.css';
-import '../src/theme/mgs-theme.css';
+import { CustomProvider } from '@mgs/ui';
 
 type Theme = 'light' | 'dark' | 'high-contrast';
 

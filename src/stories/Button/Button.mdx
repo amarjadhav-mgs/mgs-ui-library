@@ -5,8 +5,8 @@ import * as ButtonStories from './Button.stories';
 
 # Button
 
-We use **RSuite's `Button`** (rsuite 6). This page shows how to use it at MGS: which props exist, when to use
-them, and what to watch out for. Full reference: [rsuitejs.com/components/button](https://rsuitejs.com/components/button).
+`Button`, `IconButton`, `ButtonGroup` and `ButtonToolbar` from **`@mgs/ui`**. This page shows which props exist,
+when to use them, and what to watch out for.
 
 A button triggers an **action** (save, submit, delete). If clicking it navigates to another page, use a link
 button (`href` or `as={Link}`), see [Link Button](#link-button).
@@ -14,20 +14,22 @@ button (`href` or `as={Link}`), see [Link Button](#link-button).
 ## Setup
 
 ```bash
-npm install rsuite @mgs/ui
+npm install @mgs/ui
 ```
 
 ```tsx
 // Once, in your app entry (e.g. main.tsx)
-import 'rsuite/dist/rsuite.css'; // RSuite styles
-import '@mgs/ui/styles.css'; // MGS brand theme (load after RSuite)
+import '@mgs/ui/styles.css';
 
 // Anywhere
-import { Button, IconButton, ButtonGroup, ButtonToolbar } from 'rsuite';
+import { Button, IconButton, ButtonGroup, ButtonToolbar } from '@mgs/ui';
 ```
 
-Optional: wrap the app in `<CustomProvider theme="light | dark | high-contrast">` to switch themes. Use the
-**Theme** menu in the Storybook toolbar to preview all three.
+Optional: wrap the app in `<CustomProvider theme="light | dark | high-contrast">` (also from `@mgs/ui`) to switch
+themes. Use the **Theme** menu in the Storybook toolbar to preview all three.
+
+`@mgs/ui` components are [RSuite 6](https://rsuitejs.com/components/button) components with the MGS theme, so
+RSuite's documentation applies to every prop.
 
 ## Playground
 
@@ -170,8 +172,9 @@ work). It has `role="toolbar"`; add an `aria-label`. Focus moves with Tab; there
 
 ## Customizing
 
-Customize with **RSuite's CSS variables**, never by overriding `.rs-btn` selectors. The MGS theme
-(`@mgs/ui/styles.css`) does this for the brand color, danger red and focus ring:
+`@mgs/ui/styles.css` already contains the MGS theme (brand color, danger red and focus ring). To customize further,
+override the `--rs-*` CSS variables in your app's stylesheet, never `.rs-btn` class selectors. For example, the
+theme sets:
 
 ```css
 :root {
