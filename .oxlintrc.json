@@ -25,5 +25,13 @@
     ],
     "vitest/require-mock-type-parameters": "off"
   },
-  "ignorePatterns": ["dist", "storybook-static", "coverage"]
+  "ignorePatterns": ["dist", "storybook-static", "coverage"],
+  "overrides": [
+    {
+      "files": ["src/stories/**"],
+      "rules": {
+        "jsx-a11y/prefer-tag-over-role": "off"
+      }
+    }
+  ]
 }

@@ -46,3 +46,27 @@
 :is([data-theme='high-contrast'], .rs-theme-high-contrast) :is(.rs-input, .rs-input-group) {
   --rs-border-primary: var(--rs-gray-100);
 }
+
+/*
+ * Default badge colour (no `color` prop). RSuite uses its error red, which fails contrast with the white badge text:
+ *   light: #f44336 = 3.7:1 -> brand danger red (--rs-red-500, #dc2626) = 4.8:1
+ *   dark:  #f04f43 = 3.6:1 -> #d9362b = 4.65:1
+ * Only the badge is changed: RSuite's error red is also used for error text, which is set once at :root and
+ * would get worse in dark mode if changed globally. Preset and custom badge colours are untouched.
+ */
+.rs-badge:not([data-color]) {
+  --rs-badge-bg: var(--rs-red-500);
+}
+
+:is([data-theme='dark'], .rs-theme-dark) .rs-badge:not([data-color]) {
+  --rs-badge-bg: #d9362b;
+}
+
+/*
+ * Avatar initials. RSuite's light theme puts white text on gray-300 (#d9d9d9) = 1.4:1, so initials are unreadable.
+ * gray-600 (#717273) with white text = 4.8:1. Dark and high-contrast set their own avatar colours (5.1:1) and are
+ * unaffected.
+ */
+:root {
+  --rs-avatar-bg: var(--rs-gray-600);
+}

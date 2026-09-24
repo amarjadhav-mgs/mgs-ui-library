@@ -6,6 +6,9 @@ import 'rsuite/dist/rsuite.css';
 import './theme/mgs-theme.css';
 
 export {
+  Avatar,
+  AvatarGroup,
+  Badge,
   Button,
   ButtonGroup,
   ButtonToolbar,
@@ -17,6 +20,9 @@ export {
   Textarea,
 } from 'rsuite';
 export type {
+  AvatarGroupProps,
+  AvatarProps,
+  BadgeProps,
   ButtonGroupProps,
   ButtonProps,
   ButtonToolbarProps,

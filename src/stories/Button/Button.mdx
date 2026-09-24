@@ -1,49 +1,33 @@
-import { ArgTypes, Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
 import * as ButtonStories from './Button.stories';
 
 <Meta of={ButtonStories} />
 
 # Button
 
-`Button`, `IconButton`, `ButtonGroup` and `ButtonToolbar` from **`@mgs/ui`**. This page shows which props exist,
-when to use them, and what to watch out for.
+Commonly used operating buttons: a button triggers an **action** (save, submit, delete). If clicking it navigates
+to another page, use a [link button](#link-button).
 
-A button triggers an **action** (save, submit, delete). If clicking it navigates to another page, use a link
-button (`href` or `as={Link}`), see [Link Button](#link-button).
+**Component:** RSuite 6.2.4 `Button`, `IconButton`, `ButtonGroup` and `ButtonToolbar`, re-exported by `@mgs/ui` ·
+[RSuite reference](https://rsuitejs.com/components/button)
 
-## Setup
-
-```bash
-npm install @mgs/ui
-```
+## Usage
 
 ```tsx
-// Once, in your app entry (e.g. main.tsx)
-import '@mgs/ui/styles.css';
-
-// Anywhere
 import { Button, IconButton, ButtonGroup, ButtonToolbar } from '@mgs/ui';
+import '@mgs/ui/styles.css'; // once, in your app entry
 ```
 
-Optional: wrap the app in `<CustomProvider theme="light | dark | high-contrast">` (also from `@mgs/ui`) to switch
-themes. Use the **Theme** menu in the Storybook toolbar to preview all three.
+## Examples
 
-`@mgs/ui` components are [RSuite 6](https://rsuitejs.com/components/button) components with the MGS theme, so
-RSuite's documentation applies to every prop.
-
-## Playground
-
-<Canvas of={ButtonStories.Playground} sourceState="shown" />
-<Controls of={ButtonStories.Playground} />
-
-## Basic
+### Basic
 
 <Canvas of={ButtonStories.Basic} sourceState="shown" />
 
-`type` defaults to `"button"`, so a Button never submits a form by accident. Use `type="submit"` for a form's
-main action. All native button attributes work (`name`, `value`, `form`, `aria-*`, `data-*`, `ref`).
+`type` defaults to `"button"`, so a Button never submits a form by accident. Use `type="submit"` for a form's main
+action. All native button attributes work (`name`, `value`, `form`, `aria-*`, `data-*`, `ref`).
 
-## Appearance
+### Appearance
 
 <Canvas of={ButtonStories.Appearance} sourceState="shown" />
 
@@ -55,100 +39,94 @@ main action. All native button attributes work (`name`, `value`, `form`, `aria-*
 | `subtle`            | Low-emphasis actions: toolbars, table rows                   | Anything that must be noticed       |
 | `link`              | Actions that should look like inline text links              | Real navigation: use `href` instead |
 
-## Colors
+### Colors
 
 <Canvas of={ButtonStories.Colors} sourceState="shown" />
 
-`color` accepts `red | orange | yellow | green | cyan | blue | violet`.
+`color`: `red | orange | yellow | green | cyan | blue | violet`. Use `color="red"` with `appearance="primary"` for
+destructive actions (_Delete_); the MGS theme makes that red meet contrast requirements.
 
-- **Use `color="red"` with `appearance="primary"` for destructive actions** (_Delete_). The MGS theme sets a red that
-  meets contrast requirements.
-- ⚠️ **Contrast:** with RSuite's default palettes and white text, only `violet` meets WCAG AA (4.5:1). Measured:
-  red 3.7, blue 3.1, green 2.8, orange 2.4, cyan 2.3, yellow 1.8. Don't use other colors for text buttons unless
-  the theme overrides that palette (as it does for red). The Accessibility panel flags these.
+⚠️ **Contrast:** with white text only `red` (MGS theme) and `violet` meet WCAG AA (4.5:1). RSuite's other palettes
+fail: blue 3.1, green 2.8, orange 2.4, cyan 2.3, yellow 1.8. The Accessibility panel flags these.
 
-## Sizes
+### Sizes
 
 <Canvas of={ButtonStories.Sizes} sourceState="shown" />
 
-`size`: `lg | md` (default) `| sm | xs`. Use `md` in forms and dialogs, `sm`/`xs` in dense tables and toolbars.
+`size`: `lg | md` (default) `| sm | xs`. Use `md` in forms and dialogs, `sm` / `xs` in dense tables and toolbars.
 Match the size of the inputs next to the button. Inside a `ButtonGroup`, set `size` on the group.
 
-## Loading
+### Loading
 
 <Canvas of={ButtonStories.Loading} sourceState="shown" />
 
-- Shows a centered spinner; **the button keeps its width** and blocks **mouse** clicks.
-- ⚠️ **Limitation:** Enter/Space still activate a focused loading button, and RSuite doesn't set `aria-busy`.
-  Guard the handler (`if (saving) return;`) and pass `aria-busy={saving}` as shown.
-- Don't use `disabled` for loading: a disabled button loses keyboard focus.
+Shows a centered spinner; **the button keeps its width** and blocks **mouse** clicks.
 
-## Disabled
+⚠️ Enter/Space still activate a focused loading button, and RSuite doesn't set `aria-busy`. Guard the handler
+(`if (saving) return;`) and pass `aria-busy={saving}` as shown. Don't use `disabled` for loading: a disabled button
+loses keyboard focus.
+
+### Disabled
 
 <Canvas of={ButtonStories.Disabled} sourceState="shown" />
 
-Uses the native `disabled` attribute: the button can't be focused or clicked, and screen readers announce it as
-unavailable. Users can't discover _why_ a button is disabled, so prefer keeping it enabled and explaining what's
-missing (for example, validate the form on submit).
+Uses the native `disabled` attribute: the button can't be focused or clicked. Users can't discover _why_ a button is
+disabled, so prefer keeping it enabled and explaining what's missing (for example, validate the form on submit).
 
-## Active
+### Active
 
 <Canvas of={ButtonStories.Active} sourceState="shown" />
 
-- `active` shows a button as the current selection (for example the selected view in a group).
-- `toggleable` (new in RSuite 6) switches `active` on each click and calls `onToggle(active, event)`.
-- ⚠️ **Accessibility:** RSuite doesn't set `aria-pressed`. For toggle buttons, control `active` yourself and pass
-  `aria-pressed={active}`, so screen readers announce "pressed / not pressed".
+`active` shows a button as the current selection. `toggleable` switches `active` on each click and calls
+`onToggle(active, event)`.
 
-## Block / Full Width
+⚠️ RSuite doesn't set `aria-pressed`. For toggle buttons, control `active` yourself and pass `aria-pressed={active}`.
+
+### Block / Full Width
 
 <Canvas of={ButtonStories.BlockFullWidth} sourceState="shown" />
 
-`block` stretches the button to its container's width. Use it for stacked actions on mobile and in narrow panels.
-`ButtonGroup` also accepts `block`.
+`block` stretches the button to its container's width, e.g. for stacked actions on mobile. `ButtonGroup` also
+accepts `block`.
 
-## With Icons
+### With Icons
 
 <Canvas of={ButtonStories.WithIcons} sourceState="shown" />
 
-Use `startIcon` / `endIcon` with icons from `@rsuite/icons` (installed with RSuite), e.g.
-`import PlusIcon from '@rsuite/icons/Plus'`. Put leading icons at the start and direction arrows at the end.
-Icons are decorative; the label names the button.
+`startIcon` / `endIcon`, with icons from `@rsuite/icons`. Put leading icons at the start and direction arrows at the
+end. Icons are decorative; the label names the button.
 
-## IconButton
+### IconButton
 
 <Canvas of={ButtonStories.IconButtons} sourceState="shown" />
 
-- `icon`: the icon element. `circle`: round shape. `placement`: `'start'` (default) or `'end'` when there is text.
-- ⚠️ **An icon-only button must have an `aria-label`**, describing the action (_"Delete row"_, not _"Trash"_).
-  RSuite's types don't require it, so the automated accessibility tests on these stories check it.
-- Use icon-only buttons only for universally understood icons (add, edit, delete, close, search).
+⚠️ **An icon-only button must have an `aria-label`** describing the action (_"Delete row"_, not _"Trash"_). RSuite's
+types don't require it; the accessibility tests on these stories check it. Use icon-only buttons only for
+universally understood icons.
 
-## ButtonGroup
+### ButtonGroup
 
 <Canvas of={ButtonStories.ButtonGroups} sourceState="shown" />
 
-Joins related buttons (alignment, view switchers). Props: `size`, `vertical`, `justified`, `divided`, `block`,
-`disabled` (applies to every button in it). It has `role="group"`; add an `aria-label` describing the group.
+Joins related buttons (alignment, view switchers). `size` and `disabled` apply to every button in it. It has
+`role="group"`; add an `aria-label`.
 
-## ButtonToolbar
+### ButtonToolbar
 
 <Canvas of={ButtonStories.ButtonToolbars} sourceState="shown" />
 
 Lays out buttons and groups in a row with consistent spacing (it's an RSuite `Stack`, so `spacing`, `wrap` etc.
 work). It has `role="toolbar"`; add an `aria-label`. Focus moves with Tab; there is no arrow-key navigation.
 
-## Link Button
+### Link Button
 
 <Canvas of={ButtonStories.LinkButton} sourceState="shown" />
 
-- `href` renders a real `<a>` styled as a button, so middle-click and "open in new tab" work. Add `target` / `rel`
-  as needed.
-- For client-side routing use `as`: `<Button as={Link} to="/projects">`.
-- A disabled link button gets `aria-disabled` and is removed from the tab order.
-- Never wrap a `<Button>` in an `<a>`, or navigate with `onClick`.
+`href` renders a real `<a>` styled as a button, so middle-click and "open in new tab" work. For client-side routing
+use `as`: `<Button as={Link} to="/projects">`. A disabled link button leaves the tab order. Never wrap a `<Button>`
+in an `<a>`, or navigate with `onClick`.
 
-## States
+### States
 
 <Canvas of={ButtonStories.States} sourceState="shown" />
 
@@ -162,19 +140,73 @@ work). It has `role="toolbar"`; add an `aria-label`. Focus moves with Tab; there
 | `Enter` / `Space` | Activate the focused button              |
 
 - Renders a native `<button>` (or `<a>` with `href`), so keyboard, forms and screen readers work out of the box.
-- The focus ring shows for keyboard focus only (`:focus-visible`) and uses `outline`, so it stays visible in
-  Windows High Contrast mode. The MGS theme makes it fully opaque (RSuite's default is 25% transparent).
-- The MGS brand blue meets WCAG AA contrast with white text (5.2:1). RSuite's default blue doesn't (3:1).
-- Use the **High contrast** theme in the toolbar to check the high-contrast mode.
-- Known gaps (see sections above): loading doesn't block the keyboard or set `aria-busy`; toggle buttons need
-  `aria-pressed`; icon-only buttons need `aria-label`. RSuite's ripple and spinner don't respect
-  "reduce motion"; disable the ripple app-wide with `<CustomProvider disableRipple>` if needed.
+- The focus ring shows for keyboard focus only and uses `outline`, so it stays visible in Windows High Contrast
+  mode. The MGS theme makes it fully opaque (RSuite's default is 25% transparent).
+- The MGS brand blue meets WCAG AA with white text (5.2:1); RSuite's default blue doesn't (3:1).
+- Known gaps (see above): loading doesn't block the keyboard or set `aria-busy`; toggle buttons need `aria-pressed`;
+  icon-only buttons need `aria-label`. The ripple ignores "reduce motion"; turn it off with
+  `<CustomProvider disableRipple>` or `ripple={false}`.
+
+## Playground
+
+<Canvas of={ButtonStories.Playground} sourceState="shown" />
+<Controls of={ButtonStories.Playground} />
+
+## Props
+
+### `<Button>`
+
+| Property   | Type `(Default)`                                                           | Description                                          |
+| ---------- | -------------------------------------------------------------------------- | ---------------------------------------------------- |
+| active     | boolean                                                                    | Show the button as the current selection             |
+| appearance | `'default' \| 'primary' \| 'link' \| 'subtle' \| 'ghost'` `('default')`    | Visual style                                         |
+| as         | ElementType                                                                | Render as another element or component (e.g. `Link`) |
+| block      | boolean                                                                    | Full width of the container                          |
+| children   | ReactNode                                                                  | Label                                                |
+| color      | `'red' \| 'orange' \| 'yellow' \| 'green' \| 'cyan' \| 'blue' \| 'violet'` | Colour palette                                       |
+| disabled   | boolean                                                                    | Native disabled                                      |
+| endIcon    | ReactNode                                                                  | Icon after the label                                 |
+| href       | string                                                                     | Render an `<a>` styled as a button                   |
+| loading    | boolean                                                                    | Spinner; blocks mouse clicks                         |
+| onToggle   | `(active: boolean, event) => void`                                         | Called when a `toggleable` button changes            |
+| ripple     | boolean `(true)`                                                           | Click ripple effect                                  |
+| size       | `'lg' \| 'md' \| 'sm' \| 'xs'` `('md')`                                    | Button size                                          |
+| startIcon  | ReactNode                                                                  | Icon before the label                                |
+| target     | string                                                                     | Link target (with `href`)                            |
+| toggleable | boolean                                                                    | Toggle `active` on each click                        |
+| type       | `'button' \| 'submit' \| 'reset'` `('button')`                             | Native button type                                   |
+
+### `<IconButton>`
+
+Extends `<Button>`.
+
+| Property  | Type `(Default)`               | Description                         |
+| --------- | ------------------------------ | ----------------------------------- |
+| circle    | boolean                        | Round button                        |
+| icon      | ReactElement                   | The icon                            |
+| placement | `'start' \| 'end'` `('start')` | Icon position when there is a label |
+
+### `<ButtonGroup>`
+
+| Property  | Type `(Default)`               | Description                          |
+| --------- | ------------------------------ | ------------------------------------ |
+| block     | boolean                        | Full width                           |
+| disabled  | boolean                        | Disable every button in the group    |
+| divided   | boolean                        | Dividing lines between buttons       |
+| justified | boolean                        | Equal-width buttons across the width |
+| size      | `'lg' \| 'md' \| 'sm' \| 'xs'` | Size of every button in the group    |
+| vertical  | boolean                        | Stack buttons vertically             |
+
+### `<ButtonToolbar>`
+
+Accepts `Stack` props such as `spacing` and `wrap`, plus `role` (default `'toolbar'`).
+
+All components also accept `className`, `style` and native attributes.
 
 ## Customizing
 
-`@mgs/ui/styles.css` already contains the MGS theme (brand color, danger red and focus ring). To customize further,
-override the `--rs-*` CSS variables in your app's stylesheet, never `.rs-btn` class selectors. For example, the
-theme sets:
+`@mgs/ui/styles.css` already contains the MGS theme. To customize further, override the `--rs-*` CSS variables in
+your app's stylesheet, never `.rs-btn` class selectors. For example, the theme sets:
 
 ```css
 :root {
@@ -184,15 +216,3 @@ theme sets:
   --rs-focus-ring-color: var(--rs-primary-500);
 }
 ```
-
-For one-off layout tweaks use `className` or `style`; they are merged with RSuite's own.
-
-## API
-
-The Controls above list the most-used props. Full reference, including every native attribute:
-[Button](https://rsuitejs.com/components/button/#props-button),
-[IconButton](https://rsuitejs.com/components/button/#props-iconbutton),
-[ButtonGroup](https://rsuitejs.com/components/button/#props-buttongroup),
-[ButtonToolbar](https://rsuitejs.com/components/button/#props-buttontoolbar).
-
-<ArgTypes of={ButtonStories} />
