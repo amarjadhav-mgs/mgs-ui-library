@@ -26,6 +26,11 @@ function Row({ label, children }: { label?: string; children: ReactNode }) {
   );
 }
 
+/** Short, copyable snippet for "Show code" instead of the full story source. */
+function source(code: string) {
+  return { docs: { source: { code, language: 'tsx' } } };
+}
+
 const meta = {
   title: 'Components/Button',
   component: Button,
@@ -51,6 +56,18 @@ type Story = StoryObj<typeof meta>;
 
 /** Change any prop in the Controls panel below. */
 export const Playground: Story = {
+  parameters: {
+    docs: {
+      source: {
+        // Live snippet: hide props left at their default and Storybook's click spy.
+        transform: (code: string) =>
+          code
+            .split('\n')
+            .filter((line) => !/=\{false\}|onClick=\{\(\) => \{\}\}/.test(line))
+            .join('\n'),
+      },
+    },
+  },
   args: {
     variant: 'primary',
     size: 'md',
@@ -62,6 +79,10 @@ export const Playground: Story = {
 };
 
 export const Variants: Story = {
+  parameters: source(`<Button variant="primary">Primary</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="danger">Danger</Button>
+<Button variant="ghost">Ghost</Button>`),
   render: (args) => (
     <div style={row}>
       <Button {...args} variant="primary">
@@ -81,6 +102,9 @@ export const Variants: Story = {
 };
 
 export const Sizes: Story = {
+  parameters: source(`<Button size="sm">Small</Button>
+<Button size="md">Medium</Button>
+<Button size="lg">Large</Button>`),
   render: (args) => (
     <div style={row}>
       <Button {...args} size="sm">
@@ -97,6 +121,10 @@ export const Sizes: Story = {
 };
 
 export const WithIcons: Story = {
+  parameters: source(`<Button leftIcon={<PlusIcon />}>New project</Button>
+<Button variant="secondary" leftIcon={<DownloadIcon />}>Export</Button>
+<Button variant="ghost" leftIcon={<ArrowLeftIcon />}>Back</Button>
+<Button variant="secondary" rightIcon={<ArrowRightIcon />}>Next</Button>`),
   render: (args) => (
     <div style={row}>
       <Button {...args} leftIcon={<PlusIcon />}>
@@ -117,6 +145,13 @@ export const WithIcons: Story = {
 
 /** Use `IconButton` for icon-only actions. `aria-label` is required and is what screen readers announce. */
 export const IconOnly: Story = {
+  parameters: source(`<IconButton icon={<PlusIcon />} aria-label="Add item" />
+<IconButton icon={<DownloadIcon />} aria-label="Download" variant="secondary" />
+<IconButton icon={<TrashIcon />} aria-label="Delete" variant="danger" />
+<IconButton icon={<CloseIcon />} aria-label="Close" variant="ghost" />
+
+<IconButton icon={<PlusIcon />} aria-label="Add item" size="sm" />
+<IconButton icon={<PlusIcon />} aria-label="Add item" size="lg" />`),
   render: () => (
     <div style={column}>
       <Row label="Variants">
@@ -139,6 +174,11 @@ export const IconOnly: Story = {
  * focusable and clicks are ignored until loading ends. Click "Save" to try it.
  */
 export const Loading: Story = {
+  parameters: source(`const [saving, setSaving] = useState(false);
+
+<Button loading={saving} leftIcon={<DownloadIcon />} onClick={save}>
+  Save
+</Button>`),
   render: function Render(args) {
     const [saving, setSaving] = useState(false);
     return (
@@ -191,6 +231,10 @@ export const Loading: Story = {
 };
 
 export const Disabled: Story = {
+  parameters: source(`<Button disabled>Primary</Button>
+<Button variant="secondary" disabled>Secondary</Button>
+<Button variant="danger" disabled>Danger</Button>
+<Button variant="ghost" disabled>Ghost</Button>`),
   render: (args) => (
     <div style={row}>
       <Button {...args} disabled variant="primary">
@@ -210,6 +254,7 @@ export const Disabled: Story = {
 };
 
 export const FullWidth: Story = {
+  parameters: source(`<Button fullWidth size="lg">Continue</Button>`),
   args: { fullWidth: true, size: 'lg', children: 'Continue' },
   render: (args) => (
     <div style={{ maxWidth: 360 }}>
@@ -220,6 +265,10 @@ export const FullWidth: Story = {
 
 /** Labels never wrap; in a narrow space they are truncated with an ellipsis. Keep labels short. */
 export const LongText: Story = {
+  parameters: source(`<Button>Save and continue to the next step</Button>
+<Button fullWidth variant="secondary" leftIcon={<DownloadIcon />}>
+  Download the full quarterly report
+</Button>`),
   render: (args) => (
     <div style={{ ...column, width: 220, padding: 12, border: '1px dashed #d1d5db' }}>
       <Button {...args}>Save and continue to the next step</Button>
@@ -235,6 +284,12 @@ export const LongText: Story = {
  * Use `type="submit"` for the form's main action and `type="reset"` to clear it.
  */
 export const ButtonTypes: Story = {
+  parameters: source(`<form onSubmit={handleSubmit}>
+  <input name="name" />
+  <Button type="submit">Submit</Button>
+  <Button type="reset" variant="secondary">Reset</Button>
+  <Button variant="ghost">Does nothing</Button>
+</form>`),
   render: function Render() {
     const [submitted, setSubmitted] = useState<string | null>(null);
     return (
@@ -279,6 +334,10 @@ export const ButtonTypes: Story = {
 
 /** Hover, pressed and focus are interactive: move the mouse over a button, click it, or press Tab. */
 export const States: Story = {
+  parameters: source(`<Button>Default</Button>
+<Button disabled>Disabled</Button>
+<Button loading>Loading</Button>
+<Button loading disabled>Loading + disabled</Button>`),
   render: (args) => (
     <div style={column}>
       {(['primary', 'secondary', 'danger', 'ghost'] as const).map((variant) => (
@@ -306,6 +365,10 @@ export const States: Story = {
  * A plain flex container is all you need; put the primary action last (right).
  */
 export const ActionsRow: Story = {
+  parameters: source(`<div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+  <Button variant="ghost">Cancel</Button>
+  <Button>Save</Button>
+</div>`),
   render: (args) => (
     <div style={column}>
       <div style={{ ...row, justifyContent: 'flex-end' }}>
@@ -333,6 +396,13 @@ export const ActionsRow: Story = {
  * and use `fullWidth`; on wide screens keep them inline.
  */
 export const Responsive: Story = {
+  parameters: source(`// Mobile: stack and fill the width
+<Button fullWidth>Save</Button>
+<Button fullWidth variant="secondary">Cancel</Button>
+
+// Desktop: inline
+<Button variant="secondary">Cancel</Button>
+<Button>Save</Button>`),
   render: (args) => (
     <div style={column}>
       <Row label="Mobile">
@@ -359,6 +429,7 @@ export const Responsive: Story = {
 
 /** Tab moves focus (a ring appears only for keyboard focus); Enter and Space activate. */
 export const Keyboard: Story = {
+  parameters: source(`<Button onClick={handleClick}>Press me</Button>`),
   args: { children: 'Press me' },
   render: (args) => (
     <div style={row}>
@@ -388,6 +459,9 @@ export const Keyboard: Story = {
 
 /** For navigation use a real link styled with `buttonClassName`, never a Button inside `<a>`. */
 export const AsLink: Story = {
+  parameters: source(`<a href="/docs" className={buttonClassName()}>Read the docs</a>
+<a href="/pricing" className={buttonClassName({ variant: 'secondary' })}>See pricing</a>
+<Link to="/more" className={buttonClassName({ variant: 'ghost', size: 'sm' })}>Learn more</Link>`),
   render: () => (
     <div style={row}>
       <a href="#docs" className={buttonClassName()}>

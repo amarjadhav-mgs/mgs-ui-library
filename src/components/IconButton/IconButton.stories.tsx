@@ -35,6 +35,17 @@ export const Playground: Story = {
 };
 
 export const VariantsAndSizes: Story = {
+  parameters: {
+    docs: {
+      source: {
+        language: 'tsx',
+        code: `<IconButton icon={<PlusIcon />} aria-label="Add item" variant="primary" size="sm" />
+<IconButton icon={<PlusIcon />} aria-label="Add item" variant="secondary" size="md" />
+<IconButton icon={<PlusIcon />} aria-label="Add item" variant="danger" size="lg" />
+<IconButton icon={<PlusIcon />} aria-label="Add item" variant="ghost" />`,
+      },
+    },
+  },
   render: (args) => (
     <div style={{ display: 'grid', gap: 12 }}>
       {(['primary', 'secondary', 'danger', 'ghost'] as const).map((variant) => (
