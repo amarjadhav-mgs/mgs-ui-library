@@ -1,67 +1,54 @@
-import { ArgTypes, Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
 import * as InputStories from './Input.stories';
 
 <Meta of={InputStories} />
 
 # Input
 
-`Input`, `InputGroup`, `Textarea` and `PasswordInput` from **`@mgs/ui`**: single-line and multi-line text fields,
-optionally with add-ons (text, icons, buttons). This page shows which props exist, when to use them, and what to
-watch out for.
+Single-line and multi-line text fields, optionally with add-ons (text, icons, buttons).
 
-## Setup
+**Component:** RSuite 6.2.4 `Input`, `InputGroup`, `Textarea` and `PasswordInput`, re-exported by `@mgs/ui` ·
+[RSuite reference](https://rsuitejs.com/components/input)
+
+## Usage
 
 ```tsx
-// Once, in your app entry
-import '@mgs/ui/styles.css';
-
-// Anywhere
 import { Input, InputGroup, Textarea, PasswordInput } from '@mgs/ui';
+import '@mgs/ui/styles.css'; // once, in your app entry
 ```
 
-`@mgs/ui` components are [RSuite 6](https://rsuitejs.com/components/input) components with the MGS theme, so
-RSuite's documentation applies to every prop.
-
-## Always label inputs
-
-Input has **no `label` prop**. Every field needs a visible `<label htmlFor>` connected to the input's `id`, or, when a
-visible label really isn't possible (a search box with an icon), an `aria-label`. A placeholder is **not** a label:
-it disappears as soon as the user types. The accessibility tests on these stories fail if a field has no label.
+⚠️ **Always label inputs.** Input has no `label` prop: connect a visible `<label htmlFor>` to the input's `id`, or,
+only when a visible label isn't possible (a search box with an icon), use `aria-label`. A placeholder is **not** a
+label. The accessibility tests on these stories fail if a field has no label.
 
 ```tsx
 <label htmlFor="email">Email</label>
 <Input id="email" type="email" />
 ```
 
-## Playground
+## Examples
 
-<Canvas of={InputStories.Playground} sourceState="shown" />
-<Controls of={InputStories.Playground} />
-
-## Basic
+### Basic
 
 <Canvas of={InputStories.Basic} sourceState="shown" />
 
-Set the right `type` (`email`, `tel`, `url`, `search`...) so mobile keyboards and browser autofill work, and a `name`
-for forms. All native input attributes work (`autoComplete`, `maxLength`, `required`, `aria-*`, ...).
+Set the right `type` (`email`, `tel`, `url`, `search`...) so mobile keyboards and autofill work, and a `name` for
+forms. All native input attributes work (`autoComplete`, `maxLength`, `required`, `aria-*`, ...).
 
-## Sizes
+### Sizes
 
 <Canvas of={InputStories.Sizes} sourceState="shown" />
 
-`size`: `lg | md` (default) `| sm | xs`. Use the same size as the buttons next to the field. Inside an `InputGroup`,
-set `size` on the group.
+`size`: `lg | md` (default) `| sm | xs`. Use the same size as the buttons next to the field; inside an
+`InputGroup`, set `size` on the group. ⚠️ The type also accepts `"xl"`, but RSuite has no `xl` input styles.
 
-⚠️ The `size` type also accepts `"xl"`, but RSuite has no `xl` input styles, so it renders like `md`. Don't use it.
+### Width
 
-## Width
+Inputs, textareas and input groups are **full width by default** (there's no `block` prop because it's already the
+default). Control the width with the layout, e.g. a `maxWidth` on the form or a grid column, so fields adapt on small
+screens.
 
-Inputs, textareas and input groups are **full width by default**: they fill their container (there's no `block`
-prop, because it's already the default). Control the width with the layout, e.g. a `maxWidth` on the form or a grid
-column, so fields adapt on small screens. There are no responsive size props; keep the same `size` and let the
-container change.
-
-## Disabled / Read-only / Plaintext
+### Disabled / Read-only / Plaintext
 
 <Canvas of={InputStories.States} sourceState="shown" />
 
@@ -71,60 +58,49 @@ container change.
 | `readOnly`  | Yes       | No       | Yes                   | Values users should see and copy, not change |
 | `plaintext` | No        | No       | No (no input at all)  | Read-only "view" pages showing saved values  |
 
-Prefer `readOnly` over `disabled` for values users need to read: disabled text is low contrast and skipped by
-keyboard users.
+Prefer `readOnly` over `disabled` for values users need to read.
 
-## Controlled
+### Controlled
 
 <Canvas of={InputStories.Controlled} sourceState="shown" />
 
 ⚠️ **`onChange` receives the value first**: `onChange(value, event)`, not `onChange(event)` like a native input. Write
 `onChange={(value) => setName(value)}` (or `onChange={setName}`).
 
-## InputGroup
+### InputGroup
 
 <Canvas of={InputStories.InputGroups} sourceState="shown" />
 
-- `InputGroup.Addon` holds text or an icon (units, prefixes, a search icon).
-- `InputGroup.Button` holds a button (Search, Copy).
-- `inside` places add-ons inside the input's border.
-- `size` and `disabled` on the group apply to everything in it.
+`InputGroup.Addon` holds text or an icon, `InputGroup.Button` a button, and `inside` puts them inside the input's
+border. `size` and `disabled` on the group apply to everything in it. The input still needs its own label.
 
-The input still needs its own label; add-on text like "https://" doesn't label the field.
-
-## Clear button
+### Clear button
 
 <Canvas of={InputStories.Clearable} sourceState="shown" />
 
 RSuite's Input has **no built-in clear button**. For search and filter fields, add one with `InputGroup inside` and
-`InputGroup.Button`, as shown:
+`InputGroup.Button`: give it an `aria-label` ("Clear search"), show it only when there's text, and **move focus back
+to the input** after clearing.
 
-- Give the button an `aria-label` ("Clear search"); the icon alone has no name.
-- Show it only when there's text.
-- After clearing, **move focus back to the input** (`inputRef.current?.focus()`), otherwise keyboard focus is lost
-  when the button disappears.
-
-## Textarea
+### Textarea
 
 <Canvas of={InputStories.TextareaStory} sourceState="shown" />
 
-For multi-line text. Use `rows` for a fixed height, or `autosize` with `minRows` / `maxRows` to grow with the
-content. `resize` controls whether users can drag the size. Same labelling rules as Input.
+Multi-line text. `rows` for a fixed height, or `autosize` with `minRows` / `maxRows` to grow with the content.
+`resize` controls whether users can drag the size.
 
-## PasswordInput
+### PasswordInput
 
 <Canvas of={InputStories.Password} sourceState="shown" />
 
 A password field with a show/hide button. ⚠️ **Limitations** (RSuite 6.2):
 
 - **Label it with `<label htmlFor>` + `id`.** `aria-label`, `aria-describedby`, `aria-invalid`, `required` and
-  `disabled` go to the wrapper, not the input, so they don't work.
-- **The show/hide button can't be reached with Tab** (it has `tabIndex={-1}`), so keyboard users can't reveal the
-  password. Its label is always English ("Toggle password visibility").
+  `disabled` go to the wrapper, not the input.
+- **The show/hide button can't be reached with Tab** (`tabIndex={-1}`), and its label is always English.
 - It sets `autoComplete="off"`, which you can't change.
 
-For **login and sign-up forms**, where error messages and password managers matter, use a plain password input
-instead:
+For **login and sign-up forms**, use a plain password input instead:
 
 ```tsx
 <label htmlFor="password">Password</label>
@@ -137,12 +113,12 @@ instead:
 />
 ```
 
-## Validation
+### Validation
 
 <Canvas of={InputStories.Validation} sourceState="shown" />
 
-Show the error **as text** under the field, link it with `aria-describedby`, and set `aria-invalid` so screen readers
-announce it. Don't rely on a red border alone. Validate on submit or on blur, not on every keystroke.
+Show the error **as text** under the field, link it with `aria-describedby`, and set `aria-invalid`. Don't rely on a
+red border alone. Validate on submit or on blur, not on every keystroke.
 
 ## Accessibility
 
@@ -153,24 +129,71 @@ announce it. Don't rely on a red border alone. Validate on submit or on blur, no
 | `Tab` / `⇧ Tab` | Move to the next / previous field           |
 | `Enter`         | Calls `onPressEnter` (e.g. submit a search) |
 
-- Every field has a label (see [Always label inputs](#always-label-inputs)).
+- Every field has a label (see [Usage](#usage)).
 - The focus ring uses `outline` and is fully visible with the MGS theme.
-- The MGS theme darkens input borders so fields are visible (WCAG 1.4.11 needs 3:1). RSuite's default border is
-  1.3:1 in light mode and 1.6:1 in dark mode. The theme uses 3.1:1 (light) and 3.3:1 (dark); high contrast is
-  unchanged (10.7:1).
+- The MGS theme darkens input borders so fields are visible (WCAG 1.4.11 needs 3:1): RSuite's default is 1.3:1 in
+  light mode and 1.6:1 in dark mode; the theme uses 3.1:1 and 3.3:1. High contrast is unchanged (10.7:1).
 - Placeholder text meets contrast (4.8:1), but it's still not a label.
+
+## Playground
+
+<Canvas of={InputStories.Playground} sourceState="shown" />
+<Controls of={InputStories.Playground} />
+
+## Props
+
+### `<Input>`
+
+| Property     | Type `(Default)`                        | Description                                       |
+| ------------ | --------------------------------------- | ------------------------------------------------- |
+| defaultValue | string                                  | Initial value (uncontrolled)                      |
+| disabled     | boolean                                 | Not focusable or editable                         |
+| htmlSize     | number                                  | The native `size` attribute (width in characters) |
+| inputRef     | Ref                                     | Ref to the `<input>`                              |
+| onChange     | `(value: string, event) => void`        | Called when the value changes. **Value first**    |
+| onPressEnter | `(event) => void`                       | Called when Enter is pressed                      |
+| placeholder  | string                                  | Example value (not a label)                       |
+| plaintext    | boolean                                 | Show the value as text, no input                  |
+| readOnly     | boolean                                 | Focusable but not editable                        |
+| size         | `'lg' \| 'md' \| 'sm' \| 'xs'` `('md')` | Input size                                        |
+| type         | string `('text')`                       | Native input type                                 |
+| value        | string                                  | Value (controlled)                                |
+
+### `<InputGroup>`
+
+| Property | Type `(Default)`               | Description                           |
+| -------- | ------------------------------ | ------------------------------------- |
+| disabled | boolean                        | Disable everything in the group       |
+| inside   | boolean                        | Put add-ons inside the input's border |
+| size     | `'lg' \| 'md' \| 'sm' \| 'xs'` | Size of everything in the group       |
+
+Parts: `InputGroup.Addon` (text or icon) and `InputGroup.Button` (a Button).
+
+### `<Textarea>`
+
+Same as `<Input>`, plus:
+
+| Property | Type               | Description                     |
+| -------- | ------------------ | ------------------------------- |
+| autosize | boolean            | Grow with the content           |
+| maxRows  | number             | Maximum rows with `autosize`    |
+| minRows  | number             | Minimum rows with `autosize`    |
+| resize   | CSS `resize` value | Whether users can drag the size |
+
+### `<PasswordInput>`
+
+| Property             | Type                              | Description                                    |
+| -------------------- | --------------------------------- | ---------------------------------------------- |
+| defaultVisible       | boolean                           | Start with the password shown                  |
+| endIcon / startIcon  | ReactNode                         | Icons; `endIcon` replaces the show/hide button |
+| onVisibleChange      | `(visible: boolean) => void`      | Called when the password is shown or hidden    |
+| renderVisibilityIcon | `(visible: boolean) => ReactNode` | Custom show/hide icon                          |
+| visible              | boolean                           | Show the password (controlled)                 |
+
+Plus `id`, `name`, `value`, `defaultValue`, `placeholder`, `readOnly`, `onChange` and `size`, as on `<Input>`. All
+components also accept `className` and `style`.
 
 ## Customizing
 
 Override RSuite's `--rs-*` CSS variables in your app's stylesheet, never `.rs-input` properties. For one-off layout
 tweaks use `className` or `style`.
-
-## API
-
-The Controls above list the most-used props. Full reference:
-[Input](https://rsuitejs.com/components/input/#props-input),
-[InputGroup](https://rsuitejs.com/components/input/#props-input-group),
-[Textarea](https://rsuitejs.com/components/textarea),
-[PasswordInput](https://rsuitejs.com/components/password-input).
-
-<ArgTypes of={InputStories} />

@@ -1,0 +1,136 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as AvatarStories from './Avatar.stories';
+
+<Meta of={AvatarStories} />
+
+# Avatar
+
+Used to represent a user or a brand, with an image, initials or an icon.
+
+**Component:** RSuite 6.2.4 `Avatar` and `AvatarGroup`, re-exported by `@mgs/ui` ·
+[RSuite reference](https://rsuitejs.com/components/avatar)
+
+## Usage
+
+```tsx
+import { Avatar, AvatarGroup } from '@mgs/ui';
+import '@mgs/ui/styles.css'; // once, in your app entry
+```
+
+## Examples
+
+### Basic
+
+<Canvas of={AvatarStories.Basic} sourceState="shown" />
+
+Set `alt` to the person's name: it becomes the image's alt text.
+
+### Initials
+
+<Canvas of={AvatarStories.Initials} sourceState="shown" />
+
+Without an image, pass initials as `children`. A screen reader would only read "AP", so either name the avatar with
+`role="img"` + `aria-label`, or add `aria-hidden` when the name is already shown next to it.
+
+### Icons
+
+<Canvas of={AvatarStories.Icons} sourceState="shown" />
+
+With no image, children or `alt`, Avatar shows a default person icon. You can pass any icon as `children`.
+
+### Sizes
+
+<Canvas of={AvatarStories.Sizes} sourceState="shown" />
+
+`size`: `xs | sm | md` (default) `| lg | xl | 2xl`, or a number for a custom size in pixels.
+
+### Shapes
+
+<Canvas of={AvatarStories.Shapes} sourceState="shown" />
+
+Rounded square by default; `circle` for a round avatar. Use one shape consistently across a product.
+
+### Bordered
+
+<Canvas of={AvatarStories.Bordered} sourceState="shown" />
+
+### Colors
+
+<Canvas of={AvatarStories.Colors} sourceState="shown" />
+
+`color` sets the background: a preset (`red | orange | yellow | green | cyan | blue | violet`), a shade
+(`'blue.700'`) or any CSS colour.
+
+⚠️ **Contrast:** initials are white, so the background needs 4.5:1. `violet` (7.3:1), `red` (4.8:1 with the MGS
+theme) and `.700` shades such as `'blue.700'` (4.75:1) pass. Plain `blue` 3.1, `green` 2.8 and lighter presets fail.
+
+### Fallback
+
+<Canvas of={AvatarStories.Fallback} sourceState="shown" />
+
+While the image loads, or if it fails, Avatar shows its `children`. **Always pass initials with `src`**: without
+them, the full `alt` text is squeezed into the avatar.
+
+### AvatarGroup
+
+<Canvas of={AvatarStories.Group} sourceState="shown" />
+
+Lays out avatars with even `spacing`. `size` on the group applies to every avatar (an avatar's own `size` wins). It
+has `role="group"`, so give it an `aria-label` ("Project members").
+
+### Stacked
+
+<Canvas of={AvatarStories.Stacked} sourceState="shown" />
+
+`stack` overlaps the avatars. For "+5 more", use an avatar with a name that says what it means
+(`aria-label="and 5 more people"`).
+
+### With Badge
+
+<Canvas of={AvatarStories.WithBadge} sourceState="shown" />
+
+Combine with [Badge](?path=/docs/components-badge--docs) for unread counts or online status. Put the status in the
+avatar's name (`alt="Ravi Kumar, online"`), since the badge itself isn't announced.
+
+## Accessibility
+
+- **Image:** set `alt` to the person's name. If the name is shown right next to the avatar, the avatar is
+  decorative: use `alt=""` on images, or `aria-hidden` on initials.
+- **Initials or icon:** add `role="img"` and `aria-label` with the name.
+- **Group:** give `AvatarGroup` an `aria-label`.
+- **Contrast:** the MGS theme fixes RSuite's default light-mode avatar, whose white initials on light gray are
+  1.4:1. It's now 4.8:1; dark and high-contrast are already fine (5.1:1).
+- Status shown by a badge colour must also be in the avatar's name or in visible text.
+
+## Playground
+
+<Canvas of={AvatarStories.Playground} sourceState="shown" />
+<Controls of={AvatarStories.Playground} />
+
+## Props
+
+### `<Avatar>`
+
+| Property | Type `(Default)`                                                   | Description                                                  |
+| -------- | ------------------------------------------------------------------ | ------------------------------------------------------------ |
+| alt      | string                                                             | Alternative text for the image: the person's name            |
+| bordered | boolean                                                            | Show a ring around the avatar                                |
+| children | ReactNode                                                          | Initials or an icon; also the fallback while the image loads |
+| circle   | boolean                                                            | Round shape                                                  |
+| color    | Color \| `'color.shade'` \| CSS colour                             | Background colour                                            |
+| imgProps | `ImgHTMLAttributes`                                                | Attributes for the `<img>` element                           |
+| onError  | `(event) => void`                                                  | Called when the image fails to load                          |
+| size     | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` \| number `('md')` | Avatar size                                                  |
+| sizes    | string                                                             | The `sizes` attribute of the `<img>`                         |
+| src      | string                                                             | Image URL                                                    |
+| srcSet   | string                                                             | The `srcSet` attribute of the `<img>`, for responsive images |
+
+### `<AvatarGroup>`
+
+| Property | Type `(Default)`                       | Description                                       |
+| -------- | -------------------------------------- | ------------------------------------------------- |
+| size     | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | Size of every avatar in the group (no `2xl` here) |
+| spacing  | number                                 | Space between avatars (px)                        |
+| stack    | boolean                                | Overlap the avatars                               |
+
+Plus `className`, `style` and native `div` attributes (`aria-label`, `role`, ...).

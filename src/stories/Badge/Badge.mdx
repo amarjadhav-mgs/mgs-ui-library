@@ -1,0 +1,118 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as BadgeStories from './Badge.stories';
+
+<Meta of={BadgeStories} />
+
+# Badge
+
+Used to display the number of unread messages or a status on icons or other components.
+
+**Component:** RSuite 6.2.4 `Badge`, re-exported by `@mgs/ui` · [RSuite reference](https://rsuitejs.com/components/badge)
+
+## Usage
+
+```tsx
+import { Badge } from '@mgs/ui';
+import '@mgs/ui/styles.css'; // once, in your app entry
+```
+
+## Examples
+
+### Basic
+
+<Canvas of={BadgeStories.Basic} sourceState="shown" />
+
+### With content
+
+<Canvas of={BadgeStories.WithContent} sourceState="shown" />
+
+`content` can be a number, text or an icon. Numbers above `maxCount` (default `99`) show as `99+`. Without
+`content` the badge is a dot. `compact` removes the padding, for icons.
+
+### Placement
+
+<Canvas of={BadgeStories.Placement} sourceState="shown" />
+
+`placement`: `topStart | topEnd` (default) `| bottomStart | bottomEnd`.
+
+### Shapes
+
+<Canvas of={BadgeStories.Shapes} sourceState="shown" />
+
+If the wrapped element is a circle, use `shape="circle"` so the badge sits on its edge.
+
+### Sizes
+
+<Canvas of={BadgeStories.Sizes} sourceState="shown" />
+
+`size`: `xs | sm | md` (default) `| lg | xl`.
+
+### Offset
+
+<Canvas of={BadgeStories.Offset} sourceState="shown" />
+
+If the position isn't quite right, fine-tune it with `offset={[x, y]}` (pixels, or strings like `'20%'`).
+
+### Invisible
+
+<Canvas of={BadgeStories.Invisible} sourceState="shown" />
+
+`invisible` hides the badge, for example when the unread count drops to 0.
+
+### Badge without children
+
+<Canvas of={BadgeStories.WithoutChildren} sourceState="shown" />
+
+Without children, a badge stands on its own: a dot, a count, a short label, or an icon next to text.
+
+### Colors
+
+<Canvas of={BadgeStories.Colors} sourceState="shown" />
+
+`color`: `red` (default) `| orange | yellow | green | cyan | blue | violet`, or any CSS colour (`'#1e3a8a'`).
+
+⚠️ **Contrast:** badge text is small, so it needs 4.5:1. With white text only these pass:
+
+- **The default red: leave `color` out.** The MGS theme fixes it in every theme (4.8:1 light, 4.65:1 dark).
+  `color="red"` uses RSuite's own red, which fails in dark mode (3.6:1).
+- **`violet`** (7.3:1).
+
+`blue` 3.1, `green` 2.8, `orange` 2.4, `cyan` 2.3 and `yellow` 1.8 fail. Use them only for dots or icon badges next
+to text, or pass a dark custom colour.
+
+## Accessibility
+
+<Canvas of={BadgeStories.Accessibility} sourceState="shown" />
+
+- A badge is **visual only**. Screen readers don't connect its text to the element it sits on, so put the meaning
+  in that element's accessible name: `aria-label="Notifications, 3 unread"`.
+- **Don't rely on colour alone** for a status dot. Add text ("Online", "Error") next to it.
+- Keep the accessible name in sync with `content` and `invisible`, e.g. just "Notifications" when there's nothing
+  unread.
+- ⚠️ Don't put `aria-hidden` on a Badge that wraps something: it would hide the wrapped element too.
+
+## Playground
+
+<Canvas of={BadgeStories.Playground} sourceState="shown" />
+<Controls of={BadgeStories.Playground} />
+
+## Props
+
+### `<Badge>`
+
+| Property  | Type `(Default)`                                                                         | Description                                                     |
+| --------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| children  | ReactNode                                                                                | The wrapped component. Without it, the badge renders on its own |
+| color     | `'red' \| 'orange' \| 'yellow' \| 'green' \| 'cyan' \| 'blue' \| 'violet'` \| CSS colour | Badge colour (default: red)                                     |
+| compact   | boolean                                                                                  | No padding; for icons and single characters                     |
+| content   | number \| ReactNode                                                                      | The content of the badge. Empty = dot                           |
+| invisible | boolean                                                                                  | Hide the badge                                                  |
+| maxCount  | number `(99)`                                                                            | Numbers above this show as `99+` (numeric `content` only)       |
+| offset    | `[number \| string, number \| string]`                                                   | Horizontal and vertical offset relative to the wrapped element  |
+| outline   | boolean `(true)`                                                                         | Border that separates the badge from what it sits on            |
+| placement | `'topStart' \| 'topEnd' \| 'bottomStart' \| 'bottomEnd'` `('topEnd')`                    | Position on the wrapped element                                 |
+| shape     | `'rectangle' \| 'circle'`                                                                | Shape of the wrapped element                                    |
+| size      | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` `('md')`                                          | Badge size                                                      |
+
+Plus `className`, `style` and native `div` attributes. The `placement` type also accepts `leftStart`, `rightStart`,
+`leftEnd` and `rightEnd`, but RSuite has no styles for them; don't use them.
