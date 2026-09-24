@@ -1,5 +1,4 @@
-import { ArgTypes, Canvas, Controls, Meta, Source } from '@storybook/addon-docs/blocks';
-import mgsTheme from '../../theme/mgs-theme.css?raw';
+import { ArgTypes, Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
 import * as ButtonStories from './Button.stories';
 
 <Meta of={ButtonStories} />
@@ -15,19 +14,17 @@ button (`href` or `as={Link}`), see [Link Button](#link-button).
 ## Setup
 
 ```bash
-npm install rsuite
+npm install rsuite @mgs/ui
 ```
 
 ```tsx
 // Once, in your app entry (e.g. main.tsx)
-import 'rsuite/dist/rsuite.css';
+import 'rsuite/dist/rsuite.css'; // RSuite styles
+import '@mgs/ui/styles.css'; // MGS brand theme (load after RSuite)
 
 // Anywhere
 import { Button, IconButton, ButtonGroup, ButtonToolbar } from 'rsuite';
 ```
-
-Then add the [MGS theme](#mgs-theme) CSS to your app's global stylesheet (loaded after `rsuite.css`) so buttons
-use the MGS brand colors and meet contrast requirements.
 
 Optional: wrap the app in `<CustomProvider theme="light | dark | high-contrast">` to switch themes. Use the
 **Theme** menu in the Storybook toolbar to preview all three.
@@ -171,16 +168,21 @@ work). It has `role="toolbar"`; add an `aria-label`. Focus moves with Tab; there
   `aria-pressed`; icon-only buttons need `aria-label`. RSuite's ripple and spinner don't respect
   "reduce motion"; disable the ripple app-wide with `<CustomProvider disableRipple>` if needed.
 
-## MGS theme
+## Customizing
 
-Copy this CSS into your app's global stylesheet, **after** `import 'rsuite/dist/rsuite.css'`. It only overrides
-RSuite's own CSS variables, so every RSuite component picks up the MGS brand. It is the exact file this Storybook uses
-(`src/theme/mgs-theme.css`).
+Customize with **RSuite's CSS variables**, never by overriding `.rs-btn` selectors. The MGS theme
+(`@mgs/ui/styles.css`) does this for the brand color, danger red and focus ring:
 
-<Source code={mgsTheme} language="css" />
+```css
+:root {
+  --rs-primary-500: #2563eb; /* primary background */
+  --rs-primary-600: #1d4ed8; /* hover */
+  --rs-primary-700: #1e40af; /* pressed */
+  --rs-focus-ring-color: var(--rs-primary-500);
+}
+```
 
-Customize with **RSuite's CSS variables** like this, never by overriding `.rs-btn` class selectors. For one-off
-layout tweaks use `className` or `style`; they are merged with RSuite's own.
+For one-off layout tweaks use `className` or `style`; they are merged with RSuite's own.
 
 ## API
 

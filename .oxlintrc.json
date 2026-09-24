@@ -25,5 +25,5 @@
     ],
     "vitest/require-mock-type-parameters": "off"
   },
-  "ignorePatterns": ["storybook-static", "coverage"]
+  "ignorePatterns": ["dist", "storybook-static", "coverage"]
 }

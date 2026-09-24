@@ -1,31 +1,33 @@
-# MGS UI docs
+# @mgs/ui
 
-MGS documentation for [RSuite 6](https://rsuitejs.com) components, built with Storybook. It shows how we use each
-RSuite component: supported props, when to use them, accessibility notes and copyable examples.
+MGS design system, built on [RSuite 6](https://rsuitejs.com). This package provides the **MGS theme for RSuite**;
+the Storybook documents how we use each RSuite component.
 
-This repo is **not a package**. Apps use RSuite directly.
-
-## Using RSuite in an app
+## Using it in an app
 
 ```bash
-npm install rsuite
+npm install rsuite @mgs/ui
 ```
 
 ```tsx
 // App entry (e.g. main.tsx)
-import 'rsuite/dist/rsuite.css';
+import 'rsuite/dist/rsuite.css'; // RSuite styles
+import '@mgs/ui/styles.css'; // MGS theme (after RSuite)
 
-// Anywhere
+// Components come straight from RSuite
 import { Button } from 'rsuite';
 
 <Button appearance="primary">Save</Button>;
 ```
 
-Then copy the MGS theme, [`src/theme/mgs-theme.css`](src/theme/mgs-theme.css), into the app's global stylesheet
-(after `rsuite.css`). It overrides RSuite's CSS variables for the MGS brand colors and fixes RSuite's default contrast
-and focus-ring issues. Optional: `<CustomProvider theme="light | dark | high-contrast">` from `rsuite` switches themes.
+Optional: `<CustomProvider theme="light | dark | high-contrast">` from `rsuite` switches themes.
 
-## Developing the docs
+### Theming
+
+The theme only overrides RSuite's CSS variables (`--rs-*`), see `src/theme/mgs-theme.css`. Never override
+`.rs-*` class selectors.
+
+## Developing
 
 Requires Node 24 (see `.nvmrc`).
 
@@ -36,13 +38,15 @@ npm run dev          # Storybook at http://localhost:6006
 
 | Script                    | What it does                                    |
 | ------------------------- | ----------------------------------------------- |
-| `npm run dev`             | Storybook (docs + playgrounds)                  |
+| `npm run dev`             | Storybook (component docs + playgrounds)        |
 | `npm test`                | Story accessibility (axe) and behaviour tests   |
 | `npm run test:watch`      | Tests in watch mode                             |
 | `npm run lint`            | Lint with oxlint                                |
 | `npm run format`          | Format with Prettier                            |
 | `npm run typecheck`       | TypeScript check                                |
+| `npm run build`           | Build the theme package into `dist/`            |
 | `npm run build-storybook` | Build static Storybook into `storybook-static/` |
+| `npm run changeset`       | Record a change for the next release            |
 
 A pre-commit hook (Husky + lint-staged) lints and formats staged files automatically.
 
@@ -58,11 +62,11 @@ src/stories/<Component>/
 Rules:
 
 - Use the installed RSuite version's API only; check its type definitions in `node_modules/rsuite/esm/<Component>`.
-- Import components from `rsuite`. Don't wrap or re-implement them.
-- Brand changes go in `src/theme/mgs-theme.css`, using RSuite's `--rs-*` variables.
+- Don't wrap or re-implement RSuite components unless there's a clear MGS requirement.
+- Brand changes go in `src/theme/mgs-theme.css` via `--rs-*` variables.
 
 ## Git workflow
 
 - Branch from `dev` (`feat/...`, `fix/...`, `chore/...`), open a PR into `dev`.
-- CI (typecheck, lint, format, tests, Storybook build) must be green before merging.
+- CI (typecheck, lint, format, tests, builds) must be green before merging.
 - `dev` is merged into `main` for releases.

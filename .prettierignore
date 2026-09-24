@@ -1,3 +1,5 @@
+dist
 storybook-static
 coverage
 package-lock.json
+.changeset/*.md
