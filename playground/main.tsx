@@ -38,6 +38,7 @@ function Playground() {
         <Button loading={loading} onClick={simulateSave}>
           {loading ? 'Saving…' : 'Save'}
         </Button>
+        <Button variant="ghost" aria-label="Close" leftIcon={<span>✕</span>} />
       </div>
 
       <Button fullWidth size="lg">

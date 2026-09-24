@@ -11,8 +11,15 @@ export default defineConfig({
       fileName: 'index',
       cssFileName: 'styles',
     },
-    rollupOptions: {
+    // Consumers minify in their own builds; readable output + maps make debugging easier.
+    minify: false,
+    sourcemap: true,
+    rolldownOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime'],
+      output: {
+        // Marks every component as a Client Component for React Server Components (Next.js App Router).
+        banner: "'use client';",
+      },
     },
   },
 });

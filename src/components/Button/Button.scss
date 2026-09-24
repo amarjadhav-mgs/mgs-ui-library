@@ -1,136 +1,138 @@
-.mgs-button {
-  // Per-variant hooks; variants below only set these.
-  --_bg: var(--mgs-color-primary);
-  --_bg-hover: var(--mgs-color-primary-hover);
-  --_bg-active: var(--mgs-color-primary-active);
-  --_color: var(--mgs-color-on-primary);
-  --_border: transparent;
+@layer mgs.components {
+  .mgs-button {
+    // Per-variant hooks; variants below only set these.
+    --_bg: var(--mgs-color-primary);
+    --_bg-hover: var(--mgs-color-primary-hover);
+    --_bg-active: var(--mgs-color-primary-active);
+    --_color: var(--mgs-color-on-primary);
+    --_border: transparent;
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--mgs-space-2);
-  box-sizing: border-box;
-  margin: 0;
-  border: 1px solid var(--_border);
-  border-radius: var(--mgs-radius-md);
-  background-color: var(--_bg);
-  color: var(--_color);
-  font-family: var(--mgs-font-family);
-  font-weight: var(--mgs-font-weight-medium);
-  line-height: 1;
-  white-space: nowrap;
-  text-decoration: none;
-  cursor: pointer;
-  user-select: none;
-  transition:
-    background-color var(--mgs-transition-fast),
-    border-color var(--mgs-transition-fast),
-    box-shadow var(--mgs-transition-fast);
-
-  &:hover:not(:disabled) {
-    background-color: var(--_bg-hover);
-  }
-
-  &:active:not(:disabled) {
-    background-color: var(--_bg-active);
-  }
-
-  &:focus-visible {
-    outline: none;
-    box-shadow: var(--mgs-focus-ring);
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: var(--mgs-opacity-disabled);
-  }
-
-  // Variants
-  &--secondary {
-    --_bg: var(--mgs-color-surface);
-    --_bg-hover: var(--mgs-color-surface-hover);
-    --_bg-active: var(--mgs-color-surface-active);
-    --_color: var(--mgs-color-text);
-    --_border: var(--mgs-color-border);
-  }
-
-  &--danger {
-    --_bg: var(--mgs-color-danger);
-    --_bg-hover: var(--mgs-color-danger-hover);
-    --_bg-active: var(--mgs-color-danger-active);
-    --_color: var(--mgs-color-on-danger);
-  }
-
-  &--ghost {
-    --_bg: transparent;
-    --_bg-hover: var(--mgs-color-surface-hover);
-    --_bg-active: var(--mgs-color-surface-active);
-    --_color: var(--mgs-color-text);
-  }
-
-  // Sizes
-  &--sm {
-    height: var(--mgs-control-height-sm);
-    padding: 0 var(--mgs-space-3);
-    font-size: var(--mgs-font-size-sm);
-  }
-
-  &--md {
-    height: var(--mgs-control-height-md);
-    padding: 0 var(--mgs-space-4);
-    font-size: var(--mgs-font-size-md);
-  }
-
-  &--lg {
-    height: var(--mgs-control-height-lg);
-    padding: 0 var(--mgs-space-5);
-    font-size: var(--mgs-font-size-lg);
-  }
-
-  &--full-width {
-    display: flex;
-    width: 100%;
-  }
-
-  &--loading {
-    cursor: progress;
-  }
-
-  // Parts
-  &__icon {
     display: inline-flex;
-    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: var(--mgs-space-2);
+    box-sizing: border-box;
+    margin: 0;
+    border: 1px solid var(--_border);
+    border-radius: var(--mgs-radius-md);
+    background-color: var(--_bg);
+    color: var(--_color);
+    font-family: var(--mgs-font-family);
+    font-weight: var(--mgs-font-weight-medium);
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color var(--mgs-transition-fast),
+      border-color var(--mgs-transition-fast),
+      box-shadow var(--mgs-transition-fast);
 
-    svg {
+    &:hover:not(:disabled, [aria-disabled='true']) {
+      background-color: var(--_bg-hover);
+    }
+
+    &:active:not(:disabled, [aria-disabled='true']) {
+      background-color: var(--_bg-active);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--mgs-focus-ring);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: var(--mgs-opacity-disabled);
+    }
+
+    // Variants
+    &--secondary {
+      --_bg: var(--mgs-color-surface);
+      --_bg-hover: var(--mgs-color-surface-hover);
+      --_bg-active: var(--mgs-color-surface-active);
+      --_color: var(--mgs-color-text);
+      --_border: var(--mgs-color-border);
+    }
+
+    &--danger {
+      --_bg: var(--mgs-color-danger);
+      --_bg-hover: var(--mgs-color-danger-hover);
+      --_bg-active: var(--mgs-color-danger-active);
+      --_color: var(--mgs-color-on-danger);
+    }
+
+    &--ghost {
+      --_bg: transparent;
+      --_bg-hover: var(--mgs-color-surface-hover);
+      --_bg-active: var(--mgs-color-surface-active);
+      --_color: var(--mgs-color-text);
+    }
+
+    // Sizes
+    &--sm {
+      height: var(--mgs-control-height-sm);
+      padding: 0 var(--mgs-space-3);
+      font-size: var(--mgs-font-size-sm);
+    }
+
+    &--md {
+      height: var(--mgs-control-height-md);
+      padding: 0 var(--mgs-space-4);
+      font-size: var(--mgs-font-size-md);
+    }
+
+    &--lg {
+      height: var(--mgs-control-height-lg);
+      padding: 0 var(--mgs-space-5);
+      font-size: var(--mgs-font-size-lg);
+    }
+
+    &--full-width {
+      display: flex;
+      width: 100%;
+    }
+
+    &--loading {
+      cursor: progress;
+    }
+
+    // Parts
+    &__icon {
+      display: inline-flex;
+      flex-shrink: 0;
+
+      svg {
+        width: 1em;
+        height: 1em;
+      }
+    }
+
+    &__spinner {
       width: 1em;
       height: 1em;
+      flex-shrink: 0;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: mgs-button-spin 0.7s linear infinite;
     }
   }
 
-  &__spinner {
-    width: 1em;
-    height: 1em;
-    flex-shrink: 0;
-    border: 2px solid currentColor;
-    border-right-color: transparent;
-    border-radius: 50%;
-    animation: mgs-button-spin 0.7s linear infinite;
-  }
-}
-
-@keyframes mgs-button-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mgs-button {
-    transition: none;
+  @keyframes mgs-button-spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
-  .mgs-button__spinner {
-    animation-duration: 1.5s;
+  @media (prefers-reduced-motion: reduce) {
+    .mgs-button {
+      transition: none;
+    }
+
+    .mgs-button__spinner {
+      animation-duration: 1.5s;
+    }
   }
 }
