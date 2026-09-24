@@ -5,11 +5,25 @@
 import 'rsuite/dist/rsuite.css';
 import './theme/mgs-theme.css';
 
-export { Button, ButtonGroup, ButtonToolbar, CustomProvider, IconButton } from 'rsuite';
+export {
+  Button,
+  ButtonGroup,
+  ButtonToolbar,
+  CustomProvider,
+  IconButton,
+  Input,
+  InputGroup,
+  PasswordInput,
+  Textarea,
+} from 'rsuite';
 export type {
   ButtonGroupProps,
   ButtonProps,
   ButtonToolbarProps,
   CustomProviderProps,
   IconButtonProps,
+  InputGroupProps,
+  InputProps,
+  PasswordInputProps,
+  TextareaProps,
 } from 'rsuite';

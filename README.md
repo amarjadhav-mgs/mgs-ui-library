@@ -23,7 +23,8 @@ Optional: `<CustomProvider theme="light | dark | high-contrast">` from `@mgs/ui`
 
 ### Available components
 
-`Button`, `IconButton`, `ButtonGroup`, `ButtonToolbar`, `CustomProvider` (and their `...Props` types).
+`Button`, `IconButton`, `ButtonGroup`, `ButtonToolbar`, `Input`, `InputGroup`, `Textarea`, `PasswordInput`,
+`CustomProvider` (and their `...Props` types).
 
 ### Theming
 
