@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "dev": "storybook dev -p 6006",
-    "build": "vite build && tsc -p tsconfig.build.json",
+    "build": "vite build && tsc -p tsconfig.build.json && node scripts/strip-style-imports.mjs",
     "build-storybook": "storybook build",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
