@@ -70,6 +70,6 @@
       "oxlint --fix",
       "prettier --write"
     ],
-    "*.{scss,css,json,md,yml,yaml}": "prettier --write"
+    "*.{css,json,md,mdx,yml,yaml}": "prettier --write"
   }
 }
