@@ -9,14 +9,26 @@ export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   /** Control size. @default 'md' */
   size?: ButtonSize;
   /**
-   * Shows a spinner and blocks clicks. The button stays focusable (uses `aria-disabled`,
-   * not `disabled`) so keyboard users don't lose their place. @default false
+   * Shows a centered spinner over the content and blocks clicks. The width stays the same,
+   * and the button stays focusable (uses `aria-disabled`, not `disabled`) so keyboard users
+   * don't lose their place. @default false
    */
   loading?: boolean;
   /** Stretches the button to its container width. @default false */
   fullWidth?: boolean;
-  /** Icon rendered before the label. Replaced by the spinner while loading. */
+  /** Icon rendered before the label. */
   leftIcon?: ReactNode;
   /** Icon rendered after the label. */
   rightIcon?: ReactNode;
+}
+
+export interface ButtonClassNameOptions {
+  /** @default 'primary' */
+  variant?: ButtonVariant;
+  /** @default 'md' */
+  size?: ButtonSize;
+  /** @default false */
+  fullWidth?: boolean;
+  /** Extra classes appended after the button classes. */
+  className?: string;
 }

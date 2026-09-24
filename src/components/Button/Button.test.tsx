@@ -104,14 +104,27 @@ describe('Button', () => {
       expect(onSubmit).not.toHaveBeenCalled();
     });
 
-    it('replaces the left icon with a spinner', () => {
+    it('overlays a spinner and keeps the content, so width and accessible name stay the same', () => {
       const { container } = render(
         <Button loading leftIcon={<svg data-testid="icon" />}>
-          Saving…
+          Save
         </Button>,
       );
-      expect(screen.queryByTestId('icon')).not.toBeInTheDocument();
-      expect(container.querySelector('.mgs-button__spinner')).toBeInTheDocument();
+      expect(container.querySelector('.mgs-button__spinner')).toHaveAttribute(
+        'aria-hidden',
+        'true',
+      );
+      expect(screen.getByTestId('icon')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Save' })).toHaveClass('mgs-button--loading');
+    });
+
+    it('is natively disabled when both loading and disabled', () => {
+      render(
+        <Button loading disabled>
+          Save
+        </Button>,
+      );
+      expect(screen.getByRole('button')).toBeDisabled();
     });
   });
 

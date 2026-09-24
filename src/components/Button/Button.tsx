@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, type MouseEvent } from 'react';
 import { cx } from '../../utils/cx';
 import type { ButtonProps } from './Button.types';
+import { buttonClassName } from './buttonClassName';
 import './Button.scss';
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -28,7 +29,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   useEffect(() => {
     if (process.env.NODE_ENV !== 'production' && !hasLabel && !ariaLabel && !ariaLabelledBy) {
       console.warn(
-        '[@mgs/ui] Button: icon-only buttons need an `aria-label` (or `aria-labelledby`) so screen readers can announce them.',
+        '[@mgs/ui] Button: a button without text needs an `aria-label` so screen readers can announce it. For icon-only buttons use <IconButton icon={...} aria-label="..." />.',
       );
     }
   }, [hasLabel, ariaLabel, ariaLabelledBy]);
@@ -47,28 +48,23 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     <button
       ref={ref}
       type={type}
-      className={cx(
-        'mgs-button',
-        `mgs-button--${variant}`,
-        `mgs-button--${size}`,
-        fullWidth && 'mgs-button--full-width',
-        loading && 'mgs-button--loading',
-        className,
-      )}
+      className={buttonClassName({
+        variant,
+        size,
+        fullWidth,
+        className: cx(loading && 'mgs-button--loading', className),
+      })}
       disabled={disabled}
       aria-disabled={loading || undefined}
       aria-busy={loading || undefined}
       onClick={handleClick}
       {...rest}
     >
-      {loading ? (
-        <span className="mgs-button__spinner" aria-hidden="true" />
-      ) : (
-        leftIcon && (
-          <span className="mgs-button__icon" aria-hidden="true">
-            {leftIcon}
-          </span>
-        )
+      {loading && <span className="mgs-button__spinner" aria-hidden="true" />}
+      {leftIcon && (
+        <span className="mgs-button__icon" aria-hidden="true">
+          {leftIcon}
+        </span>
       )}
       {hasLabel && <span className="mgs-button__label">{children}</span>}
       {rightIcon && (

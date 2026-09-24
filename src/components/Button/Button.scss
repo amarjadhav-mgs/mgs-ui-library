@@ -1,45 +1,59 @@
 @layer mgs.components {
   .mgs-button {
-    // Per-variant hooks; variants below only set these.
+    // Private hooks: variants and sizes below only set these.
     --_bg: var(--mgs-color-primary);
     --_bg-hover: var(--mgs-color-primary-hover);
     --_bg-active: var(--mgs-color-primary-active);
     --_color: var(--mgs-color-on-primary);
     --_border: transparent;
+    --_height: var(--mgs-control-height-md);
+    --_padding-x: var(--mgs-space-4);
+    --_font-size: var(--mgs-font-size-md);
 
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--mgs-space-2);
     box-sizing: border-box;
+    max-width: 100%;
+    height: var(--_height);
     margin: 0;
-    border: 1px solid var(--_border);
-    border-radius: var(--mgs-radius-md);
+    padding: 0 var(--_padding-x);
+    border: var(--mgs-border-width) solid var(--_border);
+    // Public component tokens: read with a fallback (never declared here), so setting
+    // them on any ancestor customizes buttons without touching internal selectors.
+    border-radius: var(--mgs-button-radius, var(--mgs-radius-md));
     background-color: var(--_bg);
     color: var(--_color);
     font-family: var(--mgs-font-family);
-    font-weight: var(--mgs-font-weight-medium);
-    line-height: 1;
+    font-size: var(--_font-size);
+    font-weight: var(--mgs-button-font-weight, var(--mgs-font-weight-medium));
+    line-height: var(--mgs-line-height-none);
     white-space: nowrap;
     text-decoration: none;
+    vertical-align: middle;
     cursor: pointer;
     user-select: none;
     transition:
       background-color var(--mgs-transition-fast),
-      border-color var(--mgs-transition-fast),
-      box-shadow var(--mgs-transition-fast);
+      border-color var(--mgs-transition-fast);
 
-    &:hover:not(:disabled, [aria-disabled='true']) {
-      background-color: var(--_bg-hover);
+    // Hover only on devices that can hover, so taps on touch screens don't leave a stuck hover color.
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled='true']) {
+        background-color: var(--_bg-hover);
+      }
     }
 
     &:active:not(:disabled, [aria-disabled='true']) {
       background-color: var(--_bg-active);
     }
 
+    // outline (not box-shadow) stays visible in forced-colors / High Contrast mode.
     &:focus-visible {
-      outline: none;
-      box-shadow: var(--mgs-focus-ring);
+      outline: var(--mgs-focus-ring-width) solid var(--mgs-color-focus-ring);
+      outline-offset: var(--mgs-focus-ring-offset);
     }
 
     &:disabled {
@@ -72,33 +86,51 @@
 
     // Sizes
     &--sm {
-      height: var(--mgs-control-height-sm);
-      padding: 0 var(--mgs-space-3);
-      font-size: var(--mgs-font-size-sm);
+      --_height: var(--mgs-control-height-sm);
+      --_padding-x: var(--mgs-space-3);
+      --_font-size: var(--mgs-font-size-sm);
     }
 
     &--md {
-      height: var(--mgs-control-height-md);
-      padding: 0 var(--mgs-space-4);
-      font-size: var(--mgs-font-size-md);
+      --_height: var(--mgs-control-height-md);
+      --_padding-x: var(--mgs-space-4);
+      --_font-size: var(--mgs-font-size-md);
     }
 
     &--lg {
-      height: var(--mgs-control-height-lg);
-      padding: 0 var(--mgs-space-5);
-      font-size: var(--mgs-font-size-lg);
+      --_height: var(--mgs-control-height-lg);
+      --_padding-x: var(--mgs-space-5);
+      --_font-size: var(--mgs-font-size-lg);
     }
 
+    // Layout modifiers
     &--full-width {
       display: flex;
       width: 100%;
     }
 
+    &--icon-only {
+      width: var(--_height);
+      padding: 0;
+    }
+
+    // Loading: content stays in place (keeps the width) but is invisible; the spinner
+    // sits on top. opacity (not visibility) keeps the label as the accessible name.
     &--loading {
       cursor: progress;
+
+      > :not(.mgs-button__spinner) {
+        opacity: 0;
+      }
     }
 
     // Parts
+    &__label {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     &__icon {
       display: inline-flex;
       flex-shrink: 0;
@@ -110,10 +142,13 @@
     }
 
     &__spinner {
+      position: absolute;
+      inset: 0;
       width: 1em;
       height: 1em;
-      flex-shrink: 0;
-      border: 2px solid currentColor;
+      margin: auto;
+      box-sizing: border-box;
+      border: calc(var(--mgs-border-width) * 2) solid currentColor;
       border-right-color: transparent;
       border-radius: 50%;
       animation: mgs-button-spin 0.7s linear infinite;

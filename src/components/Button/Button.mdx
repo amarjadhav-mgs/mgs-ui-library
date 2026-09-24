@@ -1,0 +1,191 @@
+import { ArgTypes, Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as ButtonStories from './Button.stories';
+
+<Meta of={ButtonStories} />
+
+# Button
+
+Buttons trigger an **action**: save, submit, open, delete. If clicking it takes the user to another page, it is a
+**link**: use `<a>` (or your router's `<Link>`) styled with [`buttonClassName`](#links-that-look-like-buttons).
+
+```tsx
+import { Button, IconButton, buttonClassName } from '@mgs/ui';
+import '@mgs/ui/styles.css';
+```
+
+## Playground
+
+<Canvas of={ButtonStories.Playground} />
+<Controls of={ButtonStories.Playground} />
+
+## Variants
+
+<Canvas of={ButtonStories.Variants} />
+
+| Variant     | Use it for                                                       | Don't use it for                                        |
+| ----------- | ---------------------------------------------------------------- | ------------------------------------------------------- |
+| `primary`   | The single most important action in a view: _Save_, _Create_     | More than one per section; they compete for attention   |
+| `secondary` | Normal actions next to a primary one: _Cancel_, _Export_, _Edit_ | The main call to action                                 |
+| `danger`    | Destructive, hard-to-undo actions: _Delete_, _Remove access_     | Warnings or errors that aren't actions (use an Alert)   |
+| `ghost`     | Low-emphasis actions: toolbars, table rows, _Cancel_ in dialogs  | Anything that must be noticed; it has no border or fill |
+
+## Sizes
+
+<Canvas of={ButtonStories.Sizes} />
+
+| Size | Height | Use it for                                         |
+| ---- | ------ | -------------------------------------------------- |
+| `sm` | 32px   | Dense UIs: tables, toolbars, filters               |
+| `md` | 40px   | **Default.** Forms, dialogs, pages                 |
+| `lg` | 48px   | Prominent calls to action, mobile full-width forms |
+
+Use the same size as the inputs next to it: `md` buttons align with `md` inputs.
+
+## Icons
+
+<Canvas of={ButtonStories.WithIcons} />
+
+```tsx
+<Button leftIcon={<PlusIcon />}>New project</Button>
+<Button variant="secondary" rightIcon={<ArrowRightIcon />}>Next</Button>
+```
+
+Icons are decorative (hidden from screen readers) and scale with the button's font size. Put a leading icon on the
+left, and a direction arrow on the right.
+
+### Icon-only buttons
+
+<Canvas of={ButtonStories.IconOnly} />
+
+```tsx
+<IconButton icon={<CloseIcon />} aria-label="Close" variant="ghost" />
+```
+
+`aria-label` is **required** (TypeScript enforces it). Describe the action, not the icon: _"Delete row"_, not _"Trash"_.
+Use icon-only buttons only for icons that are universally understood (close, add, more, delete).
+
+## Loading
+
+<Canvas of={ButtonStories.Loading} />
+
+```tsx
+const [saving, setSaving] = useState(false);
+
+<Button loading={saving} onClick={save}>
+  Save
+</Button>;
+```
+
+- The spinner is centered over the content, so **the width doesn't change**.
+- The button **stays focusable** (`aria-disabled`, `aria-busy`), so keyboard users don't lose their place.
+- Clicks and form submission are ignored while loading.
+- Announce the _result_ ("Saved", "Couldn't save") with a toast or message: the button doesn't.
+
+## Disabled
+
+<Canvas of={ButtonStories.Disabled} />
+
+Disabled buttons can't be focused or clicked. Prefer keeping the button enabled and explaining what's missing (for
+example, validating the form on submit) — users can't discover _why_ a disabled button is disabled.
+
+## Layout
+
+<Canvas of={ButtonStories.FullWidth} />
+<Canvas of={ButtonStories.LongText} />
+
+Labels never wrap. In a tight space they are truncated with an ellipsis, so keep labels short (1–3 words).
+
+<Canvas of={ButtonStories.Responsive} />
+
+Button has no responsive props — the layout decides. Stack actions and use `fullWidth` on narrow screens.
+
+## Forms
+
+<Canvas of={ButtonStories.ButtonTypes} />
+
+`type` defaults to `"button"`, so buttons never submit a form by accident. Every native attribute works: `type`, `name`,
+`value`, `form`, `formAction`, `aria-*`, `data-*`, and `ref` goes to the real `<button>`.
+
+```tsx
+<form onSubmit={handleSubmit}>
+  …
+  <Button type="submit" loading={submitting}>
+    Create account
+  </Button>
+</form>
+```
+
+## Common patterns
+
+<Canvas of={ButtonStories.ActionsRow} />
+
+```tsx
+<div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+  <Button variant="ghost">Cancel</Button>
+  <Button>Save</Button>
+</div>
+```
+
+### Links that look like buttons
+
+<Canvas of={ButtonStories.AsLink} />
+
+```tsx
+<a href="/docs" className={buttonClassName({ variant: 'secondary' })}>Read the docs</a>
+<Link to="/projects/new" className={buttonClassName()}>New project</Link>
+```
+
+## Do / Don't
+
+| ✅ Do                                                      | ❌ Don't                                               |
+| ---------------------------------------------------------- | ------------------------------------------------------ |
+| One `primary` button per section                           | Several primary buttons side by side                   |
+| Start labels with a verb: _Save changes_, _Delete project_ | Vague labels: _OK_, _Yes_, _Click here_                |
+| Use `danger` only for destructive actions                  | Use `danger` to make a button "stand out"              |
+| Use `IconButton` with a clear `aria-label`                 | Render `<Button />` with only an icon and no label     |
+| Use `buttonClassName` on `<a>` for navigation              | Wrap a `<Button>` in `<a>`, or navigate with `onClick` |
+| Show `loading` while an action runs                        | Disable the button and leave users guessing            |
+
+## Accessibility
+
+- Renders a native `<button>`, so it works with keyboards, screen readers and forms out of the box.
+- The focus ring appears only for keyboard focus, and uses `outline`, so it stays visible in Windows High Contrast mode.
+- Colors meet WCAG AA contrast (white on primary 5.2:1, white on danger 4.8:1). The smallest size (32px) meets the WCAG
+  2.2 target size.
+- Loading keeps focus and sets `aria-busy` / `aria-disabled`; the label remains the accessible name.
+- Icons and the spinner are hidden from screen readers.
+- The spinner slows down when the user prefers reduced motion.
+
+### Keyboard
+
+| Key               | Action                                   |
+| ----------------- | ---------------------------------------- |
+| `Tab` / `⇧ Tab`   | Move focus to the next / previous button |
+| `Enter` / `Space` | Activate the focused button              |
+
+<Canvas of={ButtonStories.Keyboard} />
+
+## Customizing
+
+Override tokens instead of writing selectors — library styles live in the `mgs` CSS layer, so no `!important` is ever
+needed.
+
+```css
+/* Whole app */
+:root {
+  --mgs-color-primary: #16a34a;
+  --mgs-color-primary-hover: #15803d;
+}
+
+/* Only buttons in one area */
+.marketing-page {
+  --mgs-button-radius: 999px;
+  --mgs-button-font-weight: 600;
+}
+```
+
+`className` is merged, not replaced, for one-off layout tweaks: `<Button className="ml-auto">`.
+
+## API
+
+<ArgTypes of={ButtonStories} />
