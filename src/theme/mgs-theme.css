@@ -1,0 +1,36 @@
+/*
+ * MGS brand theme for RSuite.
+ * Load after RSuite's stylesheet. It only overrides RSuite's own CSS variables,
+ * so every RSuite component (Button, Input, Nav, ...) picks up the brand at once.
+ */
+:root {
+  /*
+   * Brand blue. RSuite uses 500 for primary backgrounds, 600 for hover and 700 for pressed.
+   * RSuite's default #3498ff with white text is ~3:1 contrast (fails WCAG AA);
+   * #2563eb is 5.2:1 (passes).
+   */
+  --rs-primary-50: #eff6ff;
+  --rs-primary-100: #dbeafe;
+  --rs-primary-200: #bfdbfe;
+  --rs-primary-300: #93c5fd;
+  --rs-primary-400: #60a5fa;
+  --rs-primary-500: #2563eb;
+  --rs-primary-600: #1d4ed8;
+  --rs-primary-700: #1e40af;
+  --rs-primary-800: #1e3a8a;
+  --rs-primary-900: #172554;
+
+  /*
+   * Danger red for destructive actions (<Button color="red" appearance="primary">).
+   * RSuite uses red-500 for the background, 700 for hover and 800 for pressed.
+   * RSuite's default #f44336 with white text is 3.7:1 (fails AA); #dc2626 is 4.8:1 (passes).
+   */
+  --rs-red-500: #dc2626;
+  --rs-red-600: #c81e1e;
+  --rs-red-700: #b91c1c;
+  --rs-red-800: #991b1b;
+  --rs-red-900: #7f1d1d;
+
+  /* RSuite's default focus ring is 25% transparent; make it fully visible for keyboard users. */
+  --rs-focus-ring-color: var(--rs-primary-500);
+}

@@ -1,0 +1,195 @@
+import { ArgTypes, Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as ButtonStories from './Button.stories';
+
+<Meta of={ButtonStories} />
+
+# Button
+
+We use **RSuite's `Button`** (rsuite 6). This page shows how to use it at MGS: which props exist, when to use
+them, and what to watch out for. Full reference: [rsuitejs.com/components/button](https://rsuitejs.com/components/button).
+
+A button triggers an **action** (save, submit, delete). If clicking it navigates to another page, use a link
+button (`href` or `as={Link}`), see [Link Button](#link-button).
+
+## Setup
+
+```bash
+npm install rsuite @mgs/ui
+```
+
+```tsx
+// Once, in your app entry (e.g. main.tsx)
+import 'rsuite/dist/rsuite.css'; // RSuite styles
+import '@mgs/ui/styles.css'; // MGS brand theme (load after RSuite)
+
+// Anywhere
+import { Button, IconButton, ButtonGroup, ButtonToolbar } from 'rsuite';
+```
+
+Optional: wrap the app in `<CustomProvider theme="light | dark | high-contrast">` to switch themes. Use the
+**Theme** menu in the Storybook toolbar to preview all three.
+
+## Playground
+
+<Canvas of={ButtonStories.Playground} sourceState="shown" />
+<Controls of={ButtonStories.Playground} />
+
+## Basic
+
+<Canvas of={ButtonStories.Basic} sourceState="shown" />
+
+`type` defaults to `"button"`, so a Button never submits a form by accident. Use `type="submit"` for a form's
+main action. All native button attributes work (`name`, `value`, `form`, `aria-*`, `data-*`, `ref`).
+
+## Appearance
+
+<Canvas of={ButtonStories.Appearance} sourceState="shown" />
+
+| `appearance`        | Use it for                                                   | Avoid                               |
+| ------------------- | ------------------------------------------------------------ | ----------------------------------- |
+| `default` (default) | Normal actions: _Cancel_, _Export_, _Edit_                   | The main call to action             |
+| `primary`           | The single most important action in a view: _Save_, _Create_ | More than one per section           |
+| `ghost`             | Secondary actions that need an outline, on busy backgrounds  | Main actions                        |
+| `subtle`            | Low-emphasis actions: toolbars, table rows                   | Anything that must be noticed       |
+| `link`              | Actions that should look like inline text links              | Real navigation: use `href` instead |
+
+## Colors
+
+<Canvas of={ButtonStories.Colors} sourceState="shown" />
+
+`color` accepts `red | orange | yellow | green | cyan | blue | violet`.
+
+- **Use `color="red"` with `appearance="primary"` for destructive actions** (_Delete_). The MGS theme sets a red that
+  meets contrast requirements.
+- ⚠️ **Contrast:** with RSuite's default palettes and white text, only `violet` meets WCAG AA (4.5:1). Measured:
+  red 3.7, blue 3.1, green 2.8, orange 2.4, cyan 2.3, yellow 1.8. Don't use other colors for text buttons unless
+  the theme overrides that palette (as it does for red). The Accessibility panel flags these.
+
+## Sizes
+
+<Canvas of={ButtonStories.Sizes} sourceState="shown" />
+
+`size`: `lg | md` (default) `| sm | xs`. Use `md` in forms and dialogs, `sm`/`xs` in dense tables and toolbars.
+Match the size of the inputs next to the button. Inside a `ButtonGroup`, set `size` on the group.
+
+## Loading
+
+<Canvas of={ButtonStories.Loading} sourceState="shown" />
+
+- Shows a centered spinner; **the button keeps its width** and blocks **mouse** clicks.
+- ⚠️ **Limitation:** Enter/Space still activate a focused loading button, and RSuite doesn't set `aria-busy`.
+  Guard the handler (`if (saving) return;`) and pass `aria-busy={saving}` as shown.
+- Don't use `disabled` for loading: a disabled button loses keyboard focus.
+
+## Disabled
+
+<Canvas of={ButtonStories.Disabled} sourceState="shown" />
+
+Uses the native `disabled` attribute: the button can't be focused or clicked, and screen readers announce it as
+unavailable. Users can't discover _why_ a button is disabled, so prefer keeping it enabled and explaining what's
+missing (for example, validate the form on submit).
+
+## Active
+
+<Canvas of={ButtonStories.Active} sourceState="shown" />
+
+- `active` shows a button as the current selection (for example the selected view in a group).
+- `toggleable` (new in RSuite 6) switches `active` on each click and calls `onToggle(active, event)`.
+- ⚠️ **Accessibility:** RSuite doesn't set `aria-pressed`. For toggle buttons, control `active` yourself and pass
+  `aria-pressed={active}`, so screen readers announce "pressed / not pressed".
+
+## Block / Full Width
+
+<Canvas of={ButtonStories.BlockFullWidth} sourceState="shown" />
+
+`block` stretches the button to its container's width. Use it for stacked actions on mobile and in narrow panels.
+`ButtonGroup` also accepts `block`.
+
+## With Icons
+
+<Canvas of={ButtonStories.WithIcons} sourceState="shown" />
+
+Use `startIcon` / `endIcon` with icons from `@rsuite/icons` (installed with RSuite), e.g.
+`import PlusIcon from '@rsuite/icons/Plus'`. Put leading icons at the start and direction arrows at the end.
+Icons are decorative; the label names the button.
+
+## IconButton
+
+<Canvas of={ButtonStories.IconButtons} sourceState="shown" />
+
+- `icon`: the icon element. `circle`: round shape. `placement`: `'start'` (default) or `'end'` when there is text.
+- ⚠️ **An icon-only button must have an `aria-label`**, describing the action (_"Delete row"_, not _"Trash"_).
+  RSuite's types don't require it, so the automated accessibility tests on these stories check it.
+- Use icon-only buttons only for universally understood icons (add, edit, delete, close, search).
+
+## ButtonGroup
+
+<Canvas of={ButtonStories.ButtonGroups} sourceState="shown" />
+
+Joins related buttons (alignment, view switchers). Props: `size`, `vertical`, `justified`, `divided`, `block`,
+`disabled` (applies to every button in it). It has `role="group"`; add an `aria-label` describing the group.
+
+## ButtonToolbar
+
+<Canvas of={ButtonStories.ButtonToolbars} sourceState="shown" />
+
+Lays out buttons and groups in a row with consistent spacing (it's an RSuite `Stack`, so `spacing`, `wrap` etc.
+work). It has `role="toolbar"`; add an `aria-label`. Focus moves with Tab; there is no arrow-key navigation.
+
+## Link Button
+
+<Canvas of={ButtonStories.LinkButton} sourceState="shown" />
+
+- `href` renders a real `<a>` styled as a button, so middle-click and "open in new tab" work. Add `target` / `rel`
+  as needed.
+- For client-side routing use `as`: `<Button as={Link} to="/projects">`.
+- A disabled link button gets `aria-disabled` and is removed from the tab order.
+- Never wrap a `<Button>` in an `<a>`, or navigate with `onClick`.
+
+## States
+
+<Canvas of={ButtonStories.States} sourceState="shown" />
+
+## Accessibility
+
+<Canvas of={ButtonStories.Accessibility} sourceState="shown" />
+
+| Key               | Action                                   |
+| ----------------- | ---------------------------------------- |
+| `Tab` / `⇧ Tab`   | Move focus to the next / previous button |
+| `Enter` / `Space` | Activate the focused button              |
+
+- Renders a native `<button>` (or `<a>` with `href`), so keyboard, forms and screen readers work out of the box.
+- The focus ring shows for keyboard focus only (`:focus-visible`) and uses `outline`, so it stays visible in
+  Windows High Contrast mode. The MGS theme makes it fully opaque (RSuite's default is 25% transparent).
+- The MGS brand blue meets WCAG AA contrast with white text (5.2:1). RSuite's default blue doesn't (3:1).
+- Use the **High contrast** theme in the toolbar to check the high-contrast mode.
+- Known gaps (see sections above): loading doesn't block the keyboard or set `aria-busy`; toggle buttons need
+  `aria-pressed`; icon-only buttons need `aria-label`. RSuite's ripple and spinner don't respect
+  "reduce motion"; disable the ripple app-wide with `<CustomProvider disableRipple>` if needed.
+
+## Customizing
+
+Customize with **RSuite's CSS variables**, never by overriding `.rs-btn` selectors. The MGS theme
+(`@mgs/ui/styles.css`) does this for the brand color, danger red and focus ring:
+
+```css
+:root {
+  --rs-primary-500: #2563eb; /* primary background */
+  --rs-primary-600: #1d4ed8; /* hover */
+  --rs-primary-700: #1e40af; /* pressed */
+  --rs-focus-ring-color: var(--rs-primary-500);
+}
+```
+
+For one-off layout tweaks use `className` or `style`; they are merged with RSuite's own.
+
+## API
+
+The Controls above list the most-used props. Full reference, including every native attribute:
+[Button](https://rsuitejs.com/components/button/#props-button),
+[IconButton](https://rsuitejs.com/components/button/#props-iconbutton),
+[ButtonGroup](https://rsuitejs.com/components/button/#props-buttongroup),
+[ButtonToolbar](https://rsuitejs.com/components/button/#props-buttontoolbar).
+
+<ArgTypes of={ButtonStories} />
