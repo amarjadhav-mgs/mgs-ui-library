@@ -1,0 +1,11 @@
+// Shared Sass mixins for MGS component styles. They output only CSS that reads --mgs-* tokens.
+// Use in a component: @use '../../styles/mixins';  →  @include mixins.focus-ring;
+
+// Keyboard focus ring, drawn outside the element so it is visible on any fill.
+// `outline` (not box-shadow) stays visible in Windows High Contrast / forced-colors mode.
+@mixin focus-ring {
+  &:focus-visible {
+    outline: var(--mgs-focus-ring-width) solid var(--mgs-color-focus-ring);
+    outline-offset: var(--mgs-focus-ring-offset);
+  }
+}

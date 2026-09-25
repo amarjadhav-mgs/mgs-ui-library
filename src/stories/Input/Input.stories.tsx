@@ -1,9 +1,8 @@
 import { useId, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
-import { Button, Input, InputGroup, PasswordInput, Textarea } from '@mgs/ui';
-import CloseIcon from '@rsuite/icons/Close';
-import SearchIcon from '@rsuite/icons/Search';
+import { Button, CloseIcon, Input, InputGroup, PasswordInput, SearchIcon, Textarea } from '@mgs/ui';
+import { source } from '../shared';
 
 // Values verified against rsuite 6.2.4. `xl` is in the Size type but has no input styles, so it's not offered.
 const sizes = ['lg', 'md', 'sm', 'xs'] as const;
@@ -22,11 +21,6 @@ function Field({ label, children }: { label: string; children: (id: string) => R
       {children(id)}
     </div>
   );
-}
-
-/** Short, copyable snippet for "Show code" instead of the full story source. */
-function source(code: string) {
-  return { docs: { source: { code, language: 'tsx' } } };
 }
 
 const meta = {
@@ -341,7 +335,7 @@ export const Accessibility: Story = {
     <div style={column}>
       <Field label="First name">{(id) => <Input id={id} onPressEnter={args.onPressEnter} />}</Field>
       <Field label="Last name">{(id) => <Input id={id} />}</Field>
-      <Button appearance="primary">Continue</Button>
+      <Button variant="primary">Continue</Button>
     </div>
   ),
   play: async ({ args, canvasElement }) => {

@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { DatePicker } from '@mgs/ui';
 import { axeViolations } from '../../test/axe';
+import { playStory, storiesWithPlay } from '../../test/stories';
 import * as stories from './DatePicker.stories';
 
 const allStories = composeStories(stories);
@@ -12,6 +13,11 @@ describe('DatePicker stories', () => {
   it.each(Object.entries(allStories))('%s has no axe violations', async (_name, Story) => {
     const { container } = render(<Story />);
     expect(await axeViolations(container)).toEqual([]);
+  });
+
+  // Runs each story's play function, as Storybook's Interactions panel does.
+  it.each(storiesWithPlay(allStories))('%s interactions pass', async (_name, Story) => {
+    await expect(playStory(Story)).resolves.toBeUndefined();
   });
 });
 

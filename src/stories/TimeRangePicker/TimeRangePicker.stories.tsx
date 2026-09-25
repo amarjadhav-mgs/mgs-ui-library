@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { TimeRangePicker, type DateRange } from '@mgs/ui';
 import { column, Field, source } from '../shared';
 
@@ -96,5 +96,28 @@ export const Controlled: Story = {
         </span>
       </div>
     );
+  },
+};
+
+/**
+ * Label the field and keep it editable: keyboard users should type both times. Enter opens the popup, Esc closes it
+ * and focus stays in the field.
+ */
+export const Accessibility: Story = {
+  parameters: source(`<TimeRangePicker label="Opening hours" />`),
+  render: (args) => (
+    <div style={column}>
+      <TimeRangePicker label="Opening hours" onChange={args.onChange} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByLabelText('Opening hours');
+    await userEvent.tab();
+    await expect(input).toHaveFocus();
+    await expect(input).toHaveAttribute('placeholder', 'HH:mm ~ HH:mm');
+    await userEvent.keyboard('{Enter}');
+    await expect(await within(document.body).findByRole('dialog')).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
+    await expect(input).toHaveFocus();
   },
 };

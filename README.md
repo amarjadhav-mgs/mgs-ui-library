@@ -1,7 +1,9 @@
 # @mgs/ui
 
-The MGS UI component library. Its components are [RSuite 6](https://rsuitejs.com) components, re-exported with the
-MGS theme, so apps use **only `@mgs/ui`**. The Storybook documents each component.
+The MGS UI component library, built on [RSuite 6](https://rsuitejs.com). MGS owns the API, styles, docs and tests;
+RSuite provides proven behaviour underneath. Apps use **only `@mgs/ui`**. The Storybook documents each component.
+
+How the library is built, the design tokens and the API conventions are in [ARCHITECTURE.md](./ARCHITECTURE.md).
 
 ## Using it in an app
 
@@ -16,25 +18,29 @@ import '@mgs/ui/styles.css'; // component styles + MGS theme
 // Anywhere
 import { Button } from '@mgs/ui';
 
-<Button appearance="primary">Save</Button>;
+<Button variant="primary">Save</Button>;
 ```
 
 Optional: `<CustomProvider theme="light | dark | high-contrast">` from `@mgs/ui` switches themes.
 
 ### Available components
 
-- **General:** `Button`, `IconButton`, `ButtonGroup`, `ButtonToolbar`, `Badge`, `Avatar`, `AvatarGroup`
-- **Input:** `Input`, `InputGroup`, `Textarea`, `PasswordInput`
-- **Date & time:** `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`,
+- **MGS components:** `Button`, `IconButton`
+- **Icons:** `PlusIcon`, `EditIcon`, `TrashIcon`, `SearchIcon`, ... (see the Icons page in Storybook)
+- **General (RSuite):** `ButtonGroup`, `ButtonToolbar`, `Badge`, `Avatar`, `AvatarGroup`
+- **Input (RSuite):** `Input`, `InputGroup`, `Textarea`, `PasswordInput`
+- **Date & time (RSuite):** `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`,
   `TimeRangePicker`, plus the `DateRange` type and date rules (`beforeToday`, `afterToday`, `allowedMaxDays`, ...)
-- **Other:** `CustomProvider`
+- **Other (RSuite):** `CustomProvider`
 
-Each component's `...Props` type is exported too.
+Each component's `...Props` type is exported too. MGS components have their own API (see Storybook); RSuite
+components keep RSuite's API.
 
 ### Theming
 
-`styles.css` contains RSuite's styles plus the MGS theme (`src/theme/mgs-theme.css`), which only overrides RSuite's
-CSS variables (`--rs-*`). Never override `.rs-*` class selectors.
+`styles.css` contains RSuite's styles plus the MGS design tokens and theme (`src/styles/`). Customize with the
+`--mgs-*` tokens (for example `--mgs-color-primary`); never override `--rs-*` variables or `.rs-*` class selectors.
+See [ARCHITECTURE.md → Styling](./ARCHITECTURE.md#styling).
 
 ## Developing
 
@@ -61,6 +67,9 @@ A pre-commit hook (Husky + lint-staged) lints and formats staged files automatic
 
 ## Adding a component
 
+First answer "What does MGS own here?" ([ARCHITECTURE.md](./ARCHITECTURE.md#what-does-mgs-own-here)). An MGS-owned
+component or pattern follows the component structure and API conventions there. For an **RSuite re-export**:
+
 1. Re-export it from RSuite in `src/index.ts` (component and its `...Props` type).
 2. Document it:
 
@@ -75,8 +84,10 @@ Rules:
 
 - Use the installed RSuite version's API only; check its type definitions in `node_modules/rsuite/esm/<Component>`.
 - Apps, stories and docs import from `@mgs/ui`, never from `rsuite` directly.
-- Don't wrap or re-implement RSuite components unless there's a clear MGS requirement.
-- Brand changes go in `src/theme/mgs-theme.css` via `--rs-*` variables.
+- Don't wrap or re-implement RSuite components unless MGS owns something real (API, behaviour, accessibility, styling
+  or an ERP pattern).
+- Colours and other visual changes go in the tokens (`src/styles/tokens.scss`, `themes.scss`); only
+  `src/styles/rsuite-bridge.scss` sets `--rs-*` variables.
 
 ## Git workflow
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { allowedMaxDays, beforeToday, combine, DateRangePicker, type DateRange } from '@mgs/ui';
 import { column, EXAMPLE_DATE, Field, source } from '../shared';
 
@@ -179,5 +179,45 @@ export const Controlled: Story = {
         </span>
       </div>
     );
+  },
+};
+
+/**
+ * Label the field and keep it editable: typing the range is the reliable keyboard path, because the calendar popup has
+ * no arrow-key navigation. Enter opens the popup, Esc closes it and focus stays in the field.
+ */
+export const Accessibility: Story = {
+  parameters: source(`<label htmlFor="period">Report period</label>
+<DateRangePicker id="period" format="dd/MM/yyyy" aria-describedby="period-help" />
+<p id="period-help">Type both dates: dd/mm/yyyy ~ dd/mm/yyyy.</p>`),
+  render: (args) => (
+    <div style={column}>
+      <Field label="Report period">
+        {(id) => (
+          <>
+            <DateRangePicker
+              id={id}
+              format="dd/MM/yyyy"
+              onChange={args.onChange}
+              aria-describedby={`${id}-help`}
+            />
+            <p id={`${id}-help`} style={{ margin: '4px 0 0', fontSize: 13 }}>
+              Type both dates: dd/mm/yyyy ~ dd/mm/yyyy.
+            </p>
+          </>
+        )}
+      </Field>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByLabelText('Report period');
+    await userEvent.tab();
+    await expect(input).toHaveFocus();
+    await expect(input).toHaveAccessibleDescription('Type both dates: dd/mm/yyyy ~ dd/mm/yyyy.');
+    // Enter opens the calendar popup; Esc closes it and keeps focus in the field.
+    await userEvent.keyboard('{Enter}');
+    await expect(await within(document.body).findByRole('dialog')).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
+    await expect(input).toHaveFocus();
   },
 };

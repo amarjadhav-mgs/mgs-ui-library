@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { afterToday, allowedMaxDays, beforeToday, DateRangePicker } from '@mgs/ui';
 import { axeViolations } from '../../test/axe';
+import { playStory, storiesWithPlay } from '../../test/stories';
 import * as stories from './DateRangePicker.stories';
 
 const allStories = composeStories(stories);
@@ -11,6 +12,11 @@ describe('DateRangePicker stories', () => {
   it.each(Object.entries(allStories))('%s has no axe violations', async (_name, Story) => {
     const { container } = render(<Story />);
     expect(await axeViolations(container)).toEqual([]);
+  });
+
+  // Runs each story's play function, as Storybook's Interactions panel does.
+  it.each(storiesWithPlay(allStories))('%s interactions pass', async (_name, Story) => {
+    await expect(playStory(Story)).resolves.toBeUndefined();
   });
 });
 

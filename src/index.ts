@@ -1,15 +1,25 @@
-// @mgs/ui: the MGS component library. Components are RSuite 6 components, re-exported unchanged,
-// so apps only ever import from '@mgs/ui':
+// @mgs/ui: the MGS component library (see ARCHITECTURE.md). Apps only ever import from '@mgs/ui':
 //   import { Button } from '@mgs/ui';
 //   import '@mgs/ui/styles.css';
+// Order matters: RSuite's styles first, then MGS tokens, the semantic theme and the bridge that overrides RSuite's
+// variables. Component styles come after all of them, through the component exports below.
 import 'rsuite/dist/rsuite.css';
-import './theme/mgs-theme.css';
+import './styles/tokens.scss';
+import './styles/themes.scss';
+import './styles/rsuite-bridge.scss';
 
+// MGS-owned components
+export * from './components/Button';
+export * from './components/IconButton';
+
+// MGS icons
+export * from './icons';
+
+// RSuite re-exports: MGS adds nothing to these beyond the theme (ARCHITECTURE.md → What does MGS own here?).
 export {
   Avatar,
   AvatarGroup,
   Badge,
-  Button,
   ButtonGroup,
   ButtonToolbar,
   Calendar,
@@ -18,7 +28,6 @@ export {
   DatePicker,
   DateRangeInput,
   DateRangePicker,
-  IconButton,
   Input,
   InputGroup,
   PasswordInput,
@@ -31,7 +40,6 @@ export type {
   AvatarProps,
   BadgeProps,
   ButtonGroupProps,
-  ButtonProps,
   ButtonToolbarProps,
   CalendarProps,
   CustomProviderProps,
@@ -39,7 +47,6 @@ export type {
   DatePickerProps,
   DateRangeInputProps,
   DateRangePickerProps,
-  IconButtonProps,
   InputGroupProps,
   InputProps,
   PasswordInputProps,

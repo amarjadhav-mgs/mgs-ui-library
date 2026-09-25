@@ -1,0 +1,12 @@
+// MGS Button. Colours, sizes, hover/pressed states and the loading spinner come from RSuite's Button, themed through
+// src/styles/rsuite-bridge.scss. This file adds only what MGS owns.
+@use '../../styles/mixins';
+
+.mgs-button {
+  // RSuite draws its focus ring inside the button in the primary colour, which disappears on primary buttons.
+  @include mixins.focus-ring;
+}
+
+.mgs-button__icon {
+  display: inline-flex;
+}

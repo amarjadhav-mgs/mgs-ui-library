@@ -1,0 +1,8 @@
+// MGS IconButton. The square shape, icon size, colours and loading spinner come from RSuite's IconButton, themed
+// through src/styles/rsuite-bridge.scss. This file adds only what MGS owns.
+@use '../../styles/mixins';
+
+.mgs-icon-button {
+  // RSuite draws its focus ring inside the button in the primary colour, which disappears on primary buttons.
+  @include mixins.focus-ring;
+}

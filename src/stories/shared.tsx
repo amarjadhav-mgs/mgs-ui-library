@@ -1,4 +1,4 @@
-// Helpers shared by the date/time stories (story-only; excluded from the library build).
+// Helpers shared by stories (story-only; excluded from the library build).
 import { useId, type CSSProperties, type ReactNode } from 'react';
 
 export const row: CSSProperties = {

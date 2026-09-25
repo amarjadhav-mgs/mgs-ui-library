@@ -37,11 +37,11 @@
     "react-dom": ">=18"
   },
   "dependencies": {
+    "@rsuite/icons": "^1.4.1",
     "rsuite": "^6.2.4"
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.3",
-    "@rsuite/icons": "^1.4.1",
     "@storybook/addon-a11y": "^10.6.0",
     "@storybook/addon-docs": "^10.6.0",
     "@storybook/react-vite": "^10.6.0",
@@ -61,6 +61,7 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "remark-gfm": "^4.0.1",
+    "sass": "^1.105.0",
     "storybook": "^10.6.0",
     "typescript": "^7.0.2",
     "vite": "^8.3.0",

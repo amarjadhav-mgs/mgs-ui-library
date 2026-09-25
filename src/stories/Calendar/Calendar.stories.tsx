@@ -118,3 +118,29 @@ export const Controlled: Story = {
     await expect(canvas.getByText('Selected: Thu Sep 10 2026')).toBeInTheDocument();
   },
 };
+
+/**
+ * The month is a grid named after the month, each day is named by its full date, and only the selected day is in the
+ * Tab order. The month buttons are named and work with Enter. For keyboard date entry, prefer DatePicker.
+ */
+export const Accessibility: Story = {
+  parameters: source(`<Calendar compact defaultValue={new Date(2026, 8, 24)} />`),
+  render: (args) => (
+    <div style={narrow}>
+      <Calendar compact defaultValue={EXAMPLE_DATE} onChange={args.onChange} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('grid', { name: 'Sep 2026' })).toBeInTheDocument();
+    const selected = canvas.getByRole('gridcell', { name: '24 Sep 2026' });
+    await expect(selected).toHaveAttribute('aria-selected', 'true');
+    // Only the selected day is a Tab stop.
+    const tabbable = canvas.getAllByRole('gridcell').filter((cell) => cell.tabIndex === 0);
+    await expect(tabbable).toEqual([selected]);
+    // The month buttons are named and keyboard operable.
+    canvas.getByRole('button', { name: 'Next month' }).focus();
+    await userEvent.keyboard('{Enter}');
+    await expect(canvas.getByRole('grid', { name: 'Oct 2026' })).toBeInTheDocument();
+  },
+};

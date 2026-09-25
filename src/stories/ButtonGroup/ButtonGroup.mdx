@@ -1,0 +1,68 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as ButtonGroupStories from './ButtonGroup.stories';
+
+<Meta of={ButtonGroupStories} />
+
+# ButtonGroup and ButtonToolbar
+
+`ButtonGroup` joins related buttons (alignment, view switchers). `ButtonToolbar` lays out buttons and groups in a row
+with even spacing. Both work with the MGS [Button](?path=/docs/components-button--docs) and
+[IconButton](?path=/docs/components-iconbutton--docs).
+
+**Component:** RSuite 6.2.4 `ButtonGroup` and `ButtonToolbar`, re-exported by `@mgs/ui` ·
+[RSuite reference](https://rsuitejs.com/components/button-group)
+
+## Usage
+
+```tsx
+import { Button, ButtonGroup, ButtonToolbar } from '@mgs/ui';
+```
+
+## Examples
+
+### Basic
+
+<Canvas of={ButtonGroupStories.Basic} sourceState="shown" />
+
+### Group props
+
+<Canvas of={ButtonGroupStories.GroupProps} sourceState="shown" />
+
+`size` and `disabled` on the group apply to every button in it that doesn't set its own. `vertical` stacks the buttons;
+`justified` gives them equal widths across the container.
+
+### Toolbar
+
+<Canvas of={ButtonGroupStories.Toolbar} sourceState="shown" />
+
+`ButtonToolbar` is an RSuite `Stack`, so `spacing` and `wrap` work.
+
+## Accessibility
+
+<Canvas of={ButtonGroupStories.Accessibility} sourceState="shown" />
+
+- `ButtonGroup` has `role="group"` and `ButtonToolbar` has `role="toolbar"`. **Add an `aria-label`** to each, so screen
+  readers announce their purpose.
+- Focus moves between buttons with Tab; there is no arrow-key navigation. Buttons in a disabled group are skipped.
+
+## Playground
+
+<Canvas of={ButtonGroupStories.Playground} sourceState="shown" />
+<Controls of={ButtonGroupStories.Playground} />
+
+## Props
+
+### `<ButtonGroup>`
+
+| Property  | Type `(Default)`       | Description                          |
+| --------- | ---------------------- | ------------------------------------ |
+| block     | boolean                | Full width                           |
+| disabled  | boolean                | Disable every button in the group    |
+| divided   | boolean                | Dividing lines between buttons       |
+| justified | boolean                | Equal-width buttons across the width |
+| size      | `'sm' \| 'md' \| 'lg'` | Size of every button in the group    |
+| vertical  | boolean                | Stack buttons vertically             |
+
+### `<ButtonToolbar>`
+
+Accepts `Stack` props such as `spacing` and `wrap`, plus `role` (default `'toolbar'`).

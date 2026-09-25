@@ -1,0 +1,111 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as IconButtonStories from './IconButton.stories';
+
+<Meta of={IconButtonStories} />
+
+# IconButton
+
+A square button that shows only an icon, for compact, well-known actions: edit, delete, settings, close. It shares
+Button's `variant`, `size`, `disabled` and `loading` behaviour, and requires an accessible name.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `IconButton` · Related:
+[Button](?path=/docs/components-button--docs) (with a label),
+[ButtonGroup and ButtonToolbar](?path=/docs/components-buttongroup--docs) (grouping),
+[Icons](?path=/story/foundation-icons--gallery)
+
+## When to use
+
+- For frequent, well-known actions where space is tight: table row actions, toolbars, panel headers.
+- **Not when the meaning could be unclear.** Use a [Button](?path=/docs/components-button--docs) with a label and
+  `leftIcon`: a visible label beats a guessed icon.
+- **Not for the main action of a view.** It deserves a labelled `primary` Button.
+
+## Import
+
+```tsx
+import { IconButton, TrashIcon } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<IconButton aria-label="Delete order 1042" variant="danger" onClick={remove}>
+  <TrashIcon />
+</IconButton>
+```
+
+The icon is the child. `aria-label` is required: it is the button's only accessible name.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={IconButtonStories.Basic} sourceState="shown" />
+
+### Variants
+
+<Canvas of={IconButtonStories.Variants} sourceState="shown" />
+
+`variant`: `primary | secondary` (default) `| danger | ghost`, with the same meaning as on Button. There is no `link`
+variant: without text, there is nothing to look like a link.
+
+### States
+
+<Canvas of={IconButtonStories.States} sourceState="shown" />
+
+Same as Button: `disabled` can't be focused or clicked; `loading` replaces the icon with a spinner, sets `aria-busy`,
+ignores clicks and Enter/Space, and keeps focus.
+
+### Sizes
+
+<Canvas of={IconButtonStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`, the same heights as Button, so they line up in a row.
+
+### Advanced examples
+
+<Canvas of={IconButtonStories.Advanced} sourceState="shown" />
+
+Row actions in a table, with labels that name the row and a `title` tooltip; a toolbar group; and a custom icon, which
+is hidden from screen readers like the MGS icons.
+
+## Do and don't
+
+| Do                                                               | Don't                                                                      |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Name the action and its target: `aria-label="Delete order 1042"` | Name the icon: `aria-label="Trash"`, or repeat the same label on every row |
+| Add a `title` so sighted users get a tooltip                     | Rely on the icon alone for unusual actions                                 |
+| Use `size="sm"` in dense tables and toolbars                     | Mix icon button sizes in one row                                           |
+| Use icons from `@mgs/ui`                                         | Import icons from `@rsuite/icons`                                          |
+
+## ERP usage
+
+- **Table rows:** Edit and Delete (`variant="danger"`) at the end of the row, `size="sm"`, labelled with the row
+  (_"Edit order 1042"_).
+- **Toolbars:** group related actions in a `ButtonGroup` with an `aria-label` (_Export_: download, copy link).
+- **Panels and dialogs:** a close button in the header (`aria-label="Close"`).
+- **Filters:** a filter or settings icon next to a search field.
+
+## Accessibility
+
+<Canvas of={IconButtonStories.Accessibility} sourceState="shown" />
+
+| Key               | Action                                   |
+| ----------------- | ---------------------------------------- |
+| `Tab` / `⇧ Tab`   | Move focus to the next / previous button |
+| `Enter` / `Space` | Activate the focused button              |
+
+- ⚠️ **`aria-label` is required** (TypeScript enforces it). Sighted users don't see it, so add `title` for a tooltip,
+  or use a labelled Button where space allows.
+- The icon is hidden from screen readers, including custom icons you pass in.
+- The focus ring is drawn outside the button, and colours meet WCAG AA in every theme (as Button).
+
+## API
+
+<Canvas of={IconButtonStories.Playground} sourceState="shown" />
+<Controls of={IconButtonStories.Playground} />
+
+Every native `<button>` attribute and event also works (`title`, `type`, `onClick`, `aria-*`, `data-*`, `className`,
+`style`), and `ref` points at the `<button>`.
