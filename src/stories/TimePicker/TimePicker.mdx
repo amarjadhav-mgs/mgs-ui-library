@@ -1,0 +1,89 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as TimePickerStories from './TimePicker.stories';
+
+<Meta of={TimePickerStories} />
+
+# TimePicker
+
+Used to select a time (hours, minutes, optionally seconds) from a popup or by typing.
+
+**Component:** RSuite 6.2.4 `TimePicker`, re-exported by `@mgs/ui` ·
+[RSuite reference](https://rsuitejs.com/components/time-picker)
+
+## Usage
+
+```tsx
+import { TimePicker } from '@mgs/ui';
+import '@mgs/ui/styles.css'; // once, in your app entry
+```
+
+TimePicker is a [DatePicker](?path=/docs/components-datepicker--docs) with a time format, so labelling, sizes,
+`appearance`, `block`, states and keyboard behaviour work the same way.
+
+## Examples
+
+### Basic
+
+<Canvas of={TimePickerStories.Basic} sourceState="shown" />
+
+### Label
+
+<Canvas of={TimePickerStories.Label} sourceState="shown" />
+
+### Format
+
+<Canvas of={TimePickerStories.Format} sourceState="shown" />
+
+`format` decides which columns appear (default `HH:mm` from the locale): `HH:mm:ss` adds seconds; `hh:mm aa` with
+`showMeridiem` gives a 12-hour clock with AM/PM.
+
+### Limit options
+
+<Canvas of={TimePickerStories.LimitOptions} sourceState="shown" />
+
+`hideHours(hour)`, `hideMinutes(minute)` and `hideSeconds(second)` remove options from the popup, e.g. outside
+working hours or every 15 minutes. Unlike DatePicker there's no `shouldDisableHour` on TimePicker. They only change what
+the popup offers, so validate the time on submit too.
+
+### Sizes
+
+<Canvas of={TimePickerStories.Sizes} sourceState="shown" />
+
+`size`: `lg | md` (default) `| sm | xs`.
+
+### Controlled
+
+<Canvas of={TimePickerStories.Controlled} sourceState="shown" />
+
+`onChange(value, event)` receives a `Date` (only its time matters), or `null` when cleared.
+
+## Accessibility
+
+- Label it with `label` or `<label htmlFor>` + `id`, like DatePicker.
+- **Typing is the most reliable input** for keyboard and screen-reader users; keep `editable` on (the default) and
+  make the format clear. `Enter` opens the popup, `Esc` / `Tab` close it.
+- A default **Now** shortcut sets the current time.
+
+## Playground
+
+<Canvas of={TimePickerStories.Playground} sourceState="shown" />
+<Controls of={TimePickerStories.Playground} />
+
+## Props
+
+### `<TimePicker>`
+
+| Property                              | Type `(Default)`                         | Description                   |
+| ------------------------------------- | ---------------------------------------- | ----------------------------- |
+| defaultValue / value                  | Date \| null                             | Initial / controlled value    |
+| disabled / readOnly / plaintext       | boolean                                  | States                        |
+| editable                              | boolean `(true)`                         | Allow typing                  |
+| format                                | string `('HH:mm')`                       | date-fns time format          |
+| hideHours / hideMinutes / hideSeconds | `(value: number, date: Date) => boolean` | Hide options                  |
+| label                                 | ReactNode                                | Label inside the field        |
+| loading                               | boolean                                  | Loading indicator             |
+| onChange                              | `(value: Date \| null, event) => void`   | Called when the time changes  |
+| showMeridiem                          | boolean                                  | AM/PM (with a 12-hour format) |
+| size                                  | `'lg' \| 'md' \| 'sm' \| 'xs'` `('md')`  | Size                          |
+
+Plus the shared picker props: `appearance`, `block`, `cleanable`, `placement`, `ranges`, `onOk`, `onClean`, `id`.

@@ -23,8 +23,13 @@ Optional: `<CustomProvider theme="light | dark | high-contrast">` from `@mgs/ui`
 
 ### Available components
 
-`Avatar`, `AvatarGroup`, `Badge`, `Button`, `IconButton`, `ButtonGroup`, `ButtonToolbar`, `Input`, `InputGroup`, `Textarea`, `PasswordInput`,
-`CustomProvider` (and their `...Props` types).
+- **General:** `Button`, `IconButton`, `ButtonGroup`, `ButtonToolbar`, `Badge`, `Avatar`, `AvatarGroup`
+- **Input:** `Input`, `InputGroup`, `Textarea`, `PasswordInput`
+- **Date & time:** `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`,
+  `TimeRangePicker`, plus the `DateRange` type and date rules (`beforeToday`, `afterToday`, `allowedMaxDays`, ...)
+- **Other:** `CustomProvider`
+
+Each component's `...Props` type is exported too.
 
 ### Theming
 

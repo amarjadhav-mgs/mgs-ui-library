@@ -1,0 +1,88 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as CalendarStories from './Calendar.stories';
+
+<Meta of={CalendarStories} />
+
+# Calendar
+
+A month view for showing dates and events, or picking a day inline (without a popup).
+
+**Component:** RSuite 6.2.4 `Calendar`, re-exported by `@mgs/ui` ·
+[RSuite reference](https://rsuitejs.com/components/calendar)
+
+## Usage
+
+```tsx
+import { Calendar } from '@mgs/ui';
+import '@mgs/ui/styles.css'; // once, in your app entry
+```
+
+To let users **enter** a date in a form, use [DatePicker](?path=/docs/components-datepicker--docs) instead: it
+supports typing and full keyboard navigation.
+
+## Examples
+
+### Basic
+
+<Canvas of={CalendarStories.Basic} sourceState="shown" />
+
+### Compact
+
+<Canvas of={CalendarStories.Compact} sourceState="shown" />
+
+`compact` for sidebars and small cards; `bordered` adds cell borders.
+
+### Week start
+
+<Canvas of={CalendarStories.WeekStart} sourceState="shown" />
+
+The first day of the week comes from the locale (Monday with the default locale). `isoWeek` forces Monday;
+`weekStart` (0 = Sunday … 6 = Saturday) sets any day and **wins over `isoWeek`**.
+
+### Custom cells
+
+<Canvas of={CalendarStories.CustomCells} sourceState="shown" />
+
+`renderCell(date)` adds content to a day (events, counts); `cellClassName(date)` adds a class.
+
+### Controlled
+
+<Canvas of={CalendarStories.Controlled} sourceState="shown" />
+
+`onSelect(date)` fires when a day is clicked; `onChange(date)` when the value changes. `onMonthChange(date)` fires
+when the month changes.
+
+## Accessibility
+
+- The month is a `grid` named after the month ("Sep 2026"); each day is a `gridcell` announced with its full date
+  ("24 Sep 2026") and `aria-selected`. The navigation buttons are named ("Previous month", "Next month", "Today").
+- ⚠️ **Limited keyboard support:** only the **selected** day is in the Tab order, and there's no arrow-key movement
+  between days in the standalone Calendar. Keyboard users can still change months with the buttons, but choosing
+  another day is hard. For date entry use **DatePicker**, which has arrow-key navigation and typing.
+- Content from `renderCell` isn't part of the day's name, so list events elsewhere as text too.
+
+## Playground
+
+<Canvas of={CalendarStories.Playground} sourceState="shown" />
+<Controls of={CalendarStories.Playground} />
+
+## Props
+
+### `<Calendar>`
+
+| Property      | Type `(Default)`                      | Description                                             |
+| ------------- | ------------------------------------- | ------------------------------------------------------- |
+| bordered      | boolean                               | Show cell borders                                       |
+| cellClassName | `(date: Date) => string \| undefined` | Class name for a day cell                               |
+| compact       | boolean                               | Compact size                                            |
+| defaultValue  | Date                                  | Initial value (uncontrolled)                            |
+| isoWeek       | boolean                               | Weeks start on Monday                                   |
+| locale        | CalendarLocale                        | Texts and date formats                                  |
+| onChange      | `(date: Date) => void`                | Called when the value changes                           |
+| onMonthChange | `(date: Date) => void`                | Called when the month changes                           |
+| onSelect      | `(date: Date) => void`                | Called when a day is clicked                            |
+| renderCell    | `(date: Date) => ReactNode`           | Extra content in a day cell                             |
+| value         | Date                                  | Value (controlled)                                      |
+| weekStart     | `0–6` (locale's first day)            | First day of the week (0 = Sunday); wins over `isoWeek` |
+
+Plus `className`, `style` and native `div` attributes.

@@ -1,0 +1,97 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as DateInputStories from './DateInput.stories';
+
+<Meta of={DateInputStories} />
+
+# DateInput
+
+A text field for typing a date (or date and time) in a fixed format, without a calendar popup.
+
+**Component:** RSuite 6.2.4 `DateInput`, re-exported by `@mgs/ui` ·
+[RSuite reference](https://rsuitejs.com/components/date-input)
+
+## Usage
+
+```tsx
+import { DateInput } from '@mgs/ui';
+import '@mgs/ui/styles.css'; // once, in your app entry
+```
+
+For most forms prefer [DatePicker](?path=/docs/components-datepicker--docs): it allows typing **and** picking from a
+calendar. Use DateInput when a calendar doesn't help, e.g. a date of birth typed from memory.
+
+## Examples
+
+### Basic
+
+<Canvas of={DateInputStories.Basic} sourceState="shown" />
+
+Label it like any input: `<label htmlFor>` + `id`, or `aria-label`.
+
+### Format
+
+<Canvas of={DateInputStories.Format} sourceState="shown" />
+
+`format` uses [date-fns tokens](https://date-fns.org/docs/format), default `yyyy-MM-dd`, and is also the
+placeholder. Include `HH:mm` for a time.
+
+### Sizes
+
+<Canvas of={DateInputStories.Sizes} sourceState="shown" />
+
+`size`: `lg | md` (default) `| sm | xs`.
+
+### Disabled / Read-only / Plaintext
+
+<Canvas of={DateInputStories.States} sourceState="shown" />
+
+### Controlled
+
+<Canvas of={DateInputStories.Controlled} sourceState="shown" />
+
+⚠️ **While the date is incomplete, `onChange` receives an `Invalid Date`**, not `null`. Check it before using the
+value:
+
+```tsx
+const isComplete = date !== null && !Number.isNaN(date.getTime());
+```
+
+## Accessibility
+
+<Canvas of={DateInputStories.Accessibility} sourceState="shown" />
+
+| Key         | Action                                          |
+| ----------- | ----------------------------------------------- |
+| Digits      | Type into the selected part (day, month, year…) |
+| `←` / `→`   | Move to the previous / next part                |
+| `↑` / `↓`   | Increase / decrease the selected part           |
+| `Backspace` | Clear the selected part                         |
+
+- Typing edits the **selected part**: click the part you want, or move with `←` / `→`, then type. When a part is
+  full, it moves on to the next.
+- Because this is less familiar than a plain text field, describe the format in help text linked with
+  `aria-describedby`, as in the example.
+- Everything else (label, `aria-*`, `required`) works as on [Input](?path=/docs/components-input--docs).
+
+## Playground
+
+<Canvas of={DateInputStories.Playground} sourceState="shown" />
+<Controls of={DateInputStories.Playground} />
+
+## Props
+
+### `<DateInput>`
+
+| Property     | Type `(Default)`                        | Description                                            |
+| ------------ | --------------------------------------- | ------------------------------------------------------ |
+| defaultValue | Date \| null                            | Initial value (uncontrolled)                           |
+| disabled     | boolean                                 | Not focusable or editable                              |
+| format       | string `('yyyy-MM-dd')`                 | date-fns format; also the placeholder                  |
+| onChange     | `(value: Date \| null, event) => void`  | Called on every change (Invalid Date while incomplete) |
+| placeholder  | string                                  | Defaults to the format                                 |
+| plaintext    | boolean                                 | Show the value as text                                 |
+| readOnly     | boolean                                 | Not editable                                           |
+| size         | `'lg' \| 'md' \| 'sm' \| 'xs'` `('md')` | Size                                                   |
+| value        | Date \| null                            | Value (controlled)                                     |
+
+Plus the [Input](?path=/docs/components-input--docs) props (`id`, `name`, `aria-*`, `className`, `style`...).
