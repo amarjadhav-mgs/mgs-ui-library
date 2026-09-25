@@ -1,0 +1,77 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as TimeRangePickerStories from './TimeRangePicker.stories';
+
+<Meta of={TimeRangePickerStories} />
+
+# TimeRangePicker
+
+Used to select a start and end time, e.g. opening hours or a meeting slot.
+
+**Component:** RSuite 6.2.4 `TimeRangePicker`, re-exported by `@mgs/ui` ·
+[RSuite reference](https://rsuitejs.com/components/time-range-picker)
+
+## Usage
+
+```tsx
+import { TimeRangePicker, type DateRange } from '@mgs/ui';
+import '@mgs/ui/styles.css'; // once, in your app entry
+```
+
+TimeRangePicker is a [DateRangePicker](?path=/docs/components-daterangepicker--docs) with a time format, so
+labelling, sizes, states and keyboard behaviour work the same way.
+
+## Examples
+
+### Basic
+
+<Canvas of={TimeRangePickerStories.Basic} sourceState="shown" />
+
+Label it with `label` or `<label htmlFor>` + `id`.
+
+### Format
+
+<Canvas of={TimeRangePickerStories.Format} sourceState="shown" />
+
+`format` (default `HH:mm`) for 24-hour times, or `hh:mm aa` with `showMeridiem` for AM/PM; `character` is the text
+between the two times (default `' ~ '`).
+
+### Sizes
+
+<Canvas of={TimeRangePickerStories.Sizes} sourceState="shown" />
+
+### Controlled
+
+<Canvas of={TimeRangePickerStories.Controlled} sourceState="shown" />
+
+`onChange(value, event)` receives `[start, end]` as `Date`s (only the times matter), or `null` when cleared. Check
+that the end is after the start when you validate the form.
+
+## Accessibility
+
+- Label it with `label` or `<label htmlFor>` + `id`.
+- Keyboard users should **type** the times (keep `editable` on, the default); `Enter` opens the popup and
+  `Esc` / `Tab` close it.
+
+## Playground
+
+<Canvas of={TimeRangePickerStories.Playground} sourceState="shown" />
+<Controls of={TimeRangePickerStories.Playground} />
+
+## Props
+
+### `<TimeRangePicker>`
+
+| Property                              | Type `(Default)`                            | Description                   |
+| ------------------------------------- | ------------------------------------------- | ----------------------------- |
+| character                             | string `(' ~ ')`                            | Text between the two times    |
+| defaultValue / value                  | DateRange \| null                           | Initial / controlled value    |
+| disabled                              | boolean                                     | Disable the picker            |
+| editable                              | boolean `(true)`                            | Allow typing                  |
+| format                                | string `('HH:mm')`                          | date-fns time format          |
+| hideHours / hideMinutes / hideSeconds | `(value: number, date: Date) => boolean`    | Hide options                  |
+| label                                 | ReactNode                                   | Label inside the field        |
+| onChange                              | `(value: DateRange \| null, event) => void` | Called when the range changes |
+| showMeridiem                          | boolean                                     | AM/PM (with a 12-hour format) |
+| size                                  | `'lg' \| 'md' \| 'sm' \| 'xs'` `('md')`     | Size                          |
+
+Plus the shared picker props: `appearance`, `block`, `cleanable`, `placement`, `ranges`, `onOk`, `onClean`, `id`.

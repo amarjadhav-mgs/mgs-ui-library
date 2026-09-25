@@ -1,0 +1,82 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as DateRangeInputStories from './DateRangeInput.stories';
+
+<Meta of={DateRangeInputStories} />
+
+# DateRangeInput
+
+A text field for typing a start and end date in a fixed format, without a calendar popup.
+
+**Component:** RSuite 6.2.4 `DateRangeInput`, re-exported by `@mgs/ui` ·
+[RSuite reference](https://rsuitejs.com/components/date-range-input)
+
+## Usage
+
+```tsx
+import { DateRangeInput, type DateRangeInputProps } from '@mgs/ui';
+import '@mgs/ui/styles.css'; // once, in your app entry
+```
+
+For most forms prefer [DateRangePicker](?path=/docs/components-daterangepicker--docs), which also offers a calendar
+and shortcuts. DateRangeInput works like [DateInput](?path=/docs/components-dateinput--docs), for two dates.
+
+## Examples
+
+### Basic
+
+<Canvas of={DateRangeInputStories.Basic} sourceState="shown" />
+
+Label it like any input: `<label htmlFor>` + `id`, or `aria-label`.
+
+### Format
+
+<Canvas of={DateRangeInputStories.Format} sourceState="shown" />
+
+`format` applies to each date (default `dd/MM/yyyy` from the locale); `character` is the text between them (default
+`' ~ '`). Both together form the placeholder.
+
+### Disabled / Read-only / Plaintext
+
+<Canvas of={DateRangeInputStories.States} sourceState="shown" />
+
+### Controlled
+
+<Canvas of={DateRangeInputStories.Controlled} sourceState="shown" />
+
+⚠️ The value is `[start, end]` where **either end can be `null` or an Invalid Date** while the range is incomplete.
+Check both before using them:
+
+```tsx
+const isComplete = range?.every((d) => d && !Number.isNaN(d.getTime()));
+```
+
+Also check that the start isn't after the end when you validate the form.
+
+## Accessibility
+
+Same keyboard model as [DateInput](?path=/docs/components-dateinput--docs): typing edits the selected part (click it,
+or move with `←` / `→`), `↑` / `↓` change it. Describe the expected format in help text linked with
+`aria-describedby`.
+
+## Playground
+
+<Canvas of={DateRangeInputStories.Playground} sourceState="shown" />
+<Controls of={DateRangeInputStories.Playground} />
+
+## Props
+
+### `<DateRangeInput>`
+
+| Property     | Type `(Default)`                                               | Description                   |
+| ------------ | -------------------------------------------------------------- | ----------------------------- |
+| character    | string `(' ~ ')`                                               | Text between the two dates    |
+| defaultValue | `[Date \| null, Date \| null]` \| null                         | Initial value (uncontrolled)  |
+| disabled     | boolean                                                        | Not focusable or editable     |
+| format       | string `('dd/MM/yyyy')`                                        | date-fns format for each date |
+| onChange     | `(value: [Date \| null, Date \| null] \| null, event) => void` | Called on every change        |
+| plaintext    | boolean                                                        | Show the value as text        |
+| readOnly     | boolean                                                        | Not editable                  |
+| size         | `'lg' \| 'md' \| 'sm' \| 'xs'` `('md')`                        | Size                          |
+| value        | `[Date \| null, Date \| null]` \| null                         | Value (controlled)            |
+
+Plus the [Input](?path=/docs/components-input--docs) props (`id`, `name`, `aria-*`, `className`, `style`...).

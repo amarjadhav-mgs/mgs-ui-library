@@ -1,0 +1,146 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as DatePickerStories from './DatePicker.stories';
+
+<Meta of={DatePickerStories} />
+
+# DatePicker
+
+Used to select a single date, or a date and time, from a calendar popup or by typing.
+
+**Component:** RSuite 6.2.4 `DatePicker`, re-exported by `@mgs/ui` ·
+[RSuite reference](https://rsuitejs.com/components/date-picker)
+
+## Usage
+
+```tsx
+import { DatePicker } from '@mgs/ui';
+import '@mgs/ui/styles.css'; // once, in your app entry
+```
+
+Label every picker: either the `label` prop (shown inside the field) or a `<label htmlFor>` pointing at the
+picker's `id`. Both are connected to the input for screen readers.
+
+## Examples
+
+### Basic
+
+<Canvas of={DatePickerStories.Basic} sourceState="shown" />
+
+### Label
+
+<Canvas of={DatePickerStories.Label} sourceState="shown" />
+
+### Sizes
+
+<Canvas of={DatePickerStories.Sizes} sourceState="shown" />
+
+`size`: `lg | md` (default) `| sm | xs`.
+
+### Appearance / Block
+
+<Canvas of={DatePickerStories.AppearanceAndBlock} sourceState="shown" />
+
+`appearance`: `default | subtle` (no border). `block` fills the container's width.
+
+### Format
+
+<Canvas of={DatePickerStories.Format} sourceState="shown" />
+
+`format` uses [date-fns tokens](https://date-fns.org/docs/format) (`yyyy`, `MM`, `dd`, `HH`, `mm`, `aa`...), default
+`yyyy-MM-dd`. It's also the placeholder. Add hours/minutes to pick a time too; `showMeridiem` shows AM/PM for 12-hour
+formats.
+
+### One tap
+
+<Canvas of={DatePickerStories.OneTap} sourceState="shown" />
+
+`oneTap` selects and closes on the first click, with no OK button.
+
+### Disabled dates
+
+<Canvas of={DatePickerStories.DisabledDates} sourceState="shown" />
+
+`shouldDisableDate(date)` returns `true` for dates that can't be chosen. There are also `shouldDisableHour`,
+`shouldDisableMinute` and `shouldDisableSecond` for time formats.
+
+### Shortcuts
+
+<Canvas of={DatePickerStories.Shortcuts} sourceState="shown" />
+
+`ranges` adds shortcut buttons to the popup: `{ label, value }`, where `value` is a date or a function returning one.
+
+### Week numbers
+
+<Canvas of={DatePickerStories.WeekNumbers} sourceState="shown" />
+
+`showWeekNumbers` shows week numbers. The first day of the week comes from the locale (Monday with the default
+locale); `isoWeek` forces Monday, and `weekStart` (0 = Sunday … 6 = Saturday) sets any day and wins over `isoWeek`.
+
+### Disabled / Read-only / Plaintext / Loading
+
+<Canvas of={DatePickerStories.States} sourceState="shown" />
+
+### Controlled
+
+<Canvas of={DatePickerStories.Controlled} sourceState="shown" />
+
+`onChange(value, event)` receives a `Date`, or `null` when cleared (`cleanable`, default `true`).
+
+## Accessibility
+
+<Canvas of={DatePickerStories.Accessibility} sourceState="shown" />
+
+| Key           | Action                                                         |
+| ------------- | -------------------------------------------------------------- |
+| Type          | Enter the date directly in the input (`editable`)              |
+| `Enter`       | Open the calendar; when it is open, select the highlighted day |
+| Arrow keys    | Move between days, once focus is in the calendar               |
+| `Esc` / `Tab` | Close the calendar                                             |
+
+- The input has `aria-haspopup="dialog"` and the popup is a `role="dialog"`. Calendar days are a `grid` whose cells
+  are announced with their full date.
+- **Keep `editable` on** (the default): typing is the fastest and most reliable way to enter a date for keyboard and
+  screen-reader users, especially for birth dates far in the past.
+- Show the expected format: it's the placeholder by default. Explain it in help text if it isn't obvious.
+- The clear (✕) button isn't in the Tab order; users can clear the field by deleting the text.
+
+## Playground
+
+<Canvas of={DatePickerStories.Playground} sourceState="shown" />
+<Controls of={DatePickerStories.Playground} />
+
+## Props
+
+### `<DatePicker>`
+
+| Property                      | Type `(Default)`                        | Description                                             |
+| ----------------------------- | --------------------------------------- | ------------------------------------------------------- |
+| appearance                    | `'default' \| 'subtle'` `('default')`   | Visual style                                            |
+| block                         | boolean                                 | Full width                                              |
+| calendarDefaultDate           | Date                                    | Month shown when there's no value                       |
+| cleanable                     | boolean `(true)`                        | Show the clear button                                   |
+| defaultValue                  | Date \| null                            | Initial value (uncontrolled)                            |
+| disabled                      | boolean                                 | Disable the picker                                      |
+| editable                      | boolean `(true)`                        | Allow typing the date                                   |
+| format                        | string `('yyyy-MM-dd')`                 | date-fns format; also the placeholder                   |
+| isoWeek                       | boolean                                 | Weeks start on Monday                                   |
+| label                         | ReactNode                               | Label inside the field                                  |
+| limitEndYear / limitStartYear | number                                  | Years shown after / before the current year             |
+| loading                       | boolean                                 | Show a loading indicator                                |
+| oneTap                        | boolean                                 | Select on first click, no OK button                     |
+| onChange                      | `(value: Date \| null, event) => void`  | Called when the value changes                           |
+| onClean / onOk / onSelect     | `(…) => void`                           | Clear, OK and day-click callbacks                       |
+| placement                     | Placement `('bottomStart')`             | Where the popup opens                                   |
+| plaintext                     | boolean                                 | Show the value as text                                  |
+| ranges                        | `{ label, value }[]`                    | Shortcut buttons                                        |
+| readOnly                      | boolean                                 | Not editable                                            |
+| shouldDisableDate             | `(date: Date) => boolean`               | Disable dates                                           |
+| showMeridiem                  | boolean                                 | AM/PM in the time picker                                |
+| showWeekNumbers               | boolean                                 | Show week numbers                                       |
+| size                          | `'lg' \| 'md' \| 'sm' \| 'xs'` `('md')` | Size                                                    |
+| value                         | Date \| null                            | Value (controlled)                                      |
+| weekStart                     | `0–6` (locale's first day)              | First day of the week (0 = Sunday); wins over `isoWeek` |
+
+Also `id`, `placeholder`, `container`, `open` / `defaultOpen`, `onOpen` / `onClose`, `renderValue`, `renderCell`,
+`shouldDisableHour` / `Minute` / `Second`, `hideHours` / `Minutes` / `Seconds`. `showMeridian` is deprecated: use
+`showMeridiem`.

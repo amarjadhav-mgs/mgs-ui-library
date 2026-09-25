@@ -1,0 +1,127 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as DateRangePickerStories from './DateRangePicker.stories';
+
+<Meta of={DateRangePickerStories} />
+
+# DateRangePicker
+
+Used to select a start and end date (or date and time) from a calendar popup or by typing.
+
+**Component:** RSuite 6.2.4 `DateRangePicker`, re-exported by `@mgs/ui` ·
+[RSuite reference](https://rsuitejs.com/components/date-range-picker)
+
+## Usage
+
+```tsx
+import { DateRangePicker, type DateRange } from '@mgs/ui';
+import '@mgs/ui/styles.css'; // once, in your app entry
+```
+
+Label it with the `label` prop or a `<label htmlFor>` pointing at its `id`.
+
+## Examples
+
+### Basic
+
+<Canvas of={DateRangePickerStories.Basic} sourceState="shown" />
+
+### Label
+
+<Canvas of={DateRangePickerStories.Label} sourceState="shown" />
+
+### One calendar
+
+<Canvas of={DateRangePickerStories.OneCalendar} sourceState="shown" />
+
+`showOneCalendar` shows one month instead of two, better on small screens.
+
+### Week / month selection
+
+<Canvas of={DateRangePickerStories.WeekOrMonth} sourceState="shown" />
+
+`hoverRange="week" | "month"` selects a whole week or month with one click; with `oneTap` the popup closes on
+that click.
+
+### Disabled dates
+
+<Canvas of={DateRangePickerStories.DisabledDates} sourceState="shown" />
+
+`shouldDisableDate` blocks dates. Ready-made rules, all importable from `@mgs/ui`: `beforeToday()`, `afterToday()`,
+`before(date)`, `after(date)`, `allowedDays(n)`, `allowedMaxDays(n)`, `allowedRange(start, end)`, and `combine(...)`
+to use several.
+
+⚠️ `allowedMaxDays` and `allowedDays` only limit **clicks in the calendar** while a range is being picked. A range
+typed into the input isn't checked, so **validate the range again on submit**.
+
+### Shortcuts
+
+<Canvas of={DateRangePickerStories.Shortcuts} sourceState="shown" />
+
+`ranges` replaces the default shortcuts (Today, Yesterday, Last 7 days): `{ label, value: [start, end] }`.
+
+### Format
+
+<Canvas of={DateRangePickerStories.Format} sourceState="shown" />
+
+`format` uses [date-fns tokens](https://date-fns.org/docs/format) (add `HH:mm` for times); `character` is the text
+between the two dates (default `' ~ '`).
+
+### Sizes
+
+<Canvas of={DateRangePickerStories.Sizes} sourceState="shown" />
+
+`size`: `lg | md` (default) `| sm | xs`.
+
+### Controlled
+
+<Canvas of={DateRangePickerStories.Controlled} sourceState="shown" />
+
+`onChange(value, event)` receives `[start, end]` (type `DateRange`), or `null` when cleared.
+
+## Accessibility
+
+| Key   | Action                                     |
+| ----- | ------------------------------------------ |
+| Type  | Enter both dates in the input (`editable`) |
+| `Tab` | Move to and from the field                 |
+| `Esc` | Close the calendar                         |
+
+- The input is labelled by `label` or `<label htmlFor>`; calendar days are announced with their full date.
+- ⚠️ **No arrow-key navigation in the calendar popup** (unlike DatePicker). Keyboard users should **type the range**,
+  so keep `editable` on (the default) and make the expected format clear, e.g. in help text.
+- Shortcut buttons (`ranges`) are reachable with Tab and are the quickest keyboard option for common ranges.
+
+## Playground
+
+<Canvas of={DateRangePickerStories.Playground} sourceState="shown" />
+<Controls of={DateRangePickerStories.Playground} />
+
+## Props
+
+### `<DateRangePicker>`
+
+| Property             | Type `(Default)`                                       | Description                                  |
+| -------------------- | ------------------------------------------------------ | -------------------------------------------- |
+| appearance           | `'default' \| 'subtle'` `('default')`                  | Visual style                                 |
+| block                | boolean                                                | Full width                                   |
+| character            | string `(' ~ ')`                                       | Text between the two dates                   |
+| cleanable            | boolean `(true)`                                       | Show the clear button                        |
+| defaultCalendarValue | DateRange                                              | Months shown when there's no value           |
+| defaultValue         | DateRange \| null                                      | Initial value (uncontrolled)                 |
+| disabled             | boolean                                                | Disable the picker                           |
+| editable             | boolean `(true)`                                       | Allow typing                                 |
+| format               | string                                                 | date-fns format                              |
+| hoverRange           | `'week' \| 'month' \| (date) => DateRange`             | Select a whole week / month                  |
+| isoWeek / weekStart  | boolean / `0–6`                                        | First day of the week (see DatePicker)       |
+| label                | ReactNode                                              | Label inside the field                       |
+| oneTap               | boolean                                                | Close on the first click (with `hoverRange`) |
+| onChange             | `(value: DateRange \| null, event) => void`            | Called when the range changes                |
+| placement            | Placement `('bottomStart')`                            | Where the popup opens                        |
+| ranges               | `{ label, value }[]`                                   | Shortcut buttons                             |
+| shouldDisableDate    | `(date, selectValue, selectedDone, target) => boolean` | Disable dates (see the ready-made rules)     |
+| showOneCalendar      | boolean `(false)`                                      | One month instead of two                     |
+| showWeekNumbers      | boolean                                                | Show week numbers                            |
+| size                 | `'lg' \| 'md' \| 'sm' \| 'xs'` `('md')`                | Size                                         |
+| value                | DateRange \| null                                      | Value (controlled)                           |
+
+`disabledDate` is deprecated: use `shouldDisableDate`. `showMeridian` is deprecated: use `showMeridiem`.
