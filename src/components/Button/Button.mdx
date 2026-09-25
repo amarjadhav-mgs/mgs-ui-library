@@ -107,6 +107,16 @@ A page header with one primary action, and a form whose submit button is busy wh
 last row shows. Screen readers still read the full label, but sighted users don't see it. Keep labels short (one to
 three words) and don't put buttons in columns narrower than their label.
 
+### Common usage
+
+- **Forms:** Cancel (`secondary`) then Save (`primary`, `type="submit"`, `loading` while saving), aligned to the end
+  of the form.
+- **Page headers:** the main action (_Create_) as `primary` with `leftIcon={<PlusIcon />}`; others (_Export_,
+  _Import_) as `secondary`.
+- **Dialogs:** the confirming action is `primary`, or `danger` for destructive confirmations (_Delete 3 items_).
+- **Tables and toolbars:** use `size="sm"`; for row actions use [IconButton](?path=/docs/components-iconbutton--docs).
+- **Bulk actions:** include the count in the label (_Archive 12 items_).
+
 ## Do and don't
 
 | Do                                                           | Don't                                                              |
@@ -117,16 +127,6 @@ three words) and don't put buttons in columns narrower than their label.
 | Use `danger` for destructive actions, and confirm them first | Use `danger` for emphasis or colour                                |
 | Explain why an action is unavailable when it's clicked       | Disable a button without telling the user why                      |
 | Use a link for navigation                                    | Use `onClick` to change pages                                      |
-
-## ERP usage
-
-- **Forms:** Cancel (`secondary`) then Save (`primary`, `type="submit"`, `loading` while saving), aligned to the end
-  of the form.
-- **Page headers:** the main action (_New order_) as `primary` with `leftIcon={<PlusIcon />}`; others (_Export_,
-  _Import_) as `secondary`.
-- **Dialogs:** the confirming action is `primary`, or `danger` for destructive confirmations (_Delete 3 invoices_).
-- **Tables and toolbars:** use `size="sm"`; for row actions use [IconButton](?path=/docs/components-iconbutton--docs).
-- **Bulk actions:** include the count in the label (_Approve 12 invoices_).
 
 ## Accessibility
 

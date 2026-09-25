@@ -85,7 +85,7 @@ Rules:
 - Use the installed RSuite version's API only; check its type definitions in `node_modules/rsuite/esm/<Component>`.
 - Apps, stories and docs import from `@mgs/ui`, never from `rsuite` directly.
 - Don't wrap or re-implement RSuite components unless MGS owns something real (API, behaviour, accessibility, styling
-  or an ERP pattern).
+  or a reusable pattern).
 - Colours and other visual changes go in the tokens (`src/styles/tokens.scss`, `themes.scss`); only
   `src/styles/rsuite-bridge.scss` sets `--rs-*` variables.
 

@@ -8,7 +8,7 @@ The contract for how `@mgs/ui` is built. Read it before adding or changing a com
 provides proven behaviour (keyboard, focus, popups, calendars, pickers) underneath, wherever it is useful.
 
 ```text
-                    ERP application
+                     Application
                           │  import { Button } from '@mgs/ui'
                           ↓
                        @mgs/ui
@@ -31,7 +31,7 @@ Ask this for every component. The answer decides where it goes:
 | ---------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------- |
 | Nothing: RSuite's API, behaviour and look are right, and the MGS theme covers the colours      | **RSuite re-export**    | `DatePicker`, `Calendar`, `Input`     |
 | A simpler or safer API, MGS defaults, behaviour or accessibility RSuite doesn't give, MGS look | **MGS-owned component** | `Button` (accessible `variant`s only) |
-| Several components always combined the same way in ERP screens                                 | **MGS pattern**         | `FormField`, `ConfirmDialog`          |
+| Several components always combined the same way across applications                            | **MGS pattern**         | `FormField`, `ConfirmDialog`          |
 
 Rules:
 
@@ -220,17 +220,26 @@ ComponentName              (Storybook sidebar)
 ├── States
 ├── Sizes
 ├── …                      component-specific stories: Loading, Disabled, With Icons, Controlled, Uncontrolled, …
-├── Advanced examples      ERP usage and edge cases
+├── Advanced examples      realistic usage and edge cases
 └── Accessibility
 ```
 
 ### `ComponentName.stories.tsx`: interactive examples
 
-- **Required exports**, in this order: `Playground`, `Basic`, `Variants` (or `Types`), `States`, `Sizes`, then
-  component-specific stories, then `Advanced` (named "Advanced examples") and `Accessibility`.
+- **Always required:** `Playground`, `Basic` and `Accessibility`.
+- **Required when the component has the concept.** The test reads the props documented in the stories' `argTypes`:
+  - `Variants` (or `Types`) when it has a `variant` (or `type`) prop;
+  - `States` when it has a state prop (`disabled`, `loading`, `readOnly`, `invalid`, `selected`, `checked`,
+    `open`);
+  - `Sizes` when it has a `size` prop.
+- **`Advanced`** (named "Advanced examples") is required too, unless the component has no realistic composed usage
+  to show; such an exemption is listed, with its reason, in `docs-structure.test.ts`.
+- Don't create a story for a concept the component doesn't have.
+- **Order:** `Playground`, `Basic`, `Variants` / `Types`, `States`, `Sizes`, component-specific stories,
+  `Advanced`, `Accessibility`.
 - `Playground` has Controls for the MGS props only (`parameters.controls.include`); native attributes also work but
   aren't listed. Never expose RSuite props in Controls or examples.
-- `Advanced` shows real ERP usage (form actions, table rows, toolbars) and edge cases.
+- `Advanced` shows realistic usage (a form, a table row, a toolbar, where they apply) and edge cases.
 - `Accessibility` has a `play` function that checks keyboard use and accessible names; the test file runs it.
 - Event props use Storybook actions (`fn()`) so clicks show in the Actions panel.
 - Each story sets a short "Show code" snippet with `source()` from `src/stories/shared.tsx`.
@@ -238,7 +247,7 @@ ComponentName              (Storybook sidebar)
 
 ### `ComponentName.mdx`: developer documentation
 
-Sections in this order (`##` headings, exactly these names):
+Sections in this order (`##` headings, exactly these names, and no others):
 
 1. `# ComponentName`, a one-paragraph overview, and a **Component:** line: its kind (MGS-owned built on RSuite X,
    MGS pattern) and links to related components.
@@ -246,13 +255,15 @@ Sections in this order (`##` headings, exactly these names):
 3. `## Import`
 4. `## Usage`: the smallest real example.
 5. `## Examples`: a `<Canvas of={…} />` for the stories, each with the guidance a developer needs (what each variant or
-   state is for). Don't repeat what the story already shows.
+   state is for). Don't repeat what the story already shows. Common usage patterns (forms, toolbars, dialogs, tables)
+   go here as a `###` subsection, where they apply.
 6. `## Do and don't`
-7. `## ERP usage`: common screens and patterns (forms, tables, toolbars, dialogs).
-8. `## Accessibility`: the Accessibility story, keyboard table, and what the component does or the developer must do.
-9. `## API`: the Playground with `<Controls />`, which Storybook generates from the types and `argTypes`, then native
+7. `## Accessibility`: the Accessibility story, keyboard table, and what the component does or the developer must do.
+8. `## API`: the Playground with `<Controls />`, which Storybook generates from the types and `argTypes`, then native
    attributes and `ref`. No hand-written props table.
-10. Optional `## Customizing`: tokens to override.
+9. Optional `## Customizing`: tokens to override, only when useful.
+
+Documentation describes reusable UI concepts. It doesn't assume a product domain or a particular application.
 
 ### RSuite re-exports
 
@@ -291,11 +302,11 @@ instead of the MGS-owned story set. Each lives in `src/stories/<Component>/` wit
 
 ## Future candidates
 
-Recorded, not built. Each is added only when a real ERP screen needs it, through "What does MGS own here?" and an
+Recorded, not built. Each is added only when a real application needs it, through "What does MGS own here?" and an
 approved design.
 
 | Candidate                   | Why it came up                                                                                                              | Status                                |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
 | `LinkButton`                | `Button` always renders a `<button>` (no `href` / `as`), so "go to page" actions need a link styled as a button             | Candidate                             |
-| IconButton `subtle` variant | Table row and toolbar actions often want a quiet, borderless icon button                                                    | Candidate, ERP-driven                 |
+| IconButton `subtle` variant | Table row and toolbar actions often want a quiet, borderless icon button                                                    | Candidate, driven by real usage       |
 | Button label wrapping       | A label wider than its button is cut off at both ends (RSuite's `nowrap` + `overflow: hidden`); documented in Button's docs | Known limitation, awaiting a decision |

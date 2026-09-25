@@ -309,7 +309,7 @@ export const WithIcons: Story = {
 };
 
 /**
- * ERP layouts: a page header with a single primary action, and a form whose submit button shows `loading` while
+ * Realistic layouts: a page header with a single primary action, and a form whose submit button shows `loading` while
  * saving, so a double click or a second Enter can't submit twice. Edge case: a label wider than its button is cut off
  * (it doesn't wrap), though screen readers still read all of it.
  */

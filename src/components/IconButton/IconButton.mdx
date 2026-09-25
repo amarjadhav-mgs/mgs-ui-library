@@ -71,6 +71,14 @@ ignores clicks and Enter/Space, and keeps focus.
 Row actions in a table, with labels that name the row and a `title` tooltip; a toolbar group; and a custom icon, which
 is hidden from screen readers like the MGS icons.
 
+### Common usage
+
+- **Table rows:** Edit and Delete (`variant="danger"`) at the end of the row, `size="sm"`, labelled with the row
+  (_"Edit item 1042"_).
+- **Toolbars:** group related actions in a `ButtonGroup` with an `aria-label` (_Export_: download, copy link).
+- **Panels and dialogs:** a close button in the header (`aria-label="Close"`).
+- **Filters:** a filter or settings icon next to a search field.
+
 ## Do and don't
 
 | Do                                                               | Don't                                                                      |
@@ -79,14 +87,6 @@ is hidden from screen readers like the MGS icons.
 | Add a `title` so sighted users get a tooltip                     | Rely on the icon alone for unusual actions                                 |
 | Use `size="sm"` in dense tables and toolbars                     | Mix icon button sizes in one row                                           |
 | Use icons from `@mgs/ui`                                         | Import icons from `@rsuite/icons`                                          |
-
-## ERP usage
-
-- **Table rows:** Edit and Delete (`variant="danger"`) at the end of the row, `size="sm"`, labelled with the row
-  (_"Edit order 1042"_).
-- **Toolbars:** group related actions in a `ButtonGroup` with an `aria-label` (_Export_: download, copy link).
-- **Panels and dialogs:** a close button in the header (`aria-label="Close"`).
-- **Filters:** a filter or settings icon next to a search field.
 
 ## Accessibility
 

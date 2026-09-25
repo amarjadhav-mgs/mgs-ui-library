@@ -171,7 +171,7 @@ export const Sizes: Story = {
 };
 
 /**
- * ERP layouts: row actions in a table (each label names its row, `title` adds a tooltip for sighted users) and a
+ * Realistic layouts: row actions in a table (each label names its row, `title` adds a tooltip for sighted users) and a
  * toolbar group. Edge case: a custom icon that isn't from `@mgs/ui` is hidden from screen readers too.
  */
 export const Advanced: Story = {
