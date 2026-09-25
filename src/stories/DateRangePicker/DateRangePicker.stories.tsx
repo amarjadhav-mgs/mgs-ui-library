@@ -10,7 +10,7 @@ const addDays = (date: Date, days: number) => new Date(date.getTime() + days * 8
 const EXAMPLE_RANGE: DateRange = [EXAMPLE_DATE, addDays(EXAMPLE_DATE, 6)];
 
 const meta = {
-  title: 'Components/DateRangePicker',
+  title: 'Components/Date & Time/DateRangePicker',
   component: DateRangePicker,
   // Docs come from DateRangePicker.mdx instead of the auto-generated page.
   tags: ['!autodocs'],

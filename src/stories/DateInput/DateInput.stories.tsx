@@ -8,7 +8,7 @@ import { column, EXAMPLE_DATE, Field, source } from '../shared';
 const sizes = ['lg', 'md', 'sm', 'xs'] as const;
 
 const meta = {
-  title: 'Components/DateInput',
+  title: 'Components/Date & Time/DateInput',
   component: DateInput,
   // Docs come from DateInput.mdx instead of the auto-generated page.
   tags: ['!autodocs'],

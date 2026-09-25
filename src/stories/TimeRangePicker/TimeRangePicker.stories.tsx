@@ -10,7 +10,7 @@ const time = (d: Date) => d.toTimeString().slice(0, 5);
 const EXAMPLE_RANGE: DateRange = [new Date(2026, 8, 24, 9, 0), new Date(2026, 8, 24, 17, 30)];
 
 const meta = {
-  title: 'Components/TimeRangePicker',
+  title: 'Components/Date & Time/TimeRangePicker',
   component: TimeRangePicker,
   // Docs come from TimeRangePicker.mdx instead of the auto-generated page.
   tags: ['!autodocs'],

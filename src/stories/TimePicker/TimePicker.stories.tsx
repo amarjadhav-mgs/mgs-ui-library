@@ -8,7 +8,7 @@ import { column, EXAMPLE_DATE, Field, source } from '../shared';
 const sizes = ['lg', 'md', 'sm', 'xs'] as const;
 
 const meta = {
-  title: 'Components/TimePicker',
+  title: 'Components/Date & Time/TimePicker',
   component: TimePicker,
   // Docs come from TimePicker.mdx instead of the auto-generated page.
   tags: ['!autodocs'],

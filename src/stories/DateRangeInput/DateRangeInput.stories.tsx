@@ -11,7 +11,7 @@ type RangeValue = DateRangeInputProps['value'];
 const EXAMPLE_RANGE: RangeValue = [EXAMPLE_DATE, new Date(2026, 8, 30)];
 
 const meta = {
-  title: 'Components/DateRangeInput',
+  title: 'Components/Date & Time/DateRangeInput',
   component: DateRangeInput,
   // Docs come from DateRangeInput.mdx instead of the auto-generated page.
   tags: ['!autodocs'],

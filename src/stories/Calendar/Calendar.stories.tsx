@@ -8,7 +8,7 @@ import { EXAMPLE_DATE, source } from '../shared';
 const narrow = { maxWidth: 420 };
 
 const meta = {
-  title: 'Components/Calendar',
+  title: 'Components/Date & Time/Calendar',
   component: Calendar,
   // Docs come from Calendar.mdx instead of the auto-generated page.
   tags: ['!autodocs'],
