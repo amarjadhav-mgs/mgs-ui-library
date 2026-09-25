@@ -1,0 +1,57 @@
+/*
+ * MGS tokens that are the same in every theme.
+ *   Colour palettes (--mgs-blue-*, --mgs-red-*): raw primitives. Components never read them; they read the semantic
+ *   colours in themes.scss, which pick a palette step per theme.
+ *   Scales (font, space, radius, focus): semantic scale tokens. Components read them directly.
+ * See ARCHITECTURE.md → Styling.
+ */
+:root {
+  /* ---- Colour palettes: raw primitives, never read by components ---- */
+
+  /* Brand blue */
+  --mgs-blue-50: #eff6ff;
+  --mgs-blue-100: #dbeafe;
+  --mgs-blue-200: #bfdbfe;
+  --mgs-blue-300: #93c5fd;
+  --mgs-blue-400: #60a5fa;
+  --mgs-blue-500: #3b82f6;
+  --mgs-blue-600: #2563eb;
+  --mgs-blue-700: #1d4ed8;
+  --mgs-blue-800: #1e40af;
+  --mgs-blue-900: #1e3a8a;
+  --mgs-blue-950: #172554;
+
+  /* Danger red */
+  --mgs-red-500: #dc2626;
+  --mgs-red-600: #c81e1e;
+  --mgs-red-700: #b91c1c;
+  --mgs-red-800: #991b1b;
+  --mgs-red-900: #7f1d1d;
+
+  /* ---- Scales: semantic scale tokens, read by components ---- */
+
+  /* Typography (same values RSuite uses, so nothing shifts) */
+  --mgs-font-family:
+    -apple-system, BlinkMacSystemFont, Arial, Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', STXihei, sans-serif;
+  --mgs-font-size-sm: 0.875rem;
+  --mgs-font-size-md: 1rem;
+  --mgs-font-size-lg: 1.125rem;
+
+  /* Spacing, for MGS components and patterns (RSuite keeps its own internal spacing) */
+  --mgs-space-xs: 0.25rem;
+  --mgs-space-sm: 0.5rem;
+  --mgs-space-md: 0.75rem;
+  --mgs-space-lg: 1rem;
+  --mgs-space-xl: 1.5rem;
+
+  /* Shape */
+  --mgs-radius-sm: 0.25rem;
+  --mgs-radius-md: 0.375rem;
+  --mgs-radius-lg: 0.5rem;
+  --mgs-radius-full: 62.5rem;
+
+  /* Focus */
+  --mgs-focus-ring-width: 2px;
+  --mgs-focus-ring-offset: 2px;
+}

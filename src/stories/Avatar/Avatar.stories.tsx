@@ -1,8 +1,8 @@
 import type { CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Avatar, AvatarGroup, Badge } from '@mgs/ui';
-import CheckIcon from '@rsuite/icons/Check';
-import PeoplesIcon from '@rsuite/icons/Peoples';
+import { expect, within } from 'storybook/test';
+import { Avatar, AvatarGroup, Badge, CheckIcon, UsersIcon } from '@mgs/ui';
+import { source } from '../shared';
 
 // Values verified against rsuite 6.2.4 (Avatar.d.ts, AvatarGroup.d.ts, rsuite.css size variables).
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const;
@@ -21,11 +21,6 @@ const photos = {
   sara: portrait('#6d28d9', '#e0ac69'),
   john: portrait('#9f1239', '#f1c27d'),
 };
-
-/** Short, copyable snippet for "Show code" instead of the full story source. */
-function source(code: string) {
-  return { docs: { source: { code, language: 'tsx' } } };
-}
 
 const meta = {
   title: 'Components/Avatar',
@@ -97,13 +92,13 @@ export const Initials: Story = {
 /** With no image, children or `alt`, Avatar shows a default person icon (announced as "Avatar"). */
 export const Icons: Story = {
   parameters: source(`<Avatar />                                  // default person icon
-<Avatar role="img" aria-label="Design team"><PeoplesIcon /></Avatar>`),
+<Avatar role="img" aria-label="Design team"><UsersIcon /></Avatar>`),
   render: () => (
     <div style={row}>
       <Avatar />
       <Avatar circle />
       <Avatar role="img" aria-label="Design team">
-        <PeoplesIcon />
+        <UsersIcon />
       </Avatar>
     </div>
   ),
@@ -253,4 +248,51 @@ export const WithBadge: Story = {
       </Badge>
     </div>
   ),
+};
+
+/**
+ * Name each person once: `alt` on photos, `role="img"` + `aria-label` on initials, and hide the avatar when the name
+ * is already visible next to it. Name the group.
+ */
+export const Accessibility: Story = {
+  parameters: source(`// Photo: alt is the person's name
+<Avatar src={url} alt="Asha Patel" />
+
+// Initials: role="img" + aria-label
+<Avatar role="img" aria-label="Ravi Kumar">RK</Avatar>
+
+// Name visible next to it: the avatar is decorative
+<Avatar aria-hidden>SM</Avatar> <span>Sara Mehta</span>
+
+// Group: aria-label
+<AvatarGroup aria-label="Project members">…</AvatarGroup>`),
+  render: () => (
+    <div style={column}>
+      <div style={row}>
+        <Avatar src={photos.asha} alt="Asha Patel" />
+        <Avatar role="img" aria-label="Ravi Kumar">
+          RK
+        </Avatar>
+      </div>
+      <div style={{ ...row, gap: 8 }}>
+        <Avatar aria-hidden>SM</Avatar>
+        <span>Sara Mehta</span>
+      </div>
+      <AvatarGroup aria-label="Project members">
+        <Avatar src={photos.john} alt="John Doe" />
+        <Avatar role="img" aria-label="and 2 more people">
+          +2
+        </Avatar>
+      </AvatarGroup>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole('img', { name: 'Asha Patel' })).toBeInTheDocument();
+    await expect(canvas.getByRole('img', { name: 'Ravi Kumar' })).toBeInTheDocument();
+    // The decorative avatar is hidden, so the visible text names Sara once.
+    await expect(canvas.getByText('SM').closest('[aria-hidden="true"]')).not.toBeNull();
+    const group = canvas.getByRole('group', { name: 'Project members' });
+    await expect(within(group).getAllByRole('img')).toHaveLength(2);
+  },
 };

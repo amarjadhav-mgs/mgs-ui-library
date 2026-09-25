@@ -1,10 +1,8 @@
 import { useState, type CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { Avatar, Badge, Button, IconButton } from '@mgs/ui';
-import CheckIcon from '@rsuite/icons/Check';
-import EmailIcon from '@rsuite/icons/Email';
-import NoticeIcon from '@rsuite/icons/Notice';
+import { Avatar, Badge, BellIcon, Button, CheckIcon, IconButton } from '@mgs/ui';
+import { source } from '../shared';
 
 // Values verified against rsuite 6.2.4. The placement type also lists left*/right* corners,
 // but RSuite has no styles for them, so only these four are offered.
@@ -14,11 +12,6 @@ const colors = ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'violet'] as
 
 const row: CSSProperties = { display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' };
 const column: CSSProperties = { display: 'grid', gap: 20 };
-
-/** Short, copyable snippet for "Show code" instead of the full story source. */
-function source(code: string) {
-  return { docs: { source: { code, language: 'tsx' } } };
-}
 
 const meta = {
   title: 'Components/Badge',
@@ -56,7 +49,9 @@ type Story = StoryObj<typeof meta>;
 /** Change any prop in the Controls panel. */
 export const Playground: Story = {
   parameters: source(`<Badge content={6}>
-  <IconButton icon={<NoticeIcon />} aria-label="Notifications, 6 unread" />
+  <IconButton aria-label="Notifications, 6 unread">
+    <BellIcon />
+  </IconButton>
 </Badge>`),
   args: {
     content: 6,
@@ -70,20 +65,25 @@ export const Playground: Story = {
   render: (args) => (
     <Badge {...args}>
       <IconButton
-        icon={<NoticeIcon />}
         aria-label={args.invisible ? 'Notifications' : `Notifications, ${args.content} unread`}
-      />
+      >
+        <BellIcon />
+      </IconButton>
     </Badge>
   ),
 };
 
 export const Basic: Story = {
   parameters: source(`<Badge content={6}>
-  <IconButton icon={<NoticeIcon />} aria-label="Notifications, 6 unread" />
+  <IconButton aria-label="Notifications, 6 unread">
+    <BellIcon />
+  </IconButton>
 </Badge>`),
   render: () => (
     <Badge content={6}>
-      <IconButton icon={<NoticeIcon />} aria-label="Notifications, 6 unread" />
+      <IconButton aria-label="Notifications, 6 unread">
+        <BellIcon />
+      </IconButton>
     </Badge>
   ),
 };
@@ -112,7 +112,7 @@ export const WithContent: Story = {
       <Badge compact color="green" placement="bottomEnd" content={<CheckIcon />}>
         <Avatar>TW</Avatar>
       </Badge>
-      <Badge compact content={<NoticeIcon />}>
+      <Badge compact content={<BellIcon />}>
         <Avatar>LB</Avatar>
       </Badge>
     </div>
@@ -138,11 +138,13 @@ export const Placement: Story = {
 /** If the wrapped element is round, use `shape="circle"` so the badge sits on its edge. */
 export const Shapes: Story = {
   parameters: source(`<Badge content={6} shape="rectangle">
-  <IconButton icon={<NoticeIcon />} aria-label="Notifications, 6 unread" />
+  <IconButton aria-label="Notifications, 6 unread">
+    <BellIcon />
+  </IconButton>
 </Badge>
 
 <Badge content={6} shape="circle">
-  <IconButton icon={<NoticeIcon />} circle aria-label="Notifications, 6 unread" />
+  <Avatar circle>AP</Avatar>
 </Badge>`),
   render: () => (
     <div style={column}>
@@ -156,21 +158,9 @@ export const Shapes: Story = {
       </div>
       <div style={row}>
         <Badge content={6} shape="rectangle">
-          <IconButton
-            icon={<NoticeIcon />}
-            size="sm"
-            appearance="primary"
-            aria-label="Notifications, 6 unread"
-          />
-        </Badge>
-        <Badge content={6} shape="circle">
-          <IconButton
-            icon={<NoticeIcon />}
-            circle
-            size="sm"
-            appearance="primary"
-            aria-label="Messages, 6 unread"
-          />
+          <IconButton size="sm" variant="primary" aria-label="Notifications, 6 unread">
+            <BellIcon />
+          </IconButton>
         </Badge>
       </div>
     </div>
@@ -206,25 +196,15 @@ export const Sizes: Story = {
 /** Fine-tune the position with `offset={[x, y]}` (numbers are pixels; strings like "20%" also work). */
 export const Offset: Story = {
   parameters: source(`<Badge content={6} shape="circle" offset={[5, 5]}>
-  <IconButton icon={<NoticeIcon />} circle appearance="subtle" aria-label="Notifications, 6 unread" />
+  <Avatar circle>AP</Avatar>
 </Badge>`),
   render: () => (
     <div style={row}>
       <Badge content={6} shape="circle">
-        <IconButton
-          icon={<NoticeIcon />}
-          circle
-          appearance="subtle"
-          aria-label="Notifications, 6 unread"
-        />
+        <Avatar circle>AP</Avatar>
       </Badge>
       <Badge content={6} shape="circle" offset={[5, 5]}>
-        <IconButton
-          icon={<EmailIcon />}
-          circle
-          appearance="subtle"
-          aria-label="Messages, 6 unread"
-        />
+        <Avatar circle>JD</Avatar>
       </Badge>
     </div>
   ),
@@ -247,7 +227,7 @@ export const Invisible: Story = {
           <Badge content="New" invisible={!show} />
         </div>
         <div>
-          <Button size="sm" toggleable active={show} onToggle={setShow} aria-pressed={show}>
+          <Button size="sm" aria-pressed={show} onClick={() => setShow(!show)}>
             Show badge
           </Button>
         </div>
@@ -279,14 +259,14 @@ export const WithoutChildren: Story = {
         <Badge content="6" />
         <Badge content="99+" />
         <Badge content="new" color="violet" />
-        <Badge compact content={<NoticeIcon />} />
+        <Badge compact content={<BellIcon />} />
       </div>
       <div style={{ ...row, gap: 8 }}>
         <Badge compact color="green" content={<CheckIcon />} />
         <span>Ready</span>
       </div>
       <div style={{ ...row, gap: 8 }}>
-        <Badge compact content={<NoticeIcon />} />
+        <Badge compact content={<BellIcon />} />
         <span>Error</span>
       </div>
     </div>
@@ -331,7 +311,9 @@ export const Colors: Story = {
 export const Accessibility: Story = {
   parameters: source(`// ✅ The count is part of the button's name
 <Badge content={unread}>
-  <IconButton icon={<NoticeIcon />} aria-label={\`Notifications, \${unread} unread\`} />
+  <IconButton aria-label={\`Notifications, \${unread} unread\`}>
+    <BellIcon />
+  </IconButton>
 </Badge>
 
 // ✅ Status dot + visible text (colour alone isn't enough)
@@ -339,7 +321,9 @@ export const Accessibility: Story = {
   render: () => (
     <div style={column}>
       <Badge content={3}>
-        <IconButton icon={<NoticeIcon />} aria-label="Notifications, 3 unread" />
+        <IconButton aria-label="Notifications, 3 unread">
+          <BellIcon />
+        </IconButton>
       </Badge>
       <div style={{ ...row, gap: 8 }}>
         <Badge color="green" />
@@ -347,4 +331,13 @@ export const Accessibility: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // The count is part of the button's name, so screen readers hear it with the action.
+    const bell = canvas.getByRole('button', { name: 'Notifications, 3 unread' });
+    await userEvent.tab();
+    await expect(bell).toHaveFocus();
+    // Colour alone isn't enough: the status dot has visible text next to it.
+    await expect(canvas.getByText('Online')).toBeVisible();
+  },
 };

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { DateInput } from '@mgs/ui';
 import { column, EXAMPLE_DATE, Field, source } from '../shared';
 
@@ -154,4 +154,14 @@ export const Accessibility: Story = {
       </Field>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByLabelText('Date of birth');
+    // Tab reaches the field; the format help is its accessible description.
+    await userEvent.tab();
+    await expect(input).toHaveFocus();
+    await expect(input).toHaveAccessibleDescription(
+      'Format: dd/mm/yyyy. Click the day, then type.',
+    );
+    await expect(input).toHaveAttribute('placeholder', 'dd/MM/yyyy');
+  },
 };

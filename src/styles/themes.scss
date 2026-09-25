@@ -1,0 +1,87 @@
+/*
+ * MGS semantic tokens: what a colour is for, per theme. MGS components read only these.
+ *
+ * Themes use RSuite's own switches, so one switch themes MGS and RSuite components together:
+ *   <CustomProvider theme="dark"> puts .rs-theme-dark on <body>; data-theme="dark" works on any element.
+ *
+ * Every token is either
+ *   owned   - MGS sets the value (brand, danger, focus); rsuite-bridge.scss passes it on to RSuite, or
+ *   adopted - MGS names RSuite's value (neutrals, and everything in high contrast).
+ * A token that points at a theme-dependent variable must be declared in every theme block:
+ * var() inside a custom property is resolved where it is declared, then inherited as a fixed value.
+ */
+
+/* Adopted in every theme: RSuite's neutrals. */
+:root,
+[data-theme],
+.rs-theme-light,
+.rs-theme-dark,
+.rs-theme-high-contrast {
+  --mgs-color-text: var(--rs-text-primary);
+  --mgs-color-text-secondary: var(--rs-text-secondary);
+  --mgs-color-text-disabled: var(--rs-text-disabled);
+  --mgs-color-text-error: var(--rs-text-error);
+  --mgs-color-surface: var(--rs-body);
+  --mgs-color-border: var(--rs-border-primary);
+}
+
+/* Light (default) */
+:root {
+  /* White text on primary: 5.2:1, hover 6.7:1, pressed 8.7:1 (WCAG AA 4.5:1). */
+  --mgs-color-primary: var(--mgs-blue-600);
+  --mgs-color-primary-hover: var(--mgs-blue-700);
+  --mgs-color-primary-active: var(--mgs-blue-800);
+  --mgs-color-on-primary: #fff;
+
+  /* White text on danger: 4.8:1, hover 6.5:1, pressed 8.3:1. */
+  --mgs-color-danger: var(--mgs-red-500);
+  --mgs-color-danger-hover: var(--mgs-red-700);
+  --mgs-color-danger-active: var(--mgs-red-800);
+  --mgs-color-on-danger: #fff;
+
+  --mgs-color-link: var(--mgs-blue-800);
+  --mgs-color-focus-ring: var(--mgs-blue-600);
+
+  /* Input borders must reach 3:1 (WCAG 1.4.11); RSuite's default border is 1.3:1. */
+  --mgs-color-border-control: var(--rs-gray-500);
+}
+
+/* Dark: the same brand fills as light (white text passes on them); lighter blue for text and focus on dark surfaces. */
+:is([data-theme='dark'], .rs-theme-dark) {
+  --mgs-color-primary: var(--mgs-blue-600);
+  --mgs-color-primary-hover: var(--mgs-blue-700);
+  --mgs-color-primary-active: var(--mgs-blue-800);
+  --mgs-color-on-primary: #fff;
+
+  --mgs-color-danger: var(--mgs-red-500);
+  --mgs-color-danger-hover: var(--mgs-red-700);
+  --mgs-color-danger-active: var(--mgs-red-800);
+  --mgs-color-on-danger: #fff;
+
+  /* 7:1 on the dark background. */
+  --mgs-color-link: var(--mgs-blue-400);
+  --mgs-color-focus-ring: var(--mgs-blue-400);
+
+  /* RSuite's dark border is 1.6:1. */
+  --mgs-color-border-control: var(--rs-gray-400);
+}
+
+/*
+ * High contrast: RSuite's high-contrast theme (yellow on black) is an accessibility mode, not a brand surface,
+ * so MGS adopts it. The bridge only fixes its colour pairs that fail WCAG AA.
+ */
+:is([data-theme='high-contrast'], .rs-theme-high-contrast) {
+  --mgs-color-primary: var(--rs-btn-primary-bg);
+  --mgs-color-primary-hover: var(--rs-btn-primary-hover-bg);
+  --mgs-color-primary-active: var(--rs-btn-primary-active-bg);
+  --mgs-color-on-primary: var(--rs-btn-primary-text);
+
+  --mgs-color-danger: var(--rs-red-500);
+  --mgs-color-danger-hover: var(--rs-red-600);
+  --mgs-color-danger-active: var(--rs-red-700);
+  --mgs-color-on-danger: var(--rs-gray-0);
+
+  --mgs-color-link: var(--rs-text-link);
+  --mgs-color-focus-ring: var(--rs-focus-ring-color);
+  --mgs-color-border-control: var(--rs-gray-100);
+}

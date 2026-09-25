@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { TimePicker } from '@mgs/ui';
 import { column, EXAMPLE_DATE, Field, source } from '../shared';
 
@@ -117,5 +117,29 @@ export const Controlled: Story = {
         <span style={{ fontSize: 14 }}>{time ? time.toTimeString().slice(0, 5) : 'No time'}</span>
       </div>
     );
+  },
+};
+
+/**
+ * Label the field and keep it editable: typing is the most reliable input. Enter opens the popup, Esc closes it and
+ * focus stays in the field.
+ */
+export const Accessibility: Story = {
+  parameters: source(`<label htmlFor="start">Start time</label>
+<TimePicker id="start" />`),
+  render: (args) => (
+    <div style={column}>
+      <Field label="Start time">{(id) => <TimePicker id={id} onChange={args.onChange} />}</Field>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByLabelText('Start time');
+    await userEvent.tab();
+    await expect(input).toHaveFocus();
+    await expect(input).toHaveAttribute('placeholder', 'HH:mm');
+    await userEvent.keyboard('{Enter}');
+    await expect(await within(document.body).findByRole('dialog')).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
+    await expect(input).toHaveFocus();
   },
 };

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { fn } from 'storybook/test';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { DateRangeInput, type DateRangeInputProps } from '@mgs/ui';
 import { column, EXAMPLE_DATE, Field, source } from '../shared';
 
@@ -115,5 +115,38 @@ const isComplete = range?.every((d) => d && !Number.isNaN(d.getTime()));
         </span>
       </div>
     );
+  },
+};
+
+/**
+ * Label the field and describe the expected format in help text linked with `aria-describedby`. Typing works as in
+ * DateInput: select a part (click it, or ← / →), then type; ↑ / ↓ change it.
+ */
+export const Accessibility: Story = {
+  parameters: source(`<label htmlFor="period">Report period</label>
+<DateRangeInput id="period" aria-describedby="period-help" />
+<p id="period-help">Format: dd/mm/yyyy ~ dd/mm/yyyy. Click a part, then type.</p>`),
+  render: (args) => (
+    <div style={column}>
+      <Field label="Report period">
+        {(id) => (
+          <>
+            <DateRangeInput id={id} onChange={args.onChange} aria-describedby={`${id}-help`} />
+            <p id={`${id}-help`} style={{ margin: '4px 0 0', fontSize: 13 }}>
+              Format: dd/mm/yyyy ~ dd/mm/yyyy. Click a part, then type.
+            </p>
+          </>
+        )}
+      </Field>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByLabelText('Report period');
+    await userEvent.tab();
+    await expect(input).toHaveFocus();
+    await expect(input).toHaveAccessibleDescription(
+      'Format: dd/mm/yyyy ~ dd/mm/yyyy. Click a part, then type.',
+    );
+    await expect(input).toHaveAttribute('placeholder', 'dd/MM/yyyy ~ dd/MM/yyyy');
   },
 };

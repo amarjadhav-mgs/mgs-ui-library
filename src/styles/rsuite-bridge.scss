@@ -1,0 +1,104 @@
+/*
+ * RSuite theme bridge: sets RSuite's --rs-* variables from MGS tokens, so RSuite components use the MGS visual language.
+ * The only file allowed to set --rs-* variables. Never style .rs-* classes here beyond variables.
+ *
+ * Loaded after rsuite.css and not in a cascade layer: rsuite.css is unlayered, and layered rules would lose to it.
+ * Each theme block repeats RSuite's theme selectors so it overrides RSuite's values on the same element.
+ */
+
+/* Every theme */
+:root {
+  --rs-font-family-base: var(--mgs-font-family);
+  --rs-radius-sm: var(--mgs-radius-sm);
+  --rs-radius-md: var(--mgs-radius-md);
+  --rs-radius-lg: var(--mgs-radius-lg);
+  --rs-radius-full: var(--mgs-radius-full);
+}
+
+/* Inputs: borders reach 3:1 contrast in every theme. */
+.rs-input,
+.rs-input-group {
+  --rs-border-primary: var(--mgs-color-border-control);
+}
+
+/* Default badge (no `color`): RSuite's red with white text is 3.7:1; the MGS danger red is 4.8:1. */
+.rs-badge:not([data-color]) {
+  --rs-badge-bg: var(--mgs-color-danger);
+}
+
+/*
+ * Light. `:not()` keeps this off an <html data-theme="dark|high-contrast">, where it would otherwise beat RSuite's
+ * own theme block. RSuite uses primary-500 for fills, 600 for hover and 700 for pressed and links.
+ */
+:root:not([data-theme='dark'], [data-theme='high-contrast']) {
+  --rs-primary-50: var(--mgs-blue-50);
+  --rs-primary-100: var(--mgs-blue-100);
+  --rs-primary-200: var(--mgs-blue-200);
+  --rs-primary-300: var(--mgs-blue-300);
+  --rs-primary-400: var(--mgs-blue-400);
+  --rs-primary-500: var(--mgs-color-primary);
+  --rs-primary-600: var(--mgs-color-primary-hover);
+  --rs-primary-700: var(--mgs-color-primary-active);
+  --rs-primary-800: var(--mgs-blue-900);
+  --rs-primary-900: var(--mgs-blue-950);
+
+  /* Red buttons (<Button color="red">): 500 fill, 700 hover, 800 pressed. */
+  --rs-red-500: var(--mgs-color-danger);
+  --rs-red-600: var(--mgs-red-600);
+  --rs-red-700: var(--mgs-color-danger-hover);
+  --rs-red-800: var(--mgs-color-danger-active);
+  --rs-red-900: var(--mgs-red-900);
+
+  /* RSuite's focus ring is 25% transparent; MGS makes it fully visible. */
+  --rs-focus-ring-color: var(--mgs-color-focus-ring);
+
+  /* Avatar initials: RSuite puts white on gray-300 (1.4:1); gray-600 is 4.8:1. */
+  --rs-avatar-bg: var(--rs-gray-600);
+}
+
+/*
+ * Dark. RSuite's dark theme uses primary-500 for links and text on dark surfaces, 700 for fills, and lightens fills
+ * on hover. The ramp follows those roles; button hover/pressed are set explicitly so white text keeps passing.
+ */
+:is([data-theme='dark'], .rs-theme-dark) {
+  --rs-primary-50: var(--mgs-blue-50);
+  --rs-primary-100: var(--mgs-blue-50);
+  --rs-primary-200: var(--mgs-blue-100);
+  --rs-primary-300: var(--mgs-blue-200);
+  --rs-primary-400: var(--mgs-blue-300);
+  --rs-primary-500: var(--mgs-color-link);
+  --rs-primary-600: var(--mgs-blue-500);
+  --rs-primary-700: var(--mgs-color-primary);
+  --rs-primary-800: var(--mgs-color-primary-hover);
+  --rs-primary-900: var(--mgs-color-primary-active);
+
+  --rs-btn-primary-bg: var(--mgs-color-primary);
+  --rs-btn-primary-hover-bg: var(--mgs-color-primary-hover);
+  --rs-btn-primary-active-bg: var(--mgs-color-primary-active);
+  --rs-btn-primary-text: var(--mgs-color-on-primary);
+
+  /* Pressed default (MGS secondary) button: white on RSuite's gray-300 is 3.4:1; gray-400 is 5.1:1. */
+  --rs-btn-default-active-bg: var(--rs-gray-400);
+
+  --rs-focus-ring-color: var(--mgs-color-focus-ring);
+}
+
+/*
+ * Dark red buttons (MGS <Button variant="danger">): RSuite lightens them on hover and press, which drops white text
+ * below 4.5:1. Use the same danger fills as light instead.
+ */
+:is([data-theme='dark'], .rs-theme-dark) .rs-btn[data-color='red'] {
+  --rs-btn-primary-bg: var(--mgs-color-danger);
+  --rs-btn-primary-hover-bg: var(--mgs-color-danger-hover);
+  --rs-btn-primary-active-bg: var(--mgs-color-danger-active);
+  --rs-btn-primary-text: var(--mgs-color-on-danger);
+}
+
+/*
+ * High contrast: RSuite's high-contrast theme is used as is (see themes.scss), except where one of its colour pairs
+ * fails WCAG AA.
+ * Red buttons (MGS danger): RSuite puts dark text on dark red (2.4:1); white text is 5:1 or more in every state.
+ */
+:is([data-theme='high-contrast'], .rs-theme-high-contrast) .rs-btn[data-color='red'] {
+  --rs-btn-primary-text: var(--mgs-color-on-danger);
+}
