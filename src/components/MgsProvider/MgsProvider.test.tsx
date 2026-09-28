@@ -92,6 +92,17 @@ describe('MgsProvider', () => {
     expect(screen.getByLabelText('Time')).toHaveAttribute('placeholder', 'hh:mm aa');
   });
 
+  it('en-IN: dd/MM/yyyy and 24-hour time, like en-GB', () => {
+    render(
+      <MgsProvider locale="en-IN">
+        <DatePicker label="Date" />
+        <TimePicker label="Time" />
+      </MgsProvider>,
+    );
+    expect(screen.getByLabelText('Date')).toHaveAttribute('placeholder', 'dd/MM/yyyy');
+    expect(screen.getByLabelText('Time')).toHaveAttribute('placeholder', 'HH:mm');
+  });
+
   it('removes the theme class from <body> when the last provider unmounts', () => {
     const { unmount } = render(<MgsProvider theme="dark">App</MgsProvider>);
     expect(document.body).toHaveClass('rs-theme-dark');

@@ -22,12 +22,13 @@ import { Button } from '@mgs/ui';
 <Button variant="primary">Save</Button>;
 ```
 
-Wrap the app once in `<MgsProvider theme="light | dark | high-contrast" locale="en-GB | en-US">` from `@mgs/ui`: it
-sets the theme, the language and the date/time formats (both props optional; defaults `light` and `en-GB`).
+Wrap the app once in `<MgsProvider theme="light | dark | high-contrast" locale="en-GB | en-US | en-IN">` from
+`@mgs/ui`: it sets the theme, the language, the date/time formats and number formatting (both props optional;
+defaults `light` and `en-GB`).
 
 ### Available components
 
-- **MGS components:** `MgsProvider`, `Button`, `IconButton`, `Input`, `Textarea`, `PasswordInput`, `InputGroup` (with `InputGroupAddon`,
+- **MGS components:** `MgsProvider`, `Button`, `IconButton`, `Input`, `Textarea`, `PasswordInput`, `NumberInput`, `InputGroup` (with `InputGroupAddon`,
   `InputGroupButton`), `VisuallyHidden`
 - **Icons:** `PlusIcon`, `EditIcon`, `TrashIcon`, `SearchIcon`, ... (see the Icons page in Storybook)
 - **Being migrated to an MGS API** (still RSuite's API for now; expect changes):

@@ -1,0 +1,127 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as NumberInputStories from './NumberInput.stories';
+
+<Meta of={NumberInputStories} />
+
+# NumberInput
+
+A field for numbers: quantities, prices, amounts, percentages, weights. Its value is a real `number` (or `null` when
+empty), it shows the number formatted for the locale (`54,999.00`, or `12,34,567.00` in `en-IN`) when not focused,
+and ↑ ↓ change it by `step`.
+
+**Component:** MGS-owned, built by MGS on [Input](?path=/docs/components-input--docs) and
+[InputGroup](?path=/docs/components-inputgroup--docs) · Related: [MgsProvider](?path=/docs/foundation-mgsprovider--docs)
+(locale and number grouping)
+
+## When to use
+
+- For values you calculate with: quantities, prices, amounts, rates, percentages, measurements.
+- **Not for numbers that are really codes**: phone numbers, PINs, postcodes, IDs, years. Use
+  [Input](?path=/docs/components-input--docs) (`type="tel"` for phones): they aren't calculated, and grouping or
+  stepping would be wrong.
+- **Not for a choice from a few values.** Use a select or radio buttons.
+
+## Import
+
+```tsx
+import { NumberInput } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+const [price, setPrice] = useState<number | null>(null);
+
+<label htmlFor="price">Unit price (₹)</label>
+<NumberInput id="price" prefix="₹" decimals={2} min={0} value={price} onChange={setPrice} />
+```
+
+`onChange` receives a **number** (or `null` when the field is emptied), never a string.
+
+**In forms**, give it a `name`: a hidden input submits the raw number (`54999.5`), not the formatted text the field
+shows (`54,999.50`). With React Hook Form, use `Controller` (`value` and `onChange`), not `register`: `register`
+reads the text field.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={NumberInputStories.Basic} sourceState="shown" />
+
+`decimals={0}` accepts whole numbers only and shows a number pad on phones; `min={0}` or higher doesn't accept a minus
+sign. Pasting `₹1,234.50` or `12 kg` keeps just the number. Up to 15 digits are accepted: beyond that, JavaScript
+numbers lose precision.
+
+### States
+
+<Canvas of={NumberInputStories.States} sourceState="shown" />
+
+Like [Input](?path=/docs/components-input--docs): read-only values keep their formatted look and have no step buttons,
+disabled ones can't be focused, and `aria-invalid="true"` shows the error border.
+
+### Sizes
+
+<Canvas of={NumberInputStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`, the same heights as Input and Button.
+
+### Locales
+
+<Canvas of={NumberInputStories.Locales} sourceState="shown" />
+
+The number format follows the [MgsProvider](?path=/docs/foundation-mgsprovider--docs) locale: `en-GB` and `en-US`
+group in thousands (`1,234,567.50`), `en-IN` in lakhs and crores (`12,34,567.50`). `grouping={false}` shows no
+separators.
+
+### Advanced examples
+
+<Canvas of={NumberInputStories.Advanced} sourceState="shown" />
+
+An order line in `en-IN`: quantity, unit price, discount with half-percent steps, and a read-only total. A discount
+typed above 100 becomes 100 when the user leaves the field.
+
+### Common usage
+
+- **Money:** `prefix="₹"` (or the currency), `decimals={2}`, `min={0}`. Say the currency in the label too.
+- **Quantities:** `decimals={0}`, `min={1}`, and the unit as `suffix`.
+- **Percentages:** `min={0}`, `max={100}`, `suffix="%"`.
+- **Totals and calculated values:** `readOnly`, so they can be copied but not edited.
+
+## Do and don't
+
+| Do                                                               | Don't                                                      |
+| ---------------------------------------------------------------- | ---------------------------------------------------------- |
+| Set `decimals`, `min` and `max` to match the data                | Let a quantity accept `-3.75`                              |
+| Put the unit or currency in the label and in `prefix` / `suffix` | Rely on the prefix alone: it isn't part of the label       |
+| Use Input for phone numbers, IDs and years                       | Use NumberInput for values that aren't calculated          |
+| Explain limits in a hint (`aria-describedby`)                    | Surprise users: say "0 to 100" before a value gets limited |
+
+## Accessibility
+
+<Canvas of={NumberInputStories.Accessibility} sourceState="shown" />
+
+| Key                     | Action                                          |
+| ----------------------- | ----------------------------------------------- |
+| `↑` / `↓`               | Increase / decrease by `step`                   |
+| `Page Up` / `Page Down` | Increase / decrease by 10 steps                 |
+| `Home` / `End`          | Jump to `min` / `max` (when set)                |
+| `Tab`                   | Leave the field: round and limit the value      |
+| `Enter`                 | Round and limit the value, then submit the form |
+
+- A `spinbutton` (WAI-ARIA): screen readers announce the value with its unit (`aria-valuetext`: "₹54,999.00",
+  "12 units"), and `min` and `max`.
+- The − + buttons are for the mouse only: out of the Tab order and hidden from screen readers, because ↑ ↓ do the same.
+  Clicking them keeps focus in the field. Each is at least 24 × 24px (WCAG 2.5.8).
+- The mouse wheel never changes the value, so scrolling a long form can't change an amount by accident.
+- Phones show a decimal keyboard (a number pad with `decimals={0}`).
+
+## API
+
+<Canvas of={NumberInputStories.Playground} sourceState="shown" />
+<Controls of={NumberInputStories.Playground} />
+
+Every native `<input>` attribute also works on the `<input>` (`id`, `name`, `required`, `placeholder`, `aria-*`,
+`onFocus`, `onBlur`, `onKeyDown`), and `ref` points at the `<input>`. `className` and `style` go to the outer wrapper,
+for layout.

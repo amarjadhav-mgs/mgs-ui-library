@@ -12,7 +12,7 @@ import {
 } from '@mgs/ui';
 import { source } from '../../stories/shared';
 
-const locales: MgsLocale[] = ['en-GB', 'en-US'];
+const locales: MgsLocale[] = ['en-GB', 'en-US', 'en-IN'];
 
 // Storybook already wraps every story in an MgsProvider with the toolbar's theme (.storybook/preview.tsx). The stories
 // below nest one to show a locale, and pass the toolbar's theme so the two providers never disagree.
@@ -47,7 +47,10 @@ const meta = {
       control: 'inline-radio',
       options: locales,
       description: 'Language and date/time formats for every component.',
-      table: { type: { summary: "'en-GB' | 'en-US'" }, defaultValue: { summary: "'en-GB'" } },
+      table: {
+        type: { summary: "'en-GB' | 'en-US' | 'en-IN'" },
+        defaultValue: { summary: "'en-GB'" },
+      },
     },
   },
 } satisfies Meta<typeof MgsProvider>;

@@ -1,0 +1,33 @@
+// MGS NumberInput. The field, border, sizes, read-only look and error border come from Input and InputGroup (themed
+// through src/styles/rsuite-bridge.scss). This file styles only what MGS adds: the − + step buttons.
+
+// Side by side at the end of the field, separated from the number by a line. Each button is at least 24px wide and
+// the field's full inner height (28, 34 or 40px), so both meet the WCAG 2.5.8 minimum target of 24 × 24px.
+.mgs-number-input__controls {
+  display: flex;
+  flex: 0 0 auto;
+  align-self: stretch;
+  border-inline-start: 1px solid var(--mgs-color-border-control);
+}
+
+.mgs-number-input__step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--mgs-space-xl);
+  padding: 0 var(--mgs-space-xs);
+  border: 0;
+  background: none;
+  color: var(--mgs-color-text-secondary);
+  font-size: var(--mgs-font-size-sm);
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    color: var(--mgs-color-text);
+  }
+
+  &:disabled {
+    color: var(--mgs-color-text-disabled);
+    cursor: default;
+  }
+}

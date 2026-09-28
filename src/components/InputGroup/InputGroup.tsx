@@ -20,10 +20,13 @@ const withClass = (base: string, className?: string) => (className ? `${base} ${
  * </InputGroup>
  */
 export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(function InputGroup(
-  { className, disabled = false, ...rest },
+  { className, disabled: disabledProp = false, ...rest },
   ref,
 ) {
-  // RSuite passes disabled only to direct children; the context reaches MGS controls however they're nested.
+  // RSuite passes disabled only to direct children; the context reaches MGS controls however they're nested. A group
+  // inside a disabled group (NumberInput and PasswordInput are groups) is disabled too.
+  const parentDisabled = useInputGroupDisabled();
+  const disabled = disabledProp || parentDisabled;
   const context = useMemo(() => ({ disabled }), [disabled]);
   return (
     <InputGroupContext.Provider value={context}>

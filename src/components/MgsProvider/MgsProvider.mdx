@@ -52,10 +52,14 @@ Every example is also a story in the sidebar, where you can interact with it.
 
 The same inputs in each locale:
 
-| `locale`          | Date         | Time                 | Week starts on |
-| ----------------- | ------------ | -------------------- | -------------- |
-| `en-GB` (default) | `dd/MM/yyyy` | `HH:mm` (24-hour)    | Monday         |
-| `en-US`           | `MM/dd/yyyy` | `hh:mm aa` (12-hour) | Sunday         |
+| `locale`          | Date         | Time                 | Week starts on | Numbers        |
+| ----------------- | ------------ | -------------------- | -------------- | -------------- |
+| `en-GB` (default) | `dd/MM/yyyy` | `HH:mm` (24-hour)    | Monday         | `1,234,567.50` |
+| `en-US`           | `MM/dd/yyyy` | `hh:mm aa` (12-hour) | Sunday         | `1,234,567.50` |
+| `en-IN`           | `dd/MM/yyyy` | `HH:mm` (24-hour)    | Monday         | `12,34,567.50` |
+
+Numbers are formatted by [NumberInput](?path=/docs/components-numberinput--docs) (and later tables) with `Intl`, so
+`en-IN` groups in lakhs and crores.
 
 A component's own `format` prop still wins over the locale, but prefer the locale: one format for the whole app.
 
@@ -107,7 +111,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 | -------------------------------------------------------- | ------------------------------------------------------------------- |
 | Render one `MgsProvider` at the root of the app          | Nest providers with different themes                                |
 | Choose the locale once, for the whole app                | Set a different `format` on each date picker                        |
-| Set `<html lang>` to match the locale (`en-GB`, `en-US`) | Leave `<html lang>` unset: screen readers need it to pronounce text |
+| Set `<html lang>` to match the locale (`en-GB`, `en-IN`) | Leave `<html lang>` unset: screen readers need it to pronounce text |
 | Offer `high-contrast` as a user setting                  | Use `high-contrast` as a brand look                                 |
 
 ## Accessibility

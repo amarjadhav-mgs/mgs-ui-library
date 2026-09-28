@@ -18,6 +18,7 @@ export * from './components/IconButton';
 export * from './components/Input';
 export * from './components/Textarea';
 export * from './components/PasswordInput';
+export * from './components/NumberInput';
 export * from './components/InputGroup';
 export * from './components/VisuallyHidden';
 

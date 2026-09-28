@@ -70,6 +70,7 @@ import {
   IconButton,
   Input,
   MgsProvider,
+  NumberInput,
   PasswordInput,
   PlusIcon,
   Textarea,
@@ -83,12 +84,14 @@ const save: ButtonProps = { variant: 'primary', children: 'Save' };
 
 function App() {
   const [name, setName] = useState('');
+  const [price, setPrice] = useState<number | null>(null);
   const [theme] = useState<MgsTheme>('light');
   return (
-    <MgsProvider theme={theme} locale="en-GB">
+    <MgsProvider theme={theme} locale="en-IN">
       <label htmlFor="name">Name</label>
       <Input id="name" value={name} onChange={setName} />
       <PasswordInput aria-label="Password" />
+      <NumberInput aria-label="Price" prefix="₹" decimals={2} value={price} onChange={setPrice} />
       <Textarea aria-label="Notes" autosize maxRows={4} />
       <DatePicker label="Due date" />
       <Button leftIcon={<PlusIcon />}>

@@ -1,11 +1,17 @@
 import { useEffect } from 'react';
 import { CustomProvider } from 'rsuite';
 import { enGB, enUS } from 'rsuite/locales';
+import { MgsLocaleContext } from './context';
 import type { MgsLocale, MgsProviderProps } from './types';
 
 // RSuite's locale for each MGS locale. It holds the texts and the date and time formats the pickers use by default
-// (shortDateFormat, shortTimeFormat), so choosing a locale also chooses the formats.
-const rsuiteLocales = { 'en-GB': enGB, 'en-US': enUS } as const satisfies Record<MgsLocale, object>;
+// (shortDateFormat, shortTimeFormat), so choosing a locale also chooses the formats. RSuite has no Indian English
+// locale; en-GB has the same texts and date formats (dd/MM/yyyy, 24-hour time, weeks from Monday). What differs,
+// number grouping (12,34,567), comes from Intl with the 'en-IN' code, through MgsLocaleContext.
+const rsuiteLocales = { 'en-GB': enGB, 'en-US': enUS, 'en-IN': enGB } as const satisfies Record<
+  MgsLocale,
+  object
+>;
 
 // The theme class lives on <body>, shared by every mounted provider. Only the last one to unmount removes it, so nested
 // providers (and React StrictMode's remount) keep the page themed.
@@ -40,7 +46,7 @@ export function MgsProvider({ theme = 'light', locale = 'en-GB', children }: Mgs
       // (src/styles/rsuite-icons.scss).
       disableInlineStyles
     >
-      {children}
+      <MgsLocaleContext.Provider value={locale}>{children}</MgsLocaleContext.Provider>
     </CustomProvider>
   );
 }

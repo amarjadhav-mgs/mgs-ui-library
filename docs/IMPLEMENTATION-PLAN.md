@@ -498,7 +498,7 @@ Tick items as they merge into `dev`.
 - [ ] Shared internals
 - [x] `Input`, `Textarea`, `PasswordInput`
 - [x] `InputGroup`
-- [ ] `NumberInput`
+- [x] `NumberInput` (and the `en-IN` locale)
 - [ ] `Checkbox`, `CheckboxGroup`
 - [ ] `Radio`, `RadioGroup`
 - [ ] `Switch`
