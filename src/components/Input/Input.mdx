@@ -1,0 +1,142 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as InputStories from './Input.stories';
+
+<Meta of={InputStories} />
+
+# Input
+
+A single-line text field for names, emails, phone numbers, codes and searches. It follows the MGS size scale, so it
+lines up with buttons, and shows an error border when the field is invalid.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `Input` · Related:
+[Textarea](?path=/docs/components-textarea--docs) (several lines),
+[PasswordInput](?path=/docs/components-passwordinput--docs),
+[InputGroup](?path=/docs/components-inputgroup--docs) (add-ons and buttons)
+
+## When to use
+
+- For short, free-form text: names, emails, phone numbers, codes, search terms.
+- **Not for several lines.** Use [Textarea](?path=/docs/components-textarea--docs).
+- **Not for passwords, numbers or dates.** Use [PasswordInput](?path=/docs/components-passwordinput--docs), and the
+  number and date components; `type` only offers `text | email | tel | url | search`.
+- **Not for a choice from a known list.** Use a select or radio buttons.
+
+## Import
+
+```tsx
+import { Input } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<label htmlFor="email">Email</label>
+<Input id="email" type="email" value={email} onChange={setEmail} />
+```
+
+⚠️ **Always label the field**: a visible `<label htmlFor>` linked to the input's `id`, or `aria-label` when a visible
+label isn't possible. A placeholder is not a label: it disappears when the user types.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={InputStories.Basic} sourceState="shown" />
+
+Set `name` for forms and `autoComplete` (`email`, `name`, `tel`, …) so browsers can fill the field.
+
+### Types
+
+<Canvas of={InputStories.Types} sourceState="shown" />
+
+| `type`           | Use it for             | Mobile keyboard            |
+| ---------------- | ---------------------- | -------------------------- |
+| `text` (default) | Names, codes, any text | Letters                    |
+| `email`          | Email addresses        | Letters with `@` and `.`   |
+| `tel`            | Phone numbers          | Number pad                 |
+| `url`            | Website addresses      | Letters with `/` and `.`   |
+| `search`         | Search boxes           | Letters, with a search key |
+
+### States
+
+<Canvas of={InputStories.States} sourceState="shown" />
+
+| State      | Focusable | Editable | Submitted with a form | Use it for                                           |
+| ---------- | --------- | -------- | --------------------- | ---------------------------------------------------- |
+| `readOnly` | Yes       | No       | Yes                   | Values users should see and copy, not change         |
+| `disabled` | No        | No       | No                    | Fields that don't apply right now                    |
+| Invalid    | Yes       | Yes      | Yes                   | A value that fails validation: see Advanced examples |
+
+Prefer `readOnly` over `disabled` for values users need to read: disabled fields are skipped by the keyboard and
+screen readers. **Invalid** isn't a prop: set `aria-invalid="true"` on the input, which also gives it the error border.
+
+### Sizes
+
+<Canvas of={InputStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`, the same heights as Button. Inputs are full width: control the width with the
+layout (a grid column or a `maxWidth` on the form).
+
+### Controlled
+
+<Canvas of={InputStories.Controlled} sourceState="shown" />
+
+`onChange` receives the **value first**, then the event: `onChange={setName}` works directly. Use `value` with
+`onChange` (controlled) or `defaultValue` (uncontrolled), not both.
+
+### Advanced examples
+
+<Canvas of={InputStories.Advanced} sourceState="shown" />
+
+A form that validates on submit: the error is text under the field, linked with `aria-describedby`, and
+`aria-invalid` turns the border red. The read-only customer code can still be focused and copied.
+
+### Common usage
+
+- **Forms:** one `Input` per field, each with a visible label, `name` and `autoComplete`. Validate on submit or on
+  blur, not on every keystroke.
+- **Search and filters:** `type="search"` in an [InputGroup](?path=/docs/components-inputgroup--docs) with a search
+  icon or a clear button.
+- **Toolbars:** `size="sm"`, next to `size="sm"` buttons.
+- **View pages:** `readOnly` for saved values users may want to copy.
+
+## Do and don't
+
+| Do                                                           | Don't                                        |
+| ------------------------------------------------------------ | -------------------------------------------- |
+| Label every field with `<label htmlFor>`                     | Use the placeholder as the label             |
+| Set `type` and `autoComplete` so keyboards and autofill work | Leave every field as plain `text`            |
+| Show errors as text, linked with `aria-describedby`          | Rely on the red border alone                 |
+| Use `readOnly` for values users need to read                 | Disable fields just to prevent editing       |
+| Match the size of the buttons next to it                     | Mix `sm` inputs with `md` buttons in one row |
+
+## Accessibility
+
+<Canvas of={InputStories.Accessibility} sourceState="shown" />
+
+| Key             | Action                                              |
+| --------------- | --------------------------------------------------- |
+| `Tab` / `⇧ Tab` | Move to the next / previous field                   |
+| `Enter`         | Submits the form the input is in (native behaviour) |
+
+- Renders a native `<input>`: labels, autofill, forms and screen readers work as usual. `id`, `aria-*`, `required`
+  and `ref` all go to the `<input>`.
+- Read-only inputs stay in the Tab order and still call `onFocus`, `onBlur` and `onKeyDown`.
+- The border reaches 3:1 contrast in every theme, and the error border (`aria-invalid="true"`) does too.
+- The focus ring is fully visible in every theme.
+
+## API
+
+<Canvas of={InputStories.Playground} sourceState="shown" />
+<Controls of={InputStories.Playground} />
+
+Every native `<input>` attribute and event also works (`id`, `name`, `placeholder`, `autoComplete`, `maxLength`,
+`required`, `onFocus`, `onBlur`, `onKeyDown`, `aria-*`, `data-*`, `className`, `style`), and `ref` points at the
+`<input>`.
+
+## Customizing
+
+Borders and focus colours come from the MGS tokens `--mgs-color-border-control`, `--mgs-color-border-error` and
+`--mgs-color-focus-ring`. Override tokens in your app's stylesheet, never `.rs-*` classes or `--rs-*` variables.

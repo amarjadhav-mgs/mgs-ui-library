@@ -238,20 +238,20 @@ Everything else depends on these.
 
 Every ERP screen is a form or a table; forms come first.
 
-| Item                                 | Size | Notes                                                                                                                                                           |
-| ------------------------------------ | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Shared internals                     | S    | Helpers the wrappers reuse (id generation for labels, class name joining, dev-only warnings), created when the first input needs them, not before               |
-| `Input`, `Textarea`, `PasswordInput` | M    | Migrations of existing re-exports                                                                                                                               |
-| `InputGroup`                         | S    | Migration                                                                                                                                                       |
-| `NumberInput`                        | M    | Locale-aware formatting; decimal and currency behaviour decided in proposal                                                                                     |
-| `Checkbox`, `CheckboxGroup`          | M    |                                                                                                                                                                 |
-| `Radio`, `RadioGroup`                | M    |                                                                                                                                                                 |
-| `Switch`                             | S    |                                                                                                                                                                 |
-| `Select`                             | L    | Search, async options, clearable; keyboard and screen reader behaviour                                                                                          |
-| `MultiSelect`                        | L    | Shares most of `Select`                                                                                                                                         |
-| `AutoComplete`                       | M    |                                                                                                                                                                 |
-| `ButtonGroup`, `Stack`               | M    | Migration of `ButtonGroup`; `Stack` replaces `ButtonToolbar`                                                                                                    |
-| **`FormField`** pattern              | L    | Built last in the phase, after the inputs above. Takes any control as a child, so the phase 2 date pickers plug in without changes; `required`, `help`, `error` |
+| Item                                 | Size | Notes                                                                                                                                                                                                                                                                                                                        |
+| ------------------------------------ | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Shared internals                     | S    | Helpers the wrappers reuse (id generation for labels, class name joining, dev-only warnings), created when the first input needs them, not before                                                                                                                                                                            |
+| `Input`, `Textarea`, `PasswordInput` | M    | Migrations of existing re-exports                                                                                                                                                                                                                                                                                            |
+| `InputGroup`                         | S    | Migration                                                                                                                                                                                                                                                                                                                    |
+| `NumberInput`                        | M    | Locale-aware formatting; decimal and currency behaviour decided in proposal                                                                                                                                                                                                                                                  |
+| `Checkbox`, `CheckboxGroup`          | M    |                                                                                                                                                                                                                                                                                                                              |
+| `Radio`, `RadioGroup`                | M    |                                                                                                                                                                                                                                                                                                                              |
+| `Switch`                             | S    |                                                                                                                                                                                                                                                                                                                              |
+| `Select`                             | L    | Search, async options, clearable; keyboard and screen reader behaviour                                                                                                                                                                                                                                                       |
+| `MultiSelect`                        | L    | Shares most of `Select`                                                                                                                                                                                                                                                                                                      |
+| `AutoComplete`                       | M    |                                                                                                                                                                                                                                                                                                                              |
+| `ButtonGroup`, `Stack`               | M    | Migration of `ButtonGroup`; `Stack` replaces `ButtonToolbar`                                                                                                                                                                                                                                                                 |
+| **`FormField`** pattern              | L    | Built last in the phase, after the inputs above. Takes any control as a child, so the phase 2 date pickers plug in without changes; `required`, `help`, `error`. Needs an error **text** colour token: RSuite's `--rs-text-error` (adopted as `--mgs-color-text-error`) fails 4.5:1 (3.7:1 in light, 2.9:1 in high contrast) |
 
 **Done when:** a complete create/edit form can be built from `@mgs/ui` only, with React Hook Form and with Formik,
 fully keyboard-operable and axe-clean. Add an "ERP form" example story that proves it.
@@ -493,7 +493,7 @@ Tick items as they merge into `dev`.
 **Phase 1: form inputs**
 
 - [ ] Shared internals
-- [ ] `Input`, `Textarea`, `PasswordInput`
+- [x] `Input`, `Textarea`, `PasswordInput`
 - [ ] `InputGroup`
 - [ ] `NumberInput`
 - [ ] `Checkbox`, `CheckboxGroup`
@@ -558,3 +558,16 @@ Tick items as they merge into `dev`.
 - [ ] `SegmentedControl`
 - [ ] `MaskedInput`
 - [ ] `PinInput`
+
+**Quality follow-ups** (from the phase 0 review, 2026-09-28)
+
+- [x] Consumer smoke test in CI (`npm run test:consumer`): strict TypeScript app, typecheck and build
+- [x] Dark theme inherits brand tokens from `:root` (app overrides work in every theme)
+- [x] Button spinner contrast in every theme and variant
+- [x] Reduced motion (`src/styles/motion.scss`)
+- [x] Icon styles ship in `styles.css`; no runtime `<style>` tag (CSP-safe)
+- [ ] Remove the known-RSuite-errors allowance in `scripts/consumer-smoke-test.mjs` once the re-exports are migrated
+- [ ] Bundle size budget in CI (today: about 35 KB gzipped of RSuite locales with `MgsProvider`, 60 KB gzipped CSS)
+- [ ] Axe in a real browser, in all three themes, for every story (jsdom can't check contrast or hover and pressed
+      states)
+- [ ] Report to RSuite: its published types reference `Chai` and `NodeJS` without shipping them

@@ -21,6 +21,36 @@
   --rs-border-primary: var(--mgs-color-border-control);
 }
 
+/*
+ * Invalid fields (aria-invalid="true" on the input, set by the app or FormField): RSuite has no invalid style, so the
+ * border, and the focused border, use the MGS error colour (3:1 or more in every theme, see themes.scss). Inside an
+ * InputGroup the group draws the border.
+ */
+.rs-input[aria-invalid='true'],
+.rs-input-group:has(> .rs-input[aria-invalid='true']) {
+  --rs-border-primary: var(--mgs-color-border-error);
+  --rs-input-focus-border: var(--mgs-color-border-error);
+}
+
+/*
+ * Button loading spinner: RSuite draws the moving arc in a grey (--rs-loader-rotor) that is 2.8:1 on light secondary
+ * buttons and nearly invisible on high-contrast primary (white on yellow). The arc uses each variant's text colour
+ * instead, which already meets 4.5:1 on that variant's fill in every theme (well above the 3:1 WCAG 1.4.11 needs).
+ * The faint track (--rs-loader-ring) stays decorative.
+ */
+.rs-btn[data-loading='true'] {
+  --rs-loader-rotor: var(--mgs-color-text);
+}
+.rs-btn[data-loading='true']:is([data-appearance='ghost'], [data-appearance='link']) {
+  --rs-loader-rotor: var(--mgs-color-link);
+}
+.rs-btn[data-loading='true'][data-appearance='primary'] {
+  --rs-loader-rotor: var(--mgs-color-on-primary);
+}
+.rs-btn[data-loading='true'][data-appearance='primary'][data-color='red'] {
+  --rs-loader-rotor: var(--mgs-color-on-danger);
+}
+
 /* Default badge (no `color`): RSuite's red with white text is 3.7:1; the MGS danger red is 4.8:1. */
 .rs-badge:not([data-color]) {
   --rs-badge-bg: var(--mgs-color-danger);

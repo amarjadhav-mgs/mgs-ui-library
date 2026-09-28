@@ -9,3 +9,11 @@
     outline-offset: var(--mgs-focus-ring-offset);
   }
 }
+
+// Visible edge for secondary buttons: RSuite's default button has no border, so it fades into white cards and panels.
+// Drawn inside the button (inset shadow), so sizes don't change; the same colour as input borders, so they match.
+@mixin secondary-edge {
+  &[data-variant='secondary'] {
+    box-shadow: inset 0 0 0 1px var(--mgs-color-border-control);
+  }
+}

@@ -1,17 +1,23 @@
 // @mgs/ui: the MGS component library (see ARCHITECTURE.md). Apps only ever import from '@mgs/ui':
 //   import { Button } from '@mgs/ui';
 //   import '@mgs/ui/styles.css';
-// Order matters: RSuite's styles first, then MGS tokens, the semantic theme and the bridge that overrides RSuite's
-// variables. Component styles come after all of them, through the component exports below.
+// Order matters: RSuite's styles first (with the icon base styles @rsuite/icons would otherwise inject at runtime), then
+// MGS tokens, the semantic theme, the bridge that overrides RSuite's variables, and the reduced-motion rules. Component
+// styles come after all of them, through the component exports below.
 import 'rsuite/dist/rsuite.css';
+import './styles/rsuite-icons.scss';
 import './styles/tokens.scss';
 import './styles/themes.scss';
 import './styles/rsuite-bridge.scss';
+import './styles/motion.scss';
 
 // MGS-owned components
 export * from './components/MgsProvider';
 export * from './components/Button';
 export * from './components/IconButton';
+export * from './components/Input';
+export * from './components/Textarea';
+export * from './components/PasswordInput';
 export * from './components/VisuallyHidden';
 
 // MGS icons
@@ -29,10 +35,7 @@ export {
   DatePicker,
   DateRangeInput,
   DateRangePicker,
-  Input,
   InputGroup,
-  PasswordInput,
-  Textarea,
   TimePicker,
   TimeRangePicker,
 } from 'rsuite';
@@ -48,9 +51,6 @@ export type {
   DateRangeInputProps,
   DateRangePickerProps,
   InputGroupProps,
-  InputProps,
-  PasswordInputProps,
-  TextareaProps,
   TimePickerProps,
   TimeRangePickerProps,
 } from 'rsuite';

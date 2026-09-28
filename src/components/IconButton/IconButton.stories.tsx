@@ -245,10 +245,13 @@ export const Advanced: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('button', { name: 'Delete order 1043' })).toBeInTheDocument();
     await expect(canvas.getByRole('group', { name: 'Export' })).toBeInTheDocument();
-    // The custom icon is hidden; the button is announced by its label only.
+    // The custom icon is hidden inside the icon wrapper; the button is announced by its label only.
     await expect(
-      canvas.getByRole('button', { name: 'Close panel' }).querySelector('svg'),
-    ).toHaveAttribute('aria-hidden', 'true');
+      canvas
+        .getByRole('button', { name: 'Close panel' })
+        .querySelector('svg')
+        ?.closest('[aria-hidden="true"]'),
+    ).not.toBeNull();
   },
 };
 

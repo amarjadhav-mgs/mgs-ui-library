@@ -15,7 +15,10 @@ const rsuiteVariant = {
 
 /**
  * Translates the MGS props shared by Button and IconButton into RSuite Button props.
- * Internal: used by Button and IconButton only, not exported from '@mgs/ui'.
+ * Internal: used by Button and IconButton only, not exported from '@mgs/ui'. `@internal` keeps it out of the published
+ * .d.ts files (tsconfig.build.json → stripInternal): its inferred RSuite return type is about 100 KB of types.
+ *
+ * @internal
  */
 export function toRSuiteButtonProps(
   {

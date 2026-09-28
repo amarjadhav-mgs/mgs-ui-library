@@ -1,0 +1,47 @@
+/*
+ * Base styles of @rsuite/icons, shipped statically. @rsuite/icons normally injects this CSS into <head> with a <style>
+ * tag when the first icon mounts, which strict Content Security Policies block (style-src without 'unsafe-inline') and
+ * which leaves server-rendered icons unstyled until hydration. MgsProvider turns the injection off
+ * (disableInlineStyles), so these rules must be here. rsuite.css has no .rs-icon rules of its own.
+ *
+ * A verbatim copy of the rules in @rsuite/icons 1.4.1 (esm/utils/useInsertStyles.js), with the default rs- prefix.
+ * Check it when upgrading @rsuite/icons. The one exception to "never style .rs-* classes" (ARCHITECTURE.md → Styling).
+ */
+.rs-icon {
+  display: inline-flex;
+  align-items: center;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: middle;
+}
+
+.rs-icon[tabindex] {
+  cursor: pointer;
+}
+
+.rs-icon-spin {
+  animation: icon-spin 2s infinite linear;
+}
+
+.rs-icon-pulse {
+  animation: icon-spin 1s infinite steps(8);
+}
+
+.rs-icon-flip-horizontal {
+  transform: scaleX(-1);
+}
+
+.rs-icon-flip-vertical {
+  transform: scaleY(-1);
+}
+
+@keyframes icon-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(359deg);
+  }
+}

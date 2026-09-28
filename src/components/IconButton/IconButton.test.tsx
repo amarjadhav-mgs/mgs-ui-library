@@ -10,6 +10,11 @@ import * as stories from './IconButton.stories';
 
 const allStories = composeStories(stories);
 
+/** A custom icon component that doesn't forward aria-hidden: IconButton's wrapper still hides it. */
+function CustomIcon() {
+  return <b>×</b>;
+}
+
 // Type-level test, never rendered: `npm run typecheck` fails if any of these becomes accepted.
 const rejectedProps = () => (
   <>
@@ -29,6 +34,10 @@ const rejectedProps = () => (
     </IconButton>
     {/* @ts-expect-error RSuite's circle shape is not part of the MGS API */}
     <IconButton aria-label="Delete" circle>
+      <TrashIcon />
+    </IconButton>
+    {/* @ts-expect-error one name only: aria-label or aria-labelledby, not both */}
+    <IconButton aria-label="Delete" aria-labelledby="row-1">
       <TrashIcon />
     </IconButton>
   </>
@@ -61,14 +70,29 @@ describe('IconButton', () => {
     expect(button.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('hides custom (non-MGS) icons from screen readers too', () => {
+  it('hides custom (non-MGS) icons from screen readers too, inside a hidden wrapper', () => {
     render(
       <IconButton aria-label="Close">
-        <span>×</span>
+        <CustomIcon />
       </IconButton>,
     );
-    expect(screen.getByText('×')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getByText('×').closest('.mgs-icon-button__icon')).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    );
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
+  });
+
+  it('can be named by visible text with aria-labelledby', () => {
+    render(
+      <>
+        <span id="row-title">Order 1042</span>
+        <IconButton aria-labelledby="row-title">
+          <TrashIcon />
+        </IconButton>
+      </>,
+    );
+    expect(screen.getByRole('button', { name: 'Order 1042' })).toBeInTheDocument();
   });
 
   it.each<IconButtonVariant>(['primary', 'secondary', 'danger', 'ghost'])(

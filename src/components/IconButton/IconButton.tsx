@@ -1,11 +1,12 @@
-import { cloneElement, forwardRef, type ReactElement } from 'react';
+import { forwardRef } from 'react';
 import { IconButton as RSuiteIconButton } from 'rsuite';
 import { toRSuiteButtonProps } from '../Button/Button';
 import type { IconButtonProps } from './types';
 import './IconButton.scss';
 
 /**
- * A square button showing only an icon. `aria-label` is required: it is the button's accessible name.
+ * A square button showing only an icon. It needs an accessible name: `aria-label`, or `aria-labelledby` pointing at
+ * visible text.
  *
  * @example
  * <IconButton aria-label="Delete row" variant="danger"><TrashIcon /></IconButton>
@@ -14,16 +15,17 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
   { variant = 'secondary', children, ...rest },
   ref,
 ) {
-  // The icon is decorative; the button's aria-label names it. MGS icons are already hidden, custom ones may not be.
-  const icon = cloneElement(children as ReactElement<{ 'aria-hidden'?: boolean }>, {
-    'aria-hidden': true,
-  });
-
   return (
     <RSuiteIconButton
       ref={ref}
       {...toRSuiteButtonProps({ ...rest, variant }, 'mgs-icon-button')}
-      icon={icon}
+      // The icon is decorative; the button's name comes from aria-label or aria-labelledby. The wrapper hides any icon,
+      // including custom ones that don't accept aria-hidden, as Button does.
+      icon={
+        <span className="mgs-icon-button__icon" aria-hidden="true">
+          {children}
+        </span>
+      }
     />
   );
 });

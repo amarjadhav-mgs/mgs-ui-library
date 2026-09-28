@@ -1,0 +1,27 @@
+/*
+ * Reduced motion (ARCHITECTURE.md → Accessibility baseline, WCAG 2.3.3): when the user asks the system for less motion,
+ * MGS and RSuite components stop animating transitions (popups, drawers, hover fades), and loading spinners keep
+ * turning, slower, because they are the only sign that something is busy.
+ *
+ * Scoped to MGS and RSuite elements (a class starting with mgs- or rs-), so the app's own animations are untouched.
+ * Durations become 0.01ms, not 0: at 0 the browser skips transitionend / animationend, which RSuite waits for to finish
+ * opening and closing overlays.
+ */
+@media (prefers-reduced-motion: reduce) {
+  :is([class^='mgs-'], [class*=' mgs-'], [class^='rs-'], [class*=' rs-']),
+  :is([class^='mgs-'], [class*=' mgs-'], [class^='rs-'], [class*=' rs-'])::before,
+  :is([class^='mgs-'], [class*=' mgs-'], [class^='rs-'], [class*=' rs-'])::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  /* Spinners: button loading, loaders and spinning icons keep turning, at a calmer pace. */
+  .rs-btn-spin::after,
+  .rs-loader-spin::after,
+  .rs-icon-spin,
+  .rs-icon-pulse {
+    animation-duration: 1.5s !important;
+    animation-iteration-count: infinite !important;
+  }
+}

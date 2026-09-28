@@ -14,6 +14,8 @@ const rejectedProps = () => (
   <>
     {/* @ts-expect-error RSuite's as is hidden; VisuallyHidden is always a <span> */}
     <VisuallyHidden as="h2">A</VisuallyHidden>
+    {/* @ts-expect-error RSuite reads color as a CSS style prop */}
+    <VisuallyHidden color="red">B</VisuallyHidden>
   </>
 );
 

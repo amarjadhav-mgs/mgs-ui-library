@@ -1,0 +1,107 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as TextareaStories from './Textarea.stories';
+
+<Meta of={TextareaStories} />
+
+# Textarea
+
+A multi-line text field for notes, comments, descriptions and addresses. It can have a fixed height that users can
+drag taller, or grow with the text.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `Textarea` · Related:
+[Input](?path=/docs/components-input--docs) (one line)
+
+## When to use
+
+- For text that may need several lines: notes, comments, reasons, descriptions, addresses.
+- **Not for a single short value.** Use [Input](?path=/docs/components-input--docs).
+- **Not for formatted text** (bold, lists). A rich text editor is a different component.
+
+## Import
+
+```tsx
+import { Textarea } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<label htmlFor="notes">Notes</label>
+<Textarea id="notes" value={notes} onChange={setNotes} />
+```
+
+Label it like an [Input](?path=/docs/components-input--docs): a visible `<label htmlFor>` linked to its `id`.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={TextareaStories.Basic} sourceState="shown" />
+
+Three lines tall by default (`rows`). Users can drag the bottom edge to make it taller.
+
+### States
+
+<Canvas of={TextareaStories.States} sourceState="shown" />
+
+The same states as [Input](?path=/docs/components-input--docs): `readOnly` stays focusable and copyable, `disabled`
+doesn't, and `aria-invalid="true"` shows the error border.
+
+### Sizes
+
+<Canvas of={TextareaStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`: the text size and padding, matching Input.
+
+### Autosize
+
+<Canvas of={TextareaStories.Autosize} sourceState="shown" />
+
+`autosize` grows the field with the text, from `minRows` to `maxRows` lines; after that it scrolls. Users can't drag
+the size of an autosized field.
+
+### Advanced examples
+
+<Canvas of={TextareaStories.Advanced} sourceState="shown" />
+
+An approval comment with a live character count linked by `aria-describedby`, next to the read-only request it
+answers.
+
+### Common usage
+
+- **Comments and reasons** (approvals, rejections, changes): `autosize` with `minRows={3}`.
+- **Addresses:** `rows={3}` and `autoComplete="street-address"`.
+- **Long limits:** `maxLength` with a visible character count, linked by `aria-describedby`.
+
+## Do and don't
+
+| Do                                                        | Don't                                     |
+| --------------------------------------------------------- | ----------------------------------------- |
+| Size it for the expected text (`rows` or `minRows`)       | Use a one-line Input for comments         |
+| Show a character count when there's a `maxLength`         | Cut text off silently                     |
+| Use `autosize` with a `maxRows`, so the page doesn't jump | Let an autosized field grow without limit |
+| Label every field                                         | Rely on a placeholder as the label        |
+
+## Accessibility
+
+<Canvas of={TextareaStories.Accessibility} sourceState="shown" />
+
+| Key             | Action                                       |
+| --------------- | -------------------------------------------- |
+| `Tab` / `⇧ Tab` | Move to the next / previous field            |
+| `Enter`         | Adds a new line (it doesn't submit the form) |
+
+- Renders a native `<textarea>`: `id`, `aria-*`, `required`, `maxLength` and `ref` go to it.
+- Read-only textareas stay in the Tab order and still call `onFocus`, `onBlur` and `onKeyDown`.
+- The border, the error border and the focus ring meet contrast in every theme.
+
+## API
+
+<Canvas of={TextareaStories.Playground} sourceState="shown" />
+<Controls of={TextareaStories.Playground} />
+
+Every native `<textarea>` attribute and event also works (`id`, `name`, `placeholder`, `maxLength`, `required`,
+`onFocus`, `onBlur`, `onKeyDown`, `aria-*`, `data-*`, `className`, `style`), and `ref` points at the `<textarea>`.
+To stop users resizing a fixed-height textarea, set `style={{ resize: 'none' }}`.

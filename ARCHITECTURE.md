@@ -56,7 +56,8 @@ Folders are created when the first file needs them.
 
 ```text
 src/
-├── styles/            tokens.scss → themes.scss → rsuite-bridge.scss (see Styling), _mixins.scss
+├── styles/            tokens.scss → themes.scss → rsuite-bridge.scss → motion.scss (see Styling), _mixins.scss,
+│                      rsuite-icons.scss
 ├── components/        components, one folder each
 ├── patterns/          patterns, one folder each
 ├── icons/             curated icon exports
@@ -87,6 +88,8 @@ themes.scss          semantic colour tokens per theme (--mgs-color-primary, --mg
       ↓
 rsuite-bridge.scss   sets RSuite's --rs-* variables from MGS tokens
       ↓
+motion.scss          reduced motion for MGS and RSuite elements
+      ↓
 MGS component styles (read semantic tokens only)  +  RSuite internals (read --rs-*)
 ```
 
@@ -112,6 +115,11 @@ MGS component styles (read semantic tokens only)  +  RSuite internals (read --rs
 - **Only `rsuite-bridge.scss` sets `--rs-*` variables.** Apps customize with `--mgs-*` tokens. Nobody styles `.rs-*`
   classes.
 - **Add a token only when a component needs it.**
+- **One exception, `rsuite-icons.scss`:** a verbatim copy of the base `.rs-icon` rules that `@rsuite/icons` would
+  otherwise inject with a `<style>` tag at runtime (blocked by strict Content Security Policies, and missing before
+  hydration in server rendering). `MgsProvider` turns the injection off. Check the copy when upgrading `@rsuite/icons`.
+- **Tokens that are the same in every theme are declared once, on `:root`** (brand primary and danger), so an app that
+  overrides them on `:root` gets its colours in every theme. A theme block only declares what differs.
 - **Foundation CSS is not in a cascade layer:** `rsuite.css` is unlayered, and layered rules would lose to it.
 
 ### Component styles
@@ -161,6 +169,10 @@ Every place where `rsuite-bridge.scss` changes RSuite's colours for contrast, me
 | Dark          | Danger button, hover and pressed                  | below 4.5:1  | 6.5:1, 8.3:1                |
 | Dark          | Secondary (default) button, pressed               | 3.4:1        | 5.1:1                       |
 | High contrast | Danger button text (dark text on dark red)        | 2.4:1        | 5.0:1 to 7.8:1 (white text) |
+| All           | Invalid field border (`aria-invalid="true"`)      | no style     | 4.8:1, 3.5:1, 4.8:1         |
+| Light         | Button loading spinner, secondary                 | 2.8:1        | 11.6:1                      |
+| High contrast | Button loading spinner, primary                   | 1.1:1        | 17.3:1                      |
+| All           | Button loading spinner, every variant             | —            | 4.8:1 or more               |
 
 ## Icons
 
@@ -169,6 +181,7 @@ Every place where `rsuite-bridge.scss` changes RSuite's colours for contrast, me
   `MgsIcon` with `MgsIconProps` (SVG attributes only), made by `createIcon` in `src/icons/createIcon.tsx`; the SVG
   artwork comes from `@rsuite/icons` internally. Add an icon when a screen needs it, with `/* @__PURE__ */` so unused
   icons are tree-shaken, and check it in the Icons gallery story.
+- Icons need no runtime `<style>` tag: their base styles ship in `styles.css` (`src/styles/rsuite-icons.scss`).
 - Icons are decorative: they render `aria-hidden="true"` with no `aria-label`, sized `1em` in `currentColor`, and take
   no `aria-label` or `role`. Size them with `font-size` and colour them with `color`. The control or text next to an
   icon carries the meaning. Components hide any icon passed to them, including custom ones.
@@ -205,7 +218,8 @@ If you know `Button`, you should already know the basics of every other MGS comp
 - **State vocabulary:** `default`, `hover`, `focus`, `active`, `disabled`, `loading`, `error`, `success`, `selected`,
   `open`, `closed`. Components expose them to CSS as `data-*` attributes (`data-loading`, `data-disabled`), not as new
   names.
-- **Icon-only controls require an accessible name:** `aria-label` is required by the TypeScript types.
+- **Icon-only controls require an accessible name:** the TypeScript types require `aria-label`, or `aria-labelledby`
+  pointing at visible text (one of them, not both).
 
 ### Accessibility baseline
 
@@ -214,7 +228,8 @@ Every component and pattern:
 - uses semantic HTML first and ARIA only where HTML can't express it
 - works with the keyboard, with a visible `:focus-visible` ring
 - supports labels, descriptions and error messages through `aria-describedby` / `aria-invalid`
-- respects `prefers-reduced-motion`
+- respects `prefers-reduced-motion`: `src/styles/motion.scss` turns off transitions and slows spinners for MGS and
+  RSuite elements
 - has a test that runs axe on every story, plus keyboard and state tests
 
 ## Documentation
@@ -306,12 +321,12 @@ documentation format, and tick it in the tracking checklist of
 
 The migrations follow the plan's phases, which also cover every other RSuite component:
 
-| Phase | Re-exports migrated                                                                                                                                                | Status  |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
-| 0     | `CustomProvider` → `MgsProvider`; icons typed with `MgsIconProps` instead of `@rsuite/icons` types                                                                 | Done    |
-| 1     | `Input`, `Textarea`, `PasswordInput`, `InputGroup`, `ButtonGroup`; `ButtonToolbar` → `Stack`                                                                       | Pending |
-| 2     | `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`, `TimeRangePicker`, date helpers (`after`, `beforeToday`, …), `DateRange` | Pending |
-| 3     | `Badge`, `Avatar`, `AvatarGroup`                                                                                                                                   | Pending |
+| Phase | Re-exports migrated                                                                                                                                                | Status      |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
+| 0     | `CustomProvider` → `MgsProvider`; icons typed with `MgsIconProps` instead of `@rsuite/icons` types                                                                 | Done        |
+| 1     | `Input`, `Textarea`, `PasswordInput` (done), `InputGroup`, `ButtonGroup`; `ButtonToolbar` → `Stack`                                                                | Inputs done |
+| 2     | `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`, `TimeRangePicker`, date helpers (`after`, `beforeToday`, …), `DateRange` | Pending     |
+| 3     | `Badge`, `Avatar`, `AvatarGroup`                                                                                                                                   | Pending     |
 
 Until a re-export is migrated, its docs in `src/stories/<Component>/` describe RSuite's API as it is: `Playground`,
 `Basic`, fitting examples and `Accessibility` stories; an MDX page with a hand-written `## Props` table (Storybook's

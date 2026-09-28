@@ -6,15 +6,9 @@ import { join, relative } from 'node:path';
 
 /** Names dist/index.d.ts may still export from 'rsuite' (ARCHITECTURE.md → Migrating the RSuite re-exports). */
 const pendingRsuiteExports = new Set([
-  // Phase 1: inputs and button groups
-  'Input',
-  'InputProps',
+  // Phase 1: input group and button groups
   'InputGroup',
   'InputGroupProps',
-  'PasswordInput',
-  'PasswordInputProps',
-  'Textarea',
-  'TextareaProps',
   'ButtonGroup',
   'ButtonGroupProps',
   'ButtonToolbar',

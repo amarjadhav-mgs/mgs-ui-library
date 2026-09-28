@@ -44,26 +44,24 @@
 
   /* Input borders must reach 3:1 (WCAG 1.4.11); RSuite's default border is 1.3:1. */
   --mgs-color-border-control: var(--rs-gray-500);
+  /* Border of an invalid field: 4.8:1 on white. */
+  --mgs-color-border-error: var(--mgs-color-danger);
 }
 
-/* Dark: the same brand fills as light (white text passes on them); lighter blue for text and focus on dark surfaces. */
+/*
+ * Dark: the same brand fills as light (white text passes on them), so the primary and danger tokens are NOT declared
+ * again here: they inherit from :root, and an app that overrides them on :root gets its colours in dark mode too.
+ * Only the tokens that really differ are declared: lighter blue for text and focus on dark surfaces.
+ */
 :is([data-theme='dark'], .rs-theme-dark) {
-  --mgs-color-primary: var(--mgs-blue-600);
-  --mgs-color-primary-hover: var(--mgs-blue-700);
-  --mgs-color-primary-active: var(--mgs-blue-800);
-  --mgs-color-on-primary: #fff;
-
-  --mgs-color-danger: var(--mgs-red-500);
-  --mgs-color-danger-hover: var(--mgs-red-700);
-  --mgs-color-danger-active: var(--mgs-red-800);
-  --mgs-color-on-danger: #fff;
-
   /* 7:1 on the dark background. */
   --mgs-color-link: var(--mgs-blue-400);
   --mgs-color-focus-ring: var(--mgs-blue-400);
 
   /* RSuite's dark border is 1.6:1. */
   --mgs-color-border-control: var(--rs-gray-400);
+  /* Border of an invalid field: 3.5:1 on the dark input background. */
+  --mgs-color-border-error: var(--mgs-color-danger);
 }
 
 /*
@@ -84,4 +82,7 @@
   --mgs-color-link: var(--rs-text-link);
   --mgs-color-focus-ring: var(--rs-focus-ring-color);
   --mgs-color-border-control: var(--rs-gray-100);
+  /* Border of an invalid field: RSuite's own high-contrast red (red-500) is 2.7:1 on the input background; red-300 is
+     4.8:1. */
+  --mgs-color-border-error: var(--rs-red-300);
 }

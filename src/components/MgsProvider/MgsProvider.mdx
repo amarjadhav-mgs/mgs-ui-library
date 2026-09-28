@@ -16,7 +16,10 @@ same.
 
 - Once, at the root of every application that uses `@mgs/ui`.
 - **Not around parts of a page.** The theme applies to the whole page, so a second provider with a different theme
-  changes the page for everyone. To show one section in another theme, set `data-theme="dark"` on its element.
+  changes the page for everyone.
+- ⚠️ **One theme per page.** Don't theme a single section with `data-theme`: popups (date pickers, menus, dialogs,
+  toasts) open at the end of `<body>`, outside the section, so they keep the page's theme; and a light section inside
+  a dark page isn't supported.
 
 ## Import
 
@@ -66,6 +69,30 @@ A component's own `format` prop still wins over the locale, but prefer the local
 
 Switch the theme with the **Theme** button in the Storybook toolbar: it is this prop on Storybook's own provider.
 
+### Server rendering (Next.js)
+
+The provider sets the theme on `<body>` when the page runs in the browser, so a server-rendered page in a dark theme
+would flash light until then. Set the same theme as `data-theme` on `<html>` on the server, too:
+
+```tsx
+// app/layout.tsx
+import { MgsProvider } from '@mgs/ui';
+import '@mgs/ui/styles.css';
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const theme = await getUserTheme(); // e.g. from a cookie: 'light' | 'dark' | 'high-contrast'
+  return (
+    <html lang="en-GB" data-theme={theme}>
+      <body>
+        <MgsProvider theme={theme}>{children}</MgsProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+`@mgs/ui` components are client components (`'use client'`), so they work in Server Component pages and layouts.
+
 ### Common usage
 
 - **App entry:** wrap the root component, next to the `@mgs/ui/styles.css` import.
@@ -87,9 +114,14 @@ Switch the theme with the **Theme** button in the Storybook toolbar: it is this 
 
 <Canvas of={MgsProviderStories.Accessibility} sourceState="shown" />
 
-- The provider adds no elements: focus order, names and keyboard behaviour come from the components inside it.
+- The provider adds no element around your app: focus order, names and keyboard behaviour come from the components
+  inside it. RSuite adds empty containers for toasts and dialogs at the end of `<body>`.
+- When the last provider unmounts, it removes the theme class from `<body>`.
 - `high-contrast` is an accessibility theme; every MGS colour pair meets WCAG AA in all three themes.
-- It turns off RSuite's click ripple animation, which ignores the "reduce motion" setting.
+- It turns off RSuite's click ripple animation. With the system's "reduce motion" setting on, MGS and RSuite
+  components stop animating transitions, and spinners turn more slowly.
+- Icons need no inline `<style>` tag, so apps with a strict Content Security Policy (`style-src` without
+  `'unsafe-inline'`) work: their styles ship in `@mgs/ui/styles.css`.
 - ⚠️ **Set `<html lang>` yourself** to match the locale. The provider changes the texts and formats, not the page
   language that screen readers use.
 
@@ -98,5 +130,5 @@ Switch the theme with the **Theme** button in the Storybook toolbar: it is this 
 <Canvas of={MgsProviderStories.Playground} sourceState="shown" />
 <Controls of={MgsProviderStories.Playground} />
 
-`children` is the application. The provider renders no element of its own, so it takes no other attributes and no
+`children` is the application. The provider renders no element around it, so it takes no other attributes and no
 `ref`.

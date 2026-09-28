@@ -1,12 +1,21 @@
 import { composeStories } from '@storybook/react-vite';
 import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { DatePicker, MgsProvider, TimePicker } from '@mgs/ui';
+import { DatePicker, MgsProvider, PlusIcon, TimePicker } from '@mgs/ui';
 import { axeViolations } from '../../test/axe';
 import { playStory, storiesWithPlay } from '../../test/stories';
 import * as stories from './MgsProvider.stories';
 
 const allStories = composeStories(stories);
+
+/** A dark provider, optionally with a second provider nested inside. */
+function NestedProviders({ showInner }: { showInner: boolean }) {
+  return (
+    <MgsProvider theme="dark">
+      {showInner && <MgsProvider theme="dark" locale="en-US" />}
+    </MgsProvider>
+  );
+}
 
 // Type-level test, never rendered: `npm run typecheck` fails if any of these becomes accepted.
 const rejectedProps = () => (
@@ -81,6 +90,28 @@ describe('MgsProvider', () => {
     );
     expect(screen.getByLabelText('Date')).toHaveAttribute('placeholder', 'MM/dd/yyyy');
     expect(screen.getByLabelText('Time')).toHaveAttribute('placeholder', 'hh:mm aa');
+  });
+
+  it('removes the theme class from <body> when the last provider unmounts', () => {
+    const { unmount } = render(<MgsProvider theme="dark">App</MgsProvider>);
+    expect(document.body).toHaveClass('rs-theme-dark');
+    unmount();
+    expect(document.body).not.toHaveClass('rs-theme-dark');
+  });
+
+  it('keeps the theme class while another provider is still mounted (nested providers)', () => {
+    const { rerender } = render(<NestedProviders showInner />);
+    rerender(<NestedProviders showInner={false} />);
+    expect(document.body).toHaveClass('rs-theme-dark');
+  });
+
+  it('icons inside it inject no <style> tag (CSP-safe; their styles are in styles.css)', () => {
+    render(
+      <MgsProvider>
+        <PlusIcon />
+      </MgsProvider>,
+    );
+    expect(document.head.querySelector('style[data-insert-css="rsuite-icons"]')).toBeNull();
   });
 
   it('does not accept RSuite props or other locales (checked by TypeScript at compile time)', () => {

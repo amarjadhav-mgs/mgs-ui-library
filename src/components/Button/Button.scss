@@ -5,6 +5,7 @@
 .mgs-button {
   // RSuite draws its focus ring inside the button in the primary colour, which disappears on primary buttons.
   @include mixins.focus-ring;
+  @include mixins.secondary-edge;
 }
 
 .mgs-button__icon {

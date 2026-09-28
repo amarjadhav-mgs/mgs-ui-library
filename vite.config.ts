@@ -38,6 +38,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
-    css: false,
+    // No CSS in tests (jsdom can't lay it out), except the theme source that themes.test.ts reads.
+    css: { include: [/themes\.scss/] },
   },
 });

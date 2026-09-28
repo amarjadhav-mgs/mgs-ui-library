@@ -27,11 +27,11 @@ sets the theme, the language and the date/time formats (both props optional; def
 
 ### Available components
 
-- **MGS components:** `MgsProvider`, `Button`, `IconButton`, `VisuallyHidden`
+- **MGS components:** `MgsProvider`, `Button`, `IconButton`, `Input`, `Textarea`, `PasswordInput`, `VisuallyHidden`
 - **Icons:** `PlusIcon`, `EditIcon`, `TrashIcon`, `SearchIcon`, ... (see the Icons page in Storybook)
 - **Being migrated to an MGS API** (still RSuite's API for now; expect changes):
   - General: `ButtonGroup`, `ButtonToolbar`, `Badge`, `Avatar`, `AvatarGroup`
-  - Input: `Input`, `InputGroup`, `Textarea`, `PasswordInput`
+  - Input: `InputGroup`
   - Date & time: `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`,
     `TimeRangePicker`, plus the `DateRange` type and date rules (`beforeToday`, `afterToday`, `allowedMaxDays`, ...)
 
@@ -45,6 +45,21 @@ and [docs/IMPLEMENTATION-PLAN.md](./docs/IMPLEMENTATION-PLAN.md) for the roadmap
 `--mgs-*` tokens (for example `--mgs-color-primary`); never override `--rs-*` variables or `.rs-*` class selectors.
 See [ARCHITECTURE.md → Styling](./ARCHITECTURE.md#styling).
 
+### Requirements and compatibility
+
+- **React 18 or later**, with `react` and `react-dom` installed by the app (peer dependencies).
+- **ES modules only.** Vite, Next.js, webpack 5 and other modern bundlers work as they are. Jest in CommonJS mode needs
+  `@mgs/ui` in `transformIgnorePatterns` exceptions (or use Vitest).
+- ⚠️ **TypeScript: `skipLibCheck: true` is needed for now** (the default in Vite and Next.js templates). Some
+  components are still RSuite re-exports, and RSuite 6.2.4's own type files reference types it doesn't ship: a test type
+  (`Cannot find namespace 'Chai'`) and, without `@types/node`, Node's `NodeJS`. This goes away when the re-exports
+  are migrated (phases 1 to 3 of [the plan](./docs/IMPLEMENTATION-PLAN.md)); `npm run test:consumer` checks that no
+  other error appears.
+- **Next.js App Router:** components are client components (`'use client'`) and work in Server Component pages. To
+  avoid a flash of the light theme, set `data-theme` on `<html>` on the server: see MgsProvider → Server rendering in
+  Storybook.
+- **Content Security Policy:** no inline `<style>` tags are injected inside `MgsProvider`, so `style-src 'self'` works.
+
 ## Developing
 
 Requires Node 24 (see `.nvmrc`).
@@ -54,17 +69,18 @@ npm install
 npm run dev          # Storybook at http://localhost:6006
 ```
 
-| Script                    | What it does                                    |
-| ------------------------- | ----------------------------------------------- |
-| `npm run dev`             | Storybook (component docs + playgrounds)        |
-| `npm test`                | Story accessibility (axe) and behaviour tests   |
-| `npm run test:watch`      | Tests in watch mode                             |
-| `npm run lint`            | Lint with oxlint                                |
-| `npm run format`          | Format with Prettier                            |
-| `npm run typecheck`       | TypeScript check                                |
-| `npm run build`           | Build the library into `dist/`                  |
-| `npm run build-storybook` | Build static Storybook into `storybook-static/` |
-| `npm run changeset`       | Record a change for the next release            |
+| Script                    | What it does                                                                |
+| ------------------------- | --------------------------------------------------------------------------- |
+| `npm run dev`             | Storybook (component docs + playgrounds)                                    |
+| `npm test`                | Story accessibility (axe) and behaviour tests                               |
+| `npm run test:watch`      | Tests in watch mode                                                         |
+| `npm run lint`            | Lint with oxlint                                                            |
+| `npm run format`          | Format with Prettier                                                        |
+| `npm run typecheck`       | TypeScript check                                                            |
+| `npm run build`           | Build the library into `dist/`                                              |
+| `npm run build-storybook` | Build static Storybook into `storybook-static/`                             |
+| `npm run test:consumer`   | Pack `dist/`, install it in a strict TypeScript app, typecheck and build it |
+| `npm run changeset`       | Record a change for the next release                                        |
 
 A pre-commit hook (Husky + lint-staged) lints and formats staged files automatically.
 
