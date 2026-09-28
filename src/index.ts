@@ -15,7 +15,7 @@ export * from './components/IconButton';
 // MGS icons
 export * from './icons';
 
-// RSuite re-exports: MGS adds nothing to these beyond the theme (ARCHITECTURE.md → What does MGS own here?).
+// RSuite re-exports waiting for migration to an MGS API (ARCHITECTURE.md → Migrating the RSuite re-exports).
 export {
   Avatar,
   AvatarGroup,

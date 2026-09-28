@@ -4,43 +4,51 @@ The contract for how `@mgs/ui` is built. Read it before adding or changing a com
 
 ## Decision
 
-`@mgs/ui` is a **hybrid** library. MGS owns the public API, types, styles, documentation, tests and exports. RSuite 6
-provides proven behaviour (keyboard, focus, popups, calendars, pickers) underneath, wherever it is useful.
+`@mgs/ui` is the UI library for every MGS project, present and future, of any kind. **MGS owns every public API**:
+each component, prop, type, helper and icon an application can import is designed by MGS. RSuite 6 provides proven
+behaviour (keyboard, focus, popups, calendars, pickers) underneath, as an **implementation detail** that applications
+never see, so it can be upgraded or replaced without changing application code.
 
 ```text
                      Application
                           │  import { Button } from '@mgs/ui'
                           ↓
-                       @mgs/ui
-          ┌───────────────┼────────────────┐
-          ↓               ↓                ↓
-      MGS-owned       RSuite-based     MGS patterns
-      components      re-exports
-          └───────────────┼────────────────┘
-                          ↓
-                       RSuite
+              @mgs/ui public API (MGS-owned)
+             ┌────────────┴────────────┐
+             ↓                         ↓
+        Components                 Patterns
+             └────────────┬────────────┘
+                          ↓  internal only
+               RSuite, or MGS's own code
 ```
 
 Apps import only from `@mgs/ui`, never from `rsuite` or `@rsuite/icons`.
 
-## What does MGS own here?
+## Kinds
 
-Ask this for every component. The answer decides where it goes:
+| Kind          | What it is                                                                         | Example                      |
+| ------------- | ---------------------------------------------------------------------------------- | ---------------------------- |
+| **Component** | One UI control or element with an MGS API, built on RSuite or by MGS               | `Button`, `DatePicker`       |
+| **Pattern**   | Several components always combined the same way, e.g. label + control + error text | `FormField`, `ConfirmDialog` |
 
-| Answer                                                                                         | Kind                    | Example                               |
-| ---------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------- |
-| Nothing: RSuite's API, behaviour and look are right, and the MGS theme covers the colours      | **RSuite re-export**    | `DatePicker`, `Calendar`, `Input`     |
-| A simpler or safer API, MGS defaults, behaviour or accessibility RSuite doesn't give, MGS look | **MGS-owned component** | `Button` (accessible `variant`s only) |
-| Several components always combined the same way across applications                            | **MGS pattern**         | `FormField`, `ConfirmDialog`          |
+How much MGS code a component needs varies. Some add behaviour, accessibility or styling RSuite doesn't give (`Button`'s
+`loading`); others mainly map an MGS API onto RSuite. Both are fine: the API is what MGS owns.
 
 Rules:
 
-- Never create a wrapper that only renames an RSuite component.
-- Don't migrate RSuite components automatically. Promote one when a real need appears; apps don't change, because they
-  already import it from `@mgs/ui`.
-- Use RSuite inside an MGS component when it provides difficult behaviour. Build it ourselves only when RSuite doesn't.
-- An MGS component never exposes RSuite props, types or class names in its public API.
+- **Nothing is re-exported from `rsuite` or `@rsuite/icons`.** Every export is an MGS component, pattern, type,
+  helper or icon.
+- **Each component declares its own `Props` interface:** the MGS props plus the native attributes of its root element.
+  It never extends, picks from or re-exports an RSuite props type, and its public types, class names and CSS variables
+  never mention RSuite.
+- **Expose only what MGS supports.** Don't add a prop because RSuite (or MUI, AntD, …) has one; classify each proposed
+  prop as must have, good to have, later or don't need, and build only what's agreed. Adding a prop later is easy;
+  removing one is a breaking change.
+- Use RSuite inside a component when it provides difficult behaviour. Build it ourselves only when RSuite doesn't.
 - No business logic, data fetching or app state in the library.
+- **Enforced by the build:** `npm run build` runs `scripts/check-public-api.mjs`, which fails when a `.d.ts` file in
+  `dist/` references `rsuite` or `@rsuite/icons`. The only exceptions are the re-exports still waiting for migration,
+  listed in that script (see [Migrating the RSuite re-exports](#migrating-the-rsuite-re-exports)).
 
 ## Folder structure
 
@@ -49,14 +57,14 @@ Folders are created when the first file needs them.
 ```text
 src/
 ├── styles/            tokens.scss → themes.scss → rsuite-bridge.scss (see Styling), _mixins.scss
-├── components/        MGS-owned components, one folder each
-├── patterns/          MGS patterns
+├── components/        components, one folder each
+├── patterns/          patterns, one folder each
 ├── icons/             curated icon exports
-├── stories/           docs, stories and tests for the RSuite re-exports
+├── stories/           shared story helpers (shared.tsx); docs of the re-exports until they are migrated
 └── index.ts           the public API: nothing is public unless it's exported here
 ```
 
-An MGS-owned component or pattern:
+A component or pattern:
 
 ```text
 ComponentName/
@@ -79,7 +87,7 @@ themes.scss          semantic colour tokens per theme (--mgs-color-primary, --mg
       ↓
 rsuite-bridge.scss   sets RSuite's --rs-* variables from MGS tokens
       ↓
-MGS components (read semantic tokens only)  +  RSuite components (read --rs-*)
+MGS component styles (read semantic tokens only)  +  RSuite internals (read --rs-*)
 ```
 
 **What components may read.** MGS components use semantic MGS tokens for every design value:
@@ -157,8 +165,10 @@ Every place where `rsuite-bridge.scss` changes RSuite's colours for contrast, me
 ## Icons
 
 - Apps import icons from `@mgs/ui` (`PlusIcon`, `TrashIcon`, ...), never from `@rsuite/icons`. `src/icons/index.ts`
-  re-exports a curated set from `@rsuite/icons` under MGS names that say what the icon shows or means
-  (`FilterIcon`, not `Funnel`). Add an icon when a screen needs it, and check it in the Icons gallery story.
+  exports a curated set under MGS names that say what the icon shows or means (`FilterIcon`, not `Funnel`). The SVG
+  artwork comes from `@rsuite/icons` internally. The icons are still typed with `@rsuite/icons` types; an MGS icon props
+  type replaces them in phase 0 (see [Migrating the RSuite re-exports](#migrating-the-rsuite-re-exports)). Add an icon when a screen
+  needs it, and check it in the Icons gallery story.
 - Icons are decorative: they render `aria-hidden="true"`, sized `1em` in `currentColor`. The control or text next to
   an icon carries the meaning. Components hide any icon passed to them, including custom ones.
 
@@ -185,8 +195,8 @@ If you know `Button`, you should already know the basics of every other MGS comp
   forwarded** to the root DOM element.
 - **Values:**
   - **Input-like components** (text inputs, selects, pickers, checkboxes, switches) use `value` / `defaultValue` for
-    controlled and uncontrolled use, and `onChange(value, event)`. This matches RSuite, so MGS-owned and re-exported
-    inputs behave the same.
+    controlled and uncontrolled use, and `onChange(value, event)`. This matches RSuite's signature, so components built on
+    RSuite inputs pass it straight through.
   - **Other components** use native event signatures: `onClick(event)`, `onFocus(event)`, `onBlur(event)`.
   - **Open/close state** uses `open` / `defaultOpen` / `onOpenChange(open)`.
 - **Event names** are `on` + verb (`onChange`, `onOpenChange`, `onClose`), and props that hold content are nouns
@@ -198,7 +208,7 @@ If you know `Button`, you should already know the basics of every other MGS comp
 
 ### Accessibility baseline
 
-Every MGS-owned component:
+Every component and pattern:
 
 - uses semantic HTML first and ARIA only where HTML can't express it
 - works with the keyboard, with a visible `:focus-visible` ring
@@ -249,7 +259,7 @@ ComponentName              (Storybook sidebar)
 
 Sections in this order (`##` headings, exactly these names, and no others):
 
-1. `# ComponentName`, a one-paragraph overview, and a **Component:** line: its kind (MGS-owned built on RSuite X,
+1. `# ComponentName`, a one-paragraph overview, and a **Component:** line: its kind (component built on RSuite X or by MGS,
    MGS pattern) and links to related components.
 2. `## When to use`: situations it is for, and what to use instead when it isn't.
 3. `## Import`
@@ -265,24 +275,8 @@ Sections in this order (`##` headings, exactly these names, and no others):
 
 Documentation describes reusable UI concepts. It doesn't assume a product domain or a particular application.
 
-### RSuite re-exports
-
-A re-export keeps RSuite's API, so its docs describe that API as it is, with a contract that fits the component
-instead of the MGS-owned story set. Each lives in `src/stories/<Component>/` with `.stories.tsx`, `.mdx` and
-`.test.tsx`. (`docs-structure.test.ts` does not check them.)
-
-- **Stories:** `Playground` first (Controls for the documented props), `Basic`, then the examples that fit the
-  component (no forced Variants, States, Sizes or Advanced stories), and `Accessibility` last. The Accessibility story
-  has a `play` function that checks what the MDX Accessibility section promises: names, roles, keyboard.
-- **MDX,** in this order: `# ComponentName`, a one-paragraph overview, and a **Component:** line (the RSuite version,
-  "re-exported by `@mgs/ui`", and a link to RSuite's reference); then `## Usage`, `## Examples`, `## Accessibility`
-  (starting with the Accessibility story), `## Playground` (with `<Controls />`), `## Props`, and an optional
-  `## Customizing`.
-- **`## Props` is hand-written:** RSuite's types come from `node_modules`, which Storybook's docgen doesn't read, so the
-  generated Controls list only the props a story declares. The table lists the props MGS documents and supports.
-- **Known RSuite gaps** (keyboard, contrast, value quirks) are marked ⚠️ in the MDX, with a test that pins the
-  behaviour, so an RSuite upgrade that changes it fails the tests.
-- **Tests:** axe on every story, every story's `play` function, and "RSuite behaviour documented in X.mdx" tests.
+Documentation describes the MGS API only. RSuite may be named on the **Component:** line (what the component is built
+on, for maintainers), but examples, Controls and prop docs never show RSuite props.
 
 ## Versioning
 
@@ -290,20 +284,42 @@ instead of the MGS-owned story set. Each lives in `src/stories/<Component>/` wit
   is a minor release.
 - **Deprecate before removing:** mark the old API `@deprecated` in the types with a pointer to the replacement, warn
   once in development, remove it in the next breaking release, and write a migration note in the changeset.
+- **Until the first application adopts `@mgs/ui`**, migrating a re-export replaces it directly (a Changeset still
+  records the change); there is nobody to deprecate for.
 
-## Adding or migrating a component
+## Adding a component
 
-1. Answer "What does MGS own here?" and pick the kind.
-2. **RSuite re-export:** export it and its `...Props` type from `src/index.ts`, and document it in
-   `src/stories/<Component>/`.
-3. **MGS-owned component or pattern:** design the API against the conventions above, then write types, component,
-   styles, stories, tests and docs, export it, and deprecate the old re-export if there was one.
+1. Pick the kind (component or pattern) and check nothing existing already covers it.
+2. Propose the API against the conventions above, with each prop classified (must have, good to have, later, don't
+   need), and get it approved.
+3. Write types, component, styles, stories, tests and docs, and export it from `src/index.ts`.
 4. Add a Changeset.
+
+## Migrating the RSuite re-exports
+
+The library started by re-exporting some RSuite components unchanged. Each is migrated to an MGS component, one at a
+time, with an approved API for each. When one is done, remove it from the pending list in
+`scripts/check-public-api.mjs`, move its docs from `src/stories/<Component>/` into its component folder in the standard
+documentation format, and tick it in the tracking checklist of
+[docs/IMPLEMENTATION-PLAN.md](./docs/IMPLEMENTATION-PLAN.md).
+
+The migrations follow the plan's phases, which also cover every other RSuite component:
+
+| Phase | Re-exports migrated                                                                                                                                                | Status  |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
+| 0     | `CustomProvider` → `MgsProvider`; icons typed with an MGS icon props type instead of `@rsuite/icons` types                                                         | Pending |
+| 1     | `Input`, `Textarea`, `PasswordInput`, `InputGroup`, `ButtonGroup`; `ButtonToolbar` → `Stack`                                                                       | Pending |
+| 2     | `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`, `TimeRangePicker`, date helpers (`after`, `beforeToday`, …), `DateRange` | Pending |
+| 3     | `Badge`, `Avatar`, `AvatarGroup`                                                                                                                                   | Pending |
+
+Until a re-export is migrated, its docs in `src/stories/<Component>/` describe RSuite's API as it is: `Playground`,
+`Basic`, fitting examples and `Accessibility` stories; an MDX page with a hand-written `## Props` table (Storybook's
+docgen doesn't read `node_modules`); known RSuite gaps marked ⚠️ with a test that pins them; axe on every story.
+`docs-structure.test.ts` doesn't check them.
 
 ## Future candidates
 
-Recorded, not built. Each is added only when a real application needs it, through "What does MGS own here?" and an
-approved design.
+Recorded, not built. Each goes through an approved API design before it's built.
 
 | Candidate                   | Why it came up                                                                                                              | Status                                |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
