@@ -19,9 +19,16 @@ export default defineConfig({
     minify: false,
     sourcemap: true,
     rolldownOptions: {
-      // rsuite and @rsuite/icons are dependencies: apps get them installed, so they aren't bundled. Only the exact
-      // 'rsuite' import is external; 'rsuite/dist/rsuite.css' is bundled into styles.css.
-      external: ['react', 'react-dom', 'react/jsx-runtime', 'rsuite', /^@rsuite\/icons\//],
+      // rsuite and @rsuite/icons are dependencies: apps get them installed, so they aren't bundled. Only the 'rsuite'
+      // and 'rsuite/locales' imports are external; 'rsuite/dist/rsuite.css' is bundled into styles.css.
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        'rsuite',
+        'rsuite/locales',
+        /^@rsuite\/icons\//,
+      ],
       output: {
         // Marks every component as a Client Component for React Server Components (Next.js App Router).
         banner: "'use client';",

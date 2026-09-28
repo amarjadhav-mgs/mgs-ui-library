@@ -9,8 +9,10 @@ import './styles/themes.scss';
 import './styles/rsuite-bridge.scss';
 
 // MGS-owned components
+export * from './components/MgsProvider';
 export * from './components/Button';
 export * from './components/IconButton';
+export * from './components/VisuallyHidden';
 
 // MGS icons
 export * from './icons';
@@ -23,7 +25,6 @@ export {
   ButtonGroup,
   ButtonToolbar,
   Calendar,
-  CustomProvider,
   DateInput,
   DatePicker,
   DateRangeInput,
@@ -42,7 +43,6 @@ export type {
   ButtonGroupProps,
   ButtonToolbarProps,
   CalendarProps,
-  CustomProviderProps,
   DateInputProps,
   DatePickerProps,
   DateRangeInputProps,

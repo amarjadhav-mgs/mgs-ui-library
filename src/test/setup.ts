@@ -16,7 +16,7 @@ if (!window.matchMedia) {
   });
 }
 
-// Stories rendered in tests get the same decorators (RSuite CustomProvider) as in Storybook.
+// Stories rendered in tests get the same decorators (MgsProvider) as in Storybook.
 setProjectAnnotations(preview);
 
 afterEach(() => {

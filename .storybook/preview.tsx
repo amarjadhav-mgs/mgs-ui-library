@@ -1,13 +1,11 @@
 import type { Preview } from '@storybook/react-vite';
-import { CustomProvider } from '@mgs/ui';
-
-type Theme = 'light' | 'dark' | 'high-contrast';
+import { MgsProvider, type MgsTheme } from '@mgs/ui';
 
 const preview: Preview = {
   tags: ['autodocs'],
   globalTypes: {
     theme: {
-      description: 'RSuite theme',
+      description: 'MGS theme',
       toolbar: {
         title: 'Theme',
         icon: 'contrast',
@@ -23,11 +21,11 @@ const preview: Preview = {
   initialGlobals: { theme: 'light' },
   decorators: [
     (Story, context) => (
-      <CustomProvider theme={context.globals.theme as Theme}>
-        <div style={{ padding: 16, background: 'var(--rs-body)' }}>
+      <MgsProvider theme={context.globals.theme as MgsTheme}>
+        <div style={{ padding: 16, background: 'var(--mgs-color-surface)' }}>
           <Story />
         </div>
-      </CustomProvider>
+      </MgsProvider>
     ),
   ],
   parameters: {

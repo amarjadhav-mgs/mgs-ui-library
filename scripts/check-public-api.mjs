@@ -1,14 +1,11 @@
 // MGS owns every public API (ARCHITECTURE.md → Kinds): no .d.ts in dist/ may reference rsuite or @rsuite/icons.
-// The only exceptions are the re-exports still waiting for migration, listed below. Remove each one when it is
-// migrated; when the lists are empty, delete them.
+// The only exceptions are the rsuite re-exports still waiting for migration, listed below. Remove each one when it is
+// migrated; when the list is empty, delete it.
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 /** Names dist/index.d.ts may still export from 'rsuite' (ARCHITECTURE.md → Migrating the RSuite re-exports). */
 const pendingRsuiteExports = new Set([
-  // Phase 0: provider
-  'CustomProvider',
-  'CustomProviderProps',
   // Phase 1: inputs and button groups
   'Input',
   'InputProps',
@@ -55,9 +52,6 @@ const pendingRsuiteExports = new Set([
   'AvatarGroupProps',
 ]);
 
-/** Files that may still reference @rsuite/icons (phase 0: icons). */
-const pendingIconFiles = new Set(['icons/index.d.ts']);
-
 const rsuiteModule = /['"](rsuite|@rsuite\/icons)(\/[^'"]*)?['"]/;
 const rsuiteExport = /export\s+(?:type\s+)?\{([^}]*)\}\s*from\s*['"]rsuite['"]/g;
 const problems = [];
@@ -76,9 +70,6 @@ for (const entry of readdirSync('dist', { recursive: true, withFileTypes: true }
         .filter((name) => name && !pendingRsuiteExports.has(name));
       return unexpected.length > 0 ? `export { ${unexpected.join(', ')} } from 'rsuite'` : '';
     });
-  }
-  if (pendingIconFiles.has(file)) {
-    source = source.replace(/^.*['"]@rsuite\/icons\/[^'"]+['"].*$/gm, '');
   }
 
   source.split(/\r?\n/).forEach((line, index) => {

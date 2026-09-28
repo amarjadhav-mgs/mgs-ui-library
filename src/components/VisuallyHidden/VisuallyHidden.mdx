@@ -1,0 +1,88 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as VisuallyHiddenStories from './VisuallyHidden.stories';
+
+<Meta of={VisuallyHiddenStories} />
+
+# VisuallyHidden
+
+Text that screen readers read but the screen doesn't show. Use it for context that sighted users get from the layout:
+which row a button acts on, that a link opens a new tab, what a coloured dot means.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `VisuallyHidden` · Related:
+[Button](?path=/docs/components-button--docs), [IconButton](?path=/docs/components-iconbutton--docs) (its
+`aria-label` is the icon-only equivalent)
+
+## When to use
+
+- To add words to a short visible label: _Edit_ → "Edit invoice INV-204".
+- To give meaning to something only visual: a colour-coded status, a chart, an icon without a label.
+- To name a region or form group that has no visible heading.
+- **Not to hide content from everyone.** Use `hidden` or don't render it.
+- **Not for an icon-only button.** Give the [IconButton](?path=/docs/components-iconbutton--docs) an `aria-label`.
+- **Not for text sighted users need too.** If it helps everyone, show it.
+
+## Import
+
+```tsx
+import { VisuallyHidden } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<Button>
+  Edit <VisuallyHidden>invoice INV-204</VisuallyHidden>
+</Button>
+```
+
+Put a space **before** `<VisuallyHidden>` when it continues a visible word, so screen readers don't join the words.
+A space at the start of the hidden text isn't enough: the accessible name is built from trimmed pieces.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={VisuallyHiddenStories.Basic} sourceState="shown" />
+
+### Advanced examples
+
+<Canvas of={VisuallyHiddenStories.Advanced} sourceState="shown" />
+
+Row actions named by their row, a link that opens a new tab, a colour-only status dot (hidden with `aria-hidden`, its
+meaning in `VisuallyHidden`), and a region named by a hidden heading through `aria-labelledby`.
+
+### Common usage
+
+- **Tables:** repeated row actions (_Edit_, _Delete_) get the row's name, so a screen reader list of buttons makes
+  sense on its own.
+- **Links:** "(opens in a new tab)" after links with `target="_blank"`.
+- **Statuses:** a dot or colour chip gets its status as hidden text.
+- **Counts:** a badge showing _3_ gets "unread messages".
+
+## Do and don't
+
+| Do                                                      | Don't                                                                |
+| ------------------------------------------------------- | -------------------------------------------------------------------- |
+| Add the missing context in a few words                  | Hide long instructions that everyone would benefit from              |
+| Put a space before it when continuing a visible word    | Write `Edit<VisuallyHidden>invoice</VisuallyHidden>` ("Editinvoice") |
+| Use `aria-label` on icon-only buttons                   | Put `VisuallyHidden` inside an IconButton instead of `aria-label`    |
+| Hide purely decorative things with `aria-hidden="true"` | Use `VisuallyHidden` to hide content from everyone                   |
+
+## Accessibility
+
+<Canvas of={VisuallyHiddenStories.Accessibility} sourceState="shown" />
+
+- The text stays in the accessibility tree: screen readers read it, and it becomes part of the accessible name of the
+  button or link it is in.
+- It is hidden with CSS (1 px, clipped, absolutely positioned), not with `display: none`, which would hide it from
+  screen readers too.
+- It is never focusable. A skip link that appears on focus is a separate need, planned with the app layout.
+
+## API
+
+<Canvas of={VisuallyHiddenStories.Playground} sourceState="shown" />
+<Controls of={VisuallyHiddenStories.Playground} />
+
+Every native `<span>` attribute also works (`id`, `className`, `aria-*`, `data-*`), and `ref` points at the `<span>`.

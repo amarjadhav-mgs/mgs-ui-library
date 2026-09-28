@@ -2,7 +2,7 @@
  * MGS semantic tokens: what a colour is for, per theme. MGS components read only these.
  *
  * Themes use RSuite's own switches, so one switch themes MGS and RSuite components together:
- *   <CustomProvider theme="dark"> puts .rs-theme-dark on <body>; data-theme="dark" works on any element.
+ *   <MgsProvider theme="dark"> puts .rs-theme-dark on <body>; data-theme="dark" works on any element.
  *
  * Every token is either
  *   owned   - MGS sets the value (brand, danger, focus); rsuite-bridge.scss passes it on to RSuite, or

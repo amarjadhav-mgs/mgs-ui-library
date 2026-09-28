@@ -22,18 +22,18 @@ import { Button } from '@mgs/ui';
 <Button variant="primary">Save</Button>;
 ```
 
-Optional: `<CustomProvider theme="light | dark | high-contrast">` from `@mgs/ui` switches themes.
+Wrap the app once in `<MgsProvider theme="light | dark | high-contrast" locale="en-GB | en-US">` from `@mgs/ui`: it
+sets the theme, the language and the date/time formats (both props optional; defaults `light` and `en-GB`).
 
 ### Available components
 
-- **MGS components:** `Button`, `IconButton`
+- **MGS components:** `MgsProvider`, `Button`, `IconButton`, `VisuallyHidden`
 - **Icons:** `PlusIcon`, `EditIcon`, `TrashIcon`, `SearchIcon`, ... (see the Icons page in Storybook)
 - **Being migrated to an MGS API** (still RSuite's API for now; expect changes):
   - General: `ButtonGroup`, `ButtonToolbar`, `Badge`, `Avatar`, `AvatarGroup`
   - Input: `Input`, `InputGroup`, `Textarea`, `PasswordInput`
   - Date & time: `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`,
     `TimeRangePicker`, plus the `DateRange` type and date rules (`beforeToday`, `afterToday`, `allowedMaxDays`, ...)
-  - Other: `CustomProvider`
 
 Each component's `...Props` type is exported too. See
 [ARCHITECTURE.md → Migrating the RSuite re-exports](./ARCHITECTURE.md#migrating-the-rsuite-re-exports) for the order,

@@ -1,0 +1,102 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as MgsProviderStories from './MgsProvider.stories';
+
+<Meta of={MgsProviderStories} />
+
+# MgsProvider
+
+Sets the colour theme and the locale for every MGS component. Wrap the application in one `MgsProvider`, at its
+root. The locale sets the language of built-in texts and the date and time formats, so every date in the app looks the
+same.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `CustomProvider` · Related:
+[DatePicker](?path=/docs/components-date-time-datepicker--docs), [TimePicker](?path=/docs/components-date-time-timepicker--docs)
+
+## When to use
+
+- Once, at the root of every application that uses `@mgs/ui`.
+- **Not around parts of a page.** The theme applies to the whole page, so a second provider with a different theme
+  changes the page for everyone. To show one section in another theme, set `data-theme="dark"` on its element.
+
+## Import
+
+```tsx
+import { MgsProvider } from '@mgs/ui';
+import '@mgs/ui/styles.css'; // once, in your app entry
+```
+
+## Usage
+
+```tsx
+<MgsProvider theme="light" locale="en-GB">
+  <App />
+</MgsProvider>
+```
+
+Both props are optional: the defaults are `theme="light"` and `locale="en-GB"`.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={MgsProviderStories.Basic} sourceState="shown" />
+
+### Advanced examples
+
+<Canvas of={MgsProviderStories.Advanced} sourceState="shown" />
+
+The same inputs in each locale:
+
+| `locale`          | Date         | Time                 | Week starts on |
+| ----------------- | ------------ | -------------------- | -------------- |
+| `en-GB` (default) | `dd/MM/yyyy` | `HH:mm` (24-hour)    | Monday         |
+| `en-US`           | `MM/dd/yyyy` | `hh:mm aa` (12-hour) | Sunday         |
+
+A component's own `format` prop still wins over the locale, but prefer the locale: one format for the whole app.
+
+### Themes
+
+| `theme`           | Use it for                                                          |
+| ----------------- | ------------------------------------------------------------------- |
+| `light` (default) | The standard MGS look                                               |
+| `dark`            | Users who prefer a dark interface                                   |
+| `high-contrast`   | Users with low vision (yellow on black); offer it as a user setting |
+
+Switch the theme with the **Theme** button in the Storybook toolbar: it is this prop on Storybook's own provider.
+
+### Common usage
+
+- **App entry:** wrap the root component, next to the `@mgs/ui/styles.css` import.
+- **User settings:** keep the theme and locale in the user's settings and pass them to the provider; changing them
+  updates the whole app at once.
+- **Dark mode from the system:** use `matchMedia('(prefers-color-scheme: dark)')` to pick `dark` when the user hasn't
+  chosen a theme.
+
+## Do and don't
+
+| Do                                                       | Don't                                                               |
+| -------------------------------------------------------- | ------------------------------------------------------------------- |
+| Render one `MgsProvider` at the root of the app          | Nest providers with different themes                                |
+| Choose the locale once, for the whole app                | Set a different `format` on each date picker                        |
+| Set `<html lang>` to match the locale (`en-GB`, `en-US`) | Leave `<html lang>` unset: screen readers need it to pronounce text |
+| Offer `high-contrast` as a user setting                  | Use `high-contrast` as a brand look                                 |
+
+## Accessibility
+
+<Canvas of={MgsProviderStories.Accessibility} sourceState="shown" />
+
+- The provider adds no elements: focus order, names and keyboard behaviour come from the components inside it.
+- `high-contrast` is an accessibility theme; every MGS colour pair meets WCAG AA in all three themes.
+- It turns off RSuite's click ripple animation, which ignores the "reduce motion" setting.
+- ⚠️ **Set `<html lang>` yourself** to match the locale. The provider changes the texts and formats, not the page
+  language that screen readers use.
+
+## API
+
+<Canvas of={MgsProviderStories.Playground} sourceState="shown" />
+<Controls of={MgsProviderStories.Playground} />
+
+`children` is the application. The provider renders no element of its own, so it takes no other attributes and no
+`ref`.

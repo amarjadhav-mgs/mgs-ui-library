@@ -165,12 +165,13 @@ Every place where `rsuite-bridge.scss` changes RSuite's colours for contrast, me
 ## Icons
 
 - Apps import icons from `@mgs/ui` (`PlusIcon`, `TrashIcon`, ...), never from `@rsuite/icons`. `src/icons/index.ts`
-  exports a curated set under MGS names that say what the icon shows or means (`FilterIcon`, not `Funnel`). The SVG
-  artwork comes from `@rsuite/icons` internally. The icons are still typed with `@rsuite/icons` types; an MGS icon props
-  type replaces them in phase 0 (see [Migrating the RSuite re-exports](#migrating-the-rsuite-re-exports)). Add an icon when a screen
-  needs it, and check it in the Icons gallery story.
-- Icons are decorative: they render `aria-hidden="true"`, sized `1em` in `currentColor`. The control or text next to
-  an icon carries the meaning. Components hide any icon passed to them, including custom ones.
+  exports a curated set under MGS names that say what the icon shows or means (`FilterIcon`, not `Funnel`). Each is an
+  `MgsIcon` with `MgsIconProps` (SVG attributes only), made by `createIcon` in `src/icons/createIcon.tsx`; the SVG
+  artwork comes from `@rsuite/icons` internally. Add an icon when a screen needs it, with `/* @__PURE__ */` so unused
+  icons are tree-shaken, and check it in the Icons gallery story.
+- Icons are decorative: they render `aria-hidden="true"` with no `aria-label`, sized `1em` in `currentColor`, and take
+  no `aria-label` or `role`. Size them with `font-size` and colour them with `color`. The control or text next to an
+  icon carries the meaning. Components hide any icon passed to them, including custom ones.
 
 ## API conventions
 
@@ -307,7 +308,7 @@ The migrations follow the plan's phases, which also cover every other RSuite com
 
 | Phase | Re-exports migrated                                                                                                                                                | Status  |
 | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
-| 0     | `CustomProvider` → `MgsProvider`; icons typed with an MGS icon props type instead of `@rsuite/icons` types                                                         | Pending |
+| 0     | `CustomProvider` → `MgsProvider`; icons typed with `MgsIconProps` instead of `@rsuite/icons` types                                                                 | Done    |
 | 1     | `Input`, `Textarea`, `PasswordInput`, `InputGroup`, `ButtonGroup`; `ButtonToolbar` → `Stack`                                                                       | Pending |
 | 2     | `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`, `TimeRangePicker`, date helpers (`after`, `beforeToday`, …), `DateRange` | Pending |
 | 3     | `Badge`, `Avatar`, `AvatarGroup`                                                                                                                                   | Pending |

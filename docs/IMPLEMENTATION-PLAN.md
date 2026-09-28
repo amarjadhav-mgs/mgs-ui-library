@@ -230,8 +230,7 @@ Everything else depends on these.
 | `MgsIconProps` for icons | S    | `src/icons/index.ts` exports typed with MGS's own props; remove icons from the pending list                                                                                 |
 | `VisuallyHidden`         | S    |                                                                                                                                                                             |
 | Density decision         | S    | See section 6 and open decision 2                                                                                                                                           |
-| Shared internals         | S    | Helpers every wrapper reuses: id generation for labels, class name joining, dev-only warnings                                                                               |
-| Publishing setup         | S    | GitHub Packages config and a release workflow (section 7), not used until phase 2                                                                                           |
+| Publishing setup         | S    | GitHub Packages config and a release workflow (section 7), not used until phase 2. Needs the GitHub organization `mgs` first (open decision 7)                              |
 
 **Done when:** `MgsProvider` replaces `CustomProvider` everywhere and the icons pass the public API check.
 
@@ -241,6 +240,7 @@ Every ERP screen is a form or a table; forms come first.
 
 | Item                                 | Size | Notes                                                                                                                                                           |
 | ------------------------------------ | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Shared internals                     | S    | Helpers the wrappers reuse (id generation for labels, class name joining, dev-only warnings), created when the first input needs them, not before               |
 | `Input`, `Textarea`, `PasswordInput` | M    | Migrations of existing re-exports                                                                                                                               |
 | `InputGroup`                         | S    | Migration                                                                                                                                                       |
 | `NumberInput`                        | M    | Locale-aware formatting; decimal and currency behaviour decided in proposal                                                                                     |
@@ -465,16 +465,16 @@ Storybook is built in CI; host it (GitHub Pages or an internal server) from phas
 
 Each needs an answer before the phase that uses it starts.
 
-| #   | Decision                                                        | Needed by | Recommendation                                                                         |
-| --- | --------------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------- |
-| 1   | Default date format                                             | Phase 0   | `dd/MM/yyyy` and 24 h time as the default, overridable in `MgsProvider`                |
-| 2   | Default density: keep `md`, or make ERP screens compact         | Phase 0   | Keep `md` as the default; apps or `MgsProvider` can choose compact later if users ask  |
-| 3   | `MgsLocale` shape: ready-made locale objects or a language code | Phase 0   | Ready-made MGS locale exports (`enGB`, `enUS`, …), mapped internally to RSuite locales |
-| 4   | `Select` + `MultiSelect`, or one `Select` with `multiple`       | Phase 1   | Two components: simpler types (`string` vs `string[]`) and docs                        |
-| 5   | `FormLayout`: needed, or is `Stack` / `Grid` enough             | Phase 1   | Decide in the `FormField` proposal                                                     |
-| 6   | `Table` API: column definitions (data) or children (`<Column>`) | Phase 3   | Column definitions                                                                     |
-| 7   | Registry: GitHub Packages or another private registry           | Phase 0   | GitHub Packages (the repo is already on GitHub)                                        |
-| 8   | Storybook hosting                                               | Phase 2   | GitHub Pages (private) or an internal server                                           |
+| #   | Decision                                                        | Needed by | Recommendation                                                                                                                                                         |
+| --- | --------------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Default date format                                             | Phase 0   | **Decided:** the locale sets the format; default `en-GB` = `dd/MM/yyyy`, 24 h. No separate date format prop                                                            |
+| 2   | Default density: keep `md`, or make ERP screens compact         | Phase 0   | **Decided:** keep `md`; no density prop for now                                                                                                                        |
+| 3   | `MgsLocale` shape: ready-made locale objects or a language code | Phase 0   | **Decided:** a language code (`'en-GB' \| 'en-US'`), mapped internally to RSuite locales                                                                               |
+| 4   | `Select` + `MultiSelect`, or one `Select` with `multiple`       | Phase 1   | Two components: simpler types (`string` vs `string[]`) and docs                                                                                                        |
+| 5   | `FormLayout`: needed, or is `Stack` / `Grid` enough             | Phase 1   | Decide in the `FormField` proposal                                                                                                                                     |
+| 6   | `Table` API: column definitions (data) or children (`<Column>`) | Phase 3   | Column definitions                                                                                                                                                     |
+| 7   | Registry: GitHub Packages or another private registry           | Phase 0   | **Decided:** GitHub Packages under a GitHub organization named `mgs` (the scope must match the owner), keeping the name `@mgs/ui`; the repo moves to that organization |
+| 8   | Storybook hosting                                               | Phase 2   | GitHub Pages (private) or an internal server                                                                                                                           |
 
 ---
 
@@ -484,15 +484,15 @@ Tick items as they merge into `dev`.
 
 **Phase 0: foundation**
 
-- [ ] `MgsProvider`
-- [ ] `MgsIconProps` for icons
-- [ ] `VisuallyHidden`
-- [ ] Shared internals
-- [ ] Density and date format decided
+- [x] `MgsProvider`
+- [x] `MgsIconProps` for icons
+- [x] `VisuallyHidden`
+- [x] Density and date format decided (density: keep `md`; date format from the locale, default `en-GB`)
 - [ ] Publishing setup
 
 **Phase 1: form inputs**
 
+- [ ] Shared internals
 - [ ] `Input`, `Textarea`, `PasswordInput`
 - [ ] `InputGroup`
 - [ ] `NumberInput`
