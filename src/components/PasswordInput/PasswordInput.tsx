@@ -1,7 +1,7 @@
 import { forwardRef, useState } from 'react';
-import { InputGroup } from 'rsuite';
 import { EyeIcon, EyeOffIcon } from '../../icons';
 import { TextInput } from '../Input/Input';
+import { InputGroup, InputGroupButton } from '../InputGroup';
 import type { PasswordInputProps } from './types';
 
 /**
@@ -36,7 +36,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           type={visible ? 'text' : 'password'}
         />
         {/* A toggle button: its name stays the same and aria-pressed says whether the password is shown. */}
-        <InputGroup.Button
+        <InputGroupButton
           className="mgs-password-input__toggle"
           aria-label="Show password"
           aria-pressed={visible}
@@ -44,7 +44,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           onClick={() => setVisible((shown) => !shown)}
         >
           {visible ? <EyeOffIcon /> : <EyeIcon />}
-        </InputGroup.Button>
+        </InputGroupButton>
       </InputGroup>
     );
   },

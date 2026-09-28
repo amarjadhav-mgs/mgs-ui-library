@@ -27,11 +27,11 @@ sets the theme, the language and the date/time formats (both props optional; def
 
 ### Available components
 
-- **MGS components:** `MgsProvider`, `Button`, `IconButton`, `Input`, `Textarea`, `PasswordInput`, `VisuallyHidden`
+- **MGS components:** `MgsProvider`, `Button`, `IconButton`, `Input`, `Textarea`, `PasswordInput`, `InputGroup` (with `InputGroupAddon`,
+  `InputGroupButton`), `VisuallyHidden`
 - **Icons:** `PlusIcon`, `EditIcon`, `TrashIcon`, `SearchIcon`, ... (see the Icons page in Storybook)
 - **Being migrated to an MGS API** (still RSuite's API for now; expect changes):
   - General: `ButtonGroup`, `ButtonToolbar`, `Badge`, `Avatar`, `AvatarGroup`
-  - Input: `InputGroup`
   - Date & time: `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`,
     `TimeRangePicker`, plus the `DateRange` type and date rules (`beforeToday`, `afterToday`, `allowedMaxDays`, ...)
 

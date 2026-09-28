@@ -18,6 +18,7 @@ export * from './components/IconButton';
 export * from './components/Input';
 export * from './components/Textarea';
 export * from './components/PasswordInput';
+export * from './components/InputGroup';
 export * from './components/VisuallyHidden';
 
 // MGS icons
@@ -35,7 +36,6 @@ export {
   DatePicker,
   DateRangeInput,
   DateRangePicker,
-  InputGroup,
   TimePicker,
   TimeRangePicker,
 } from 'rsuite';
@@ -50,7 +50,6 @@ export type {
   DatePickerProps,
   DateRangeInputProps,
   DateRangePickerProps,
-  InputGroupProps,
   TimePickerProps,
   TimeRangePickerProps,
 } from 'rsuite';

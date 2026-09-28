@@ -1,0 +1,117 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as InputGroupStories from './InputGroup.stories';
+
+<Meta of={InputGroupStories} />
+
+# InputGroup
+
+An [Input](?path=/docs/components-input--docs) with text, icons or buttons attached: a currency or unit, a fixed prefix,
+a search icon, a Search or Clear button. `InputGroupAddon` holds text or an icon, and `InputGroupButton` a button.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `InputGroup` · Related:
+[Input](?path=/docs/components-input--docs), [PasswordInput](?path=/docs/components-passwordinput--docs) (built on
+InputGroup), [Icons](?path=/story/foundation-icons--gallery)
+
+## When to use
+
+- For a value with a fixed unit, currency or prefix: `₹ 1,200`, `12 kg`, `https://…`.
+- For a search field with an icon or a clear button inside, or a button that acts on the field (Search, Apply).
+- **Not for a label.** The input keeps its own `<label>`; an add-on is not a label.
+- **Not for several fields in a row.** Lay out separate fields with the page layout.
+
+## Import
+
+```tsx
+import { Input, InputGroup, InputGroupAddon, InputGroupButton } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<label htmlFor="amount">Amount (₹)</label>
+<InputGroup>
+  <InputGroupAddon>₹</InputGroupAddon>
+  <Input id="amount" />
+</InputGroup>
+```
+
+`InputGroupAddon` and `InputGroupButton` are separate components, not `InputGroup.Addon`: they also work when a
+Next.js Server Component renders them.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={InputGroupStories.Basic} sourceState="shown" />
+
+Attached add-ons sit in grey boxes before or after the input.
+
+### Icons and buttons
+
+<Canvas of={InputGroupStories.IconsAndButtons} sourceState="shown" />
+
+`inside` puts add-ons inside the input's border: use it for icons and small buttons. `InputGroupButton` attaches a
+button; give an icon-only one an `aria-label`.
+
+### States
+
+<Canvas of={InputGroupStories.States} sourceState="shown" />
+
+`disabled` on the group disables the input, the add-ons and the buttons together. `aria-invalid="true"` on the input
+turns the whole group's border red.
+
+### Sizes
+
+<Canvas of={InputGroupStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`, set on the group: it applies to the input and add-ons, and matches Button.
+
+### Advanced examples
+
+<Canvas of={InputGroupStories.Advanced} sourceState="shown" />
+
+A search field with a clear button that appears only when there's text and returns focus to the input, prices and
+quantities with their currency and unit, and a long prefix, which leaves less room for the value: keep prefixes short.
+
+### Common usage
+
+- **Amounts:** `₹` (or the currency code) before the input, with `inputMode="decimal"`.
+- **Quantities:** the unit after the input (`kg`, `units`, `%`).
+- **Search and filters:** `inside`, a search icon, and a clear button that returns focus to the input.
+- **Field actions:** a Search, Apply or Verify button after the input.
+
+## Do and don't
+
+| Do                                                      | Don't                                                               |
+| ------------------------------------------------------- | ------------------------------------------------------------------- |
+| Put the unit or currency in the label too: "Amount (₹)" | Rely on the add-on alone: screen readers don't read it as the label |
+| Keep add-ons short                                      | Use long prefixes that squeeze the value                            |
+| Give icon-only buttons an `aria-label` ("Clear search") | Leave an icon button unnamed                                        |
+| Set `size` and `disabled` on the group                  | Set a different size on the input inside                            |
+
+## Accessibility
+
+<Canvas of={InputGroupStories.Accessibility} sourceState="shown" />
+
+| Key             | Action                                                    |
+| --------------- | --------------------------------------------------------- |
+| `Tab` / `⇧ Tab` | Move between the input and the group's buttons            |
+| `Enter`         | On a button: activates it; in the input: native behaviour |
+
+- The input keeps its own label. Add-on text is not part of it: repeat what matters in the label, or link the add-on
+  with `aria-describedby`.
+- Icons in add-ons are decorative and hidden from screen readers.
+- Buttons are `type="button"`, so they never submit the form by accident.
+- The group's border meets 3:1 contrast in every theme, turns red for an invalid input, and shows the focus ring while
+  anything inside has focus.
+
+## API
+
+<Canvas of={InputGroupStories.Playground} sourceState="shown" />
+<Controls of={InputGroupStories.Playground} />
+
+`InputGroup` also takes every native `<div>` attribute, `InputGroupAddon` every `<span>` attribute, and
+`InputGroupButton` every `<button>` attribute (`onClick`, `aria-label`, `disabled`, …). Each forwards `ref` to its
+element.

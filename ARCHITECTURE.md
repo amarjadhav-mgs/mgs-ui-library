@@ -321,12 +321,12 @@ documentation format, and tick it in the tracking checklist of
 
 The migrations follow the plan's phases, which also cover every other RSuite component:
 
-| Phase | Re-exports migrated                                                                                                                                                | Status      |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
-| 0     | `CustomProvider` → `MgsProvider`; icons typed with `MgsIconProps` instead of `@rsuite/icons` types                                                                 | Done        |
-| 1     | `Input`, `Textarea`, `PasswordInput` (done), `InputGroup`, `ButtonGroup`; `ButtonToolbar` → `Stack`                                                                | Inputs done |
-| 2     | `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`, `TimeRangePicker`, date helpers (`after`, `beforeToday`, …), `DateRange` | Pending     |
-| 3     | `Badge`, `Avatar`, `AvatarGroup`                                                                                                                                   | Pending     |
+| Phase | Re-exports migrated                                                                                                                                                | Status                     |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
+| 0     | `CustomProvider` → `MgsProvider`; icons typed with `MgsIconProps` instead of `@rsuite/icons` types                                                                 | Done                       |
+| 1     | `Input`, `Textarea`, `PasswordInput`, `InputGroup` (done); `ButtonGroup`; `ButtonToolbar` → `Stack`                                                                | Inputs and InputGroup done |
+| 2     | `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`, `TimeRangePicker`, date helpers (`after`, `beforeToday`, …), `DateRange` | Pending                    |
+| 3     | `Badge`, `Avatar`, `AvatarGroup`                                                                                                                                   | Pending                    |
 
 Until a re-export is migrated, its docs in `src/stories/<Component>/` describe RSuite's API as it is: `Playground`,
 `Basic`, fitting examples and `Accessibility` stories; an MDX page with a hand-written `## Props` table (Storybook's
