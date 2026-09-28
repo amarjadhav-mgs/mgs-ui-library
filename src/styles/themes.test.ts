@@ -24,7 +24,10 @@ describe('themes.scss', () => {
     }
   });
 
-  it('every theme declares the error border colour (it points at theme-dependent colours)', () => {
-    expect(themes.match(/--mgs-color-border-error:/g)).toHaveLength(3);
-  });
+  it.each(['--mgs-color-border-error', '--mgs-color-surface-readonly'])(
+    'every theme declares %s (it points at theme-dependent colours)',
+    (token) => {
+      expect(themes.match(new RegExp(`${token}:`, 'g'))).toHaveLength(3);
+    },
+  );
 });

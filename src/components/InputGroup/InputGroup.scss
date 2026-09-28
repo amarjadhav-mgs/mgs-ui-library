@@ -1,0 +1,36 @@
+// MGS InputGroup. The border, sizes, focus ring of the group and add-on colours come from RSuite's InputGroup, themed
+// through src/styles/rsuite-bridge.scss. This file adds only what MGS owns.
+
+// Buttons inside the border (`inside`: a clear button, PasswordInput's Show password): RSuite removes their focus
+// outline, so only the group's ring shows, the same as when the text field has focus. Keyboard users need to see which
+// one is focused. Inset, so it fits inside the group's border. Same specificity as RSuite's rule and loaded after it.
+.mgs-input-group[data-inside='true'] .mgs-input-group__button:focus-visible {
+  outline: var(--mgs-focus-ring-width) solid var(--mgs-color-focus-ring);
+  outline-offset: calc(-1 * var(--mgs-focus-ring-width));
+}
+
+// Attached add-ons (not `inside`): room around the text, and a divider from the input, in the input border colour
+// (3:1 in every theme). RSuite gives them 4px and no divider, so "₹ 1,200" read as one string.
+.mgs-input-group:not([data-inside='true']) {
+  > .mgs-input-group__addon {
+    padding-inline: var(--mgs-space-md);
+  }
+
+  &[data-size='sm'] > .mgs-input-group__addon {
+    padding-inline: var(--mgs-space-sm);
+  }
+
+  > .mgs-input-group__addon:not(:last-child) {
+    border-inline-end: 1px solid var(--mgs-color-border-control);
+  }
+
+  > .mgs-input-group__addon:not(:first-child) {
+    border-inline-start: 1px solid var(--mgs-color-border-control);
+  }
+}
+
+// Search fields in a group get an MGS clear button (InputGroupButton), so hide the browser's own one: two ✕ in one
+// field. A plain search Input outside a group keeps the browser's.
+.mgs-input-group .mgs-input[type='search']::-webkit-search-cancel-button {
+  appearance: none;
+}

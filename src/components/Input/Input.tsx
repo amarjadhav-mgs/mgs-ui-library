@@ -1,6 +1,8 @@
 import { forwardRef } from 'react';
 import { Input as RSuiteInput } from 'rsuite';
+import { useInputGroupDisabled } from '../InputGroup/context';
 import type { InputProps } from './types';
+import './Input.scss';
 
 /** Input with any native `type`. Internal: PasswordInput uses it for `type="password"`; apps use `Input`. */
 export type TextInputProps = Omit<InputProps, 'type'> & { type?: string };
@@ -10,13 +12,15 @@ export type TextInputProps = Omit<InputProps, 'type'> & { type?: string };
  * Internal: not exported from '@mgs/ui'.
  */
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function TextInput(
-  { className, readOnly, onFocus, onBlur, onKeyDown, ...rest },
+  { className, disabled, readOnly, onFocus, onBlur, onKeyDown, ...rest },
   ref,
 ) {
+  const groupDisabled = useInputGroupDisabled();
   return (
     <RSuiteInput
       ref={ref}
       {...rest}
+      disabled={disabled || groupDisabled}
       readOnly={readOnly}
       onFocus={onFocus}
       onBlur={onBlur}

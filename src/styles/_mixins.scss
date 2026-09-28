@@ -12,8 +12,18 @@
 
 // Visible edge for secondary buttons: RSuite's default button has no border, so it fades into white cards and panels.
 // Drawn inside the button (inset shadow), so sizes don't change; the same colour as input borders, so they match.
+// Disabled buttons get the quieter neutral border, like their faded text. High contrast already draws its own yellow
+// border on secondary buttons, so no MGS edge there.
 @mixin secondary-edge {
   &[data-variant='secondary'] {
     box-shadow: inset 0 0 0 1px var(--mgs-color-border-control);
+  }
+
+  &[data-variant='secondary']:disabled {
+    box-shadow: inset 0 0 0 1px var(--mgs-color-border);
+  }
+
+  :is([data-theme='high-contrast'], .rs-theme-high-contrast) &[data-variant='secondary'] {
+    box-shadow: none;
   }
 }

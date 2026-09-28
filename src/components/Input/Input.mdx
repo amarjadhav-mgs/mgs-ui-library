@@ -69,7 +69,8 @@ Set `name` for forms and `autoComplete` (`email`, `name`, `tel`, …) so browser
 | `disabled` | No        | No       | No                    | Fields that don't apply right now                    |
 | Invalid    | Yes       | Yes      | Yes                   | A value that fails validation: see Advanced examples |
 
-Prefer `readOnly` over `disabled` for values users need to read: disabled fields are skipped by the keyboard and
+Read-only fields have a quieter background and the normal cursor, so they don't look editable. Prefer `readOnly` over
+`disabled` for values users need to read: disabled fields are skipped by the keyboard and
 screen readers. **Invalid** isn't a prop: set `aria-invalid="true"` on the input, which also gives it the error border.
 
 ### Sizes

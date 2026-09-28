@@ -1,6 +1,8 @@
-import { forwardRef } from 'react';
+import { forwardRef, useMemo } from 'react';
 import { InputGroup as RSuiteInputGroup } from 'rsuite';
+import { InputGroupContext, useInputGroupDisabled } from './context';
 import type { InputGroupAddonProps, InputGroupButtonProps, InputGroupProps } from './types';
+import './InputGroup.scss';
 
 const withClass = (base: string, className?: string) => (className ? `${base} ${className}` : base);
 
@@ -18,11 +20,20 @@ const withClass = (base: string, className?: string) => (className ? `${base} ${
  * </InputGroup>
  */
 export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(function InputGroup(
-  { className, ...rest },
+  { className, disabled = false, ...rest },
   ref,
 ) {
+  // RSuite passes disabled only to direct children; the context reaches MGS controls however they're nested.
+  const context = useMemo(() => ({ disabled }), [disabled]);
   return (
-    <RSuiteInputGroup ref={ref} {...rest} className={withClass('mgs-input-group', className)} />
+    <InputGroupContext.Provider value={context}>
+      <RSuiteInputGroup
+        ref={ref}
+        {...rest}
+        disabled={disabled}
+        className={withClass('mgs-input-group', className)}
+      />
+    </InputGroupContext.Provider>
   );
 });
 
@@ -41,12 +52,14 @@ export const InputGroupAddon = forwardRef<HTMLSpanElement, InputGroupAddonProps>
 
 /** A button attached to the input in an `InputGroup`. Give an icon-only button an `aria-label`. */
 export const InputGroupButton = forwardRef<HTMLButtonElement, InputGroupButtonProps>(
-  function InputGroupButton({ className, type = 'button', ...rest }, ref) {
+  function InputGroupButton({ className, type = 'button', disabled, ...rest }, ref) {
+    const groupDisabled = useInputGroupDisabled();
     return (
       <RSuiteInputGroup.Button
         ref={ref}
         {...rest}
         type={type}
+        disabled={disabled || groupDisabled}
         // The click ripple is motion that ignores "reduce motion"; MGS buttons don't use it.
         ripple={false}
         className={withClass('mgs-input-group__button', className)}

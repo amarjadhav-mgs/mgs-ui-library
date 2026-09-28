@@ -34,8 +34,9 @@ import { IconButton, TrashIcon } from '@mgs/ui';
 </IconButton>
 ```
 
-The icon is the child. A name is required, because the button has no visible text: `aria-label`, or
-`aria-labelledby` pointing at visible text that already names the action (a table row's title).
+The icon is the child. `aria-label` is required: the button has no visible text, so it is its name. To reuse visible
+text that already names the action (a table row's title), add `aria-labelledby`: screen readers use it first, and
+`aria-label` stays as the fallback.
 
 ## Examples
 
@@ -98,7 +99,7 @@ is hidden from screen readers like the MGS icons.
 | `Tab` / `⇧ Tab`   | Move focus to the next / previous button |
 | `Enter` / `Space` | Activate the focused button              |
 
-- ⚠️ **A name is required**: `aria-label` or `aria-labelledby`, not both (TypeScript enforces it). Sighted users don't see it, so add `title` for a tooltip,
+- ⚠️ **`aria-label` is required** (TypeScript enforces it); `aria-labelledby` can point at visible text and wins. Sighted users don't see it, so add `title` for a tooltip,
   or use a labelled Button where space allows.
 - The icon is hidden from screen readers, including custom icons you pass in.
 - The focus ring is drawn outside the button, and colours meet WCAG AA in every theme (as Button).

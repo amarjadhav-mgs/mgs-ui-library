@@ -15,8 +15,9 @@ Fixes from the phase 0 review:
   ship in `@mgs/ui/styles.css`.
 - **MgsProvider** removes its theme class from `<body>` when the last provider unmounts. The docs now cover server
   rendering (Next.js: set `data-theme` on `<html>`) and explain why a single section can't have its own theme.
-- **IconButton** can be named with `aria-labelledby` instead of `aria-label` (one of the two is required). Its icon is
-  now hidden by a wrapper, so custom icon components that don't accept `aria-hidden` are hidden too.
+- **IconButton** can point `aria-labelledby` at visible text (it takes precedence; `aria-label` stays required as the
+  fallback). Its icon is now hidden by a wrapper, so custom icon components that don't accept `aria-hidden` are hidden
+  too.
 - **Types:** `Input`, `PasswordInput` and `VisuallyHidden` no longer accept `width`, `height` or `color`, which RSuite
   read as CSS style props instead of passing them on. The published type files are about 100 KB smaller.
 - **Package:** `@mgs/ui/package.json` is exported, and `engines` asks for Node 20 or later. The README documents the

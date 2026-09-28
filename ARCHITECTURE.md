@@ -218,15 +218,17 @@ If you know `Button`, you should already know the basics of every other MGS comp
 - **State vocabulary:** `default`, `hover`, `focus`, `active`, `disabled`, `loading`, `error`, `success`, `selected`,
   `open`, `closed`. Components expose them to CSS as `data-*` attributes (`data-loading`, `data-disabled`), not as new
   names.
-- **Icon-only controls require an accessible name:** the TypeScript types require `aria-label`, or `aria-labelledby`
-  pointing at visible text (one of them, not both).
+- **Icon-only controls require an accessible name:** the TypeScript types require `aria-label`. `aria-labelledby` may
+  also point at visible text (it takes precedence). Props types are interfaces, not unions, so apps can extend them.
 
 ### Accessibility baseline
 
 Every component and pattern:
 
 - uses semantic HTML first and ARIA only where HTML can't express it
-- works with the keyboard, with a visible `:focus-visible` ring
+- works with the keyboard, with a visible `:focus-visible` ring (3:1 or more): **outside** buttons (2px offset, the
+  `focus-ring` mixin), and **inset** on fields and input groups, so rings in a dense form don't overlap the field
+  below. Buttons inside a field (a clear or Show password button) get their own inset ring
 - supports labels, descriptions and error messages through `aria-describedby` / `aria-invalid`
 - respects `prefers-reduced-motion`: `src/styles/motion.scss` turns off transitions and slows spinners for MGS and
   RSuite elements

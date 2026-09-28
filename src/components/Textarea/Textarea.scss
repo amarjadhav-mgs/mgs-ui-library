@@ -1,0 +1,8 @@
+// MGS Textarea. Borders, sizes, colours and the focus ring come from RSuite's Textarea, themed through
+// src/styles/rsuite-bridge.scss (including the read-only background and the error border). This file adds only what
+// MGS owns.
+
+// Read-only text can be selected and copied but not typed into: the default cursor instead of the text cursor.
+.mgs-textarea[readonly] {
+  cursor: default;
+}

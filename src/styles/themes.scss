@@ -46,6 +46,8 @@
   --mgs-color-border-control: var(--rs-gray-500);
   /* Border of an invalid field: 4.8:1 on white. */
   --mgs-color-border-error: var(--mgs-color-danger);
+  /* Background of a read-only field: quieter than an editable one (white); text stays at full contrast. */
+  --mgs-color-surface-readonly: var(--rs-gray-50);
 }
 
 /*
@@ -62,6 +64,8 @@
   --mgs-color-border-control: var(--rs-gray-400);
   /* Border of an invalid field: 3.5:1 on the dark input background. */
   --mgs-color-border-error: var(--mgs-color-danger);
+  /* Read-only field: the page colour, darker than editable (gray-800) and disabled (gray-700) fields. */
+  --mgs-color-surface-readonly: var(--rs-gray-900);
 }
 
 /*
@@ -85,4 +89,6 @@
   /* Border of an invalid field: RSuite's own high-contrast red (red-500) is 2.7:1 on the input background; red-300 is
      4.8:1. */
   --mgs-color-border-error: var(--rs-red-300);
+  /* Read-only field: the page colour, darker than editable and disabled fields. */
+  --mgs-color-surface-readonly: var(--rs-gray-900);
 }

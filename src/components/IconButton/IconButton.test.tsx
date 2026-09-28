@@ -3,7 +3,7 @@ import { composeStories } from '@storybook/react-vite';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { IconButton, type IconButtonVariant, TrashIcon } from '@mgs/ui';
+import { IconButton, type IconButtonProps, type IconButtonVariant, TrashIcon } from '@mgs/ui';
 import { axeViolations } from '../../test/axe';
 import { playStory, storiesWithPlay } from '../../test/stories';
 import * as stories from './IconButton.stories';
@@ -36,10 +36,28 @@ const rejectedProps = () => (
     <IconButton aria-label="Delete" circle>
       <TrashIcon />
     </IconButton>
-    {/* @ts-expect-error one name only: aria-label or aria-labelledby, not both */}
-    <IconButton aria-label="Delete" aria-labelledby="row-1">
+    {/* @ts-expect-error aria-label stays required with aria-labelledby: it is the fallback name */}
+    <IconButton aria-labelledby="row-1">
       <TrashIcon />
     </IconButton>
+  </>
+);
+
+// Type-level test, never rendered: apps can extend and wrap IconButtonProps (it's an interface), and the name stays
+// required through Omit.
+interface DeleteButtonProps extends Omit<IconButtonProps, 'variant' | 'children'> {
+  rowId: string;
+}
+const DeleteButton = ({ rowId, ...rest }: DeleteButtonProps) => (
+  <IconButton {...rest} variant="danger" data-row={rowId}>
+    <TrashIcon />
+  </IconButton>
+);
+const wrapperKeepsTheName = () => (
+  <>
+    <DeleteButton rowId="1" aria-label="Delete row 1" />
+    {/* @ts-expect-error the wrapper still requires aria-label */}
+    <DeleteButton rowId="2" />
   </>
 );
 
@@ -83,11 +101,11 @@ describe('IconButton', () => {
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
   });
 
-  it('can be named by visible text with aria-labelledby', () => {
+  it('aria-labelledby names it from visible text, taking precedence over aria-label', () => {
     render(
       <>
         <span id="row-title">Order 1042</span>
-        <IconButton aria-labelledby="row-title">
+        <IconButton aria-labelledby="row-title" aria-label="Delete">
           <TrashIcon />
         </IconButton>
       </>,
@@ -168,5 +186,6 @@ describe('IconButton', () => {
 
   it('requires aria-label and an icon, and hides RSuite props (checked by TypeScript at compile time)', () => {
     expect(rejectedProps).toBeTypeOf('function');
+    expect(wrapperKeepsTheName).toBeTypeOf('function');
   });
 });

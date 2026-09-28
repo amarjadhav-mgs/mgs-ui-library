@@ -10,6 +10,11 @@ import * as stories from './InputGroup.stories';
 
 const allStories = composeStories(stories);
 
+/** An Input wrapped in a component, so it isn't a direct child of the group. */
+function NestedInput() {
+  return <Input aria-label="Nested input" />;
+}
+
 // Type-level test, never rendered: `npm run typecheck` fails if any of these becomes accepted.
 const rejectedProps = () => (
   <>
@@ -67,6 +72,21 @@ describe('InputGroup', () => {
       </InputGroup>,
     );
     expect(screen.getByLabelText('Project')).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Search' })).toBeDisabled();
+  });
+
+  it('disabled reaches inputs and buttons however deeply they are nested (RSuite only did direct children)', () => {
+    render(
+      <InputGroup disabled>
+        <>
+          <NestedInput />
+          <div>
+            <InputGroupButton>Search</InputGroupButton>
+          </div>
+        </>
+      </InputGroup>,
+    );
+    expect(screen.getByLabelText('Nested input')).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Search' })).toBeDisabled();
   });
 

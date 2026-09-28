@@ -33,6 +33,15 @@
 }
 
 /*
+ * Read-only fields: RSuite draws them exactly like editable ones, so users click and try to type. MGS gives them a
+ * quieter background (themes.scss); their text keeps full contrast. The cursor is set in the component styles.
+ */
+.rs-input[readonly]:not(:disabled),
+.rs-input-group:has(> .rs-input[readonly]:not(:disabled)) {
+  --rs-input-bg: var(--mgs-color-surface-readonly);
+}
+
+/*
  * Button loading spinner: RSuite draws the moving arc in a grey (--rs-loader-rotor) that is 2.8:1 on light secondary
  * buttons and nearly invisible on high-contrast primary (white on yellow). The arc uses each variant's text colour
  * instead, which already meets 4.5:1 on that variant's fill in every theme (well above the 3:1 WCAG 1.4.11 needs).

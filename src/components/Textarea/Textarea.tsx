@@ -1,6 +1,8 @@
 import { forwardRef } from 'react';
 import { Textarea as RSuiteTextarea } from 'rsuite';
+import { useInputGroupDisabled } from '../InputGroup/context';
 import type { TextareaProps } from './types';
+import './Textarea.scss';
 
 /**
  * A multi-line text field. Label it with `<label htmlFor>` and `id` (or `aria-label`).
@@ -10,13 +12,15 @@ import type { TextareaProps } from './types';
  * <Textarea id="notes" autosize minRows={2} maxRows={6} />
  */
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
-  { className, autosize = false, readOnly, onFocus, onBlur, onKeyDown, ...rest },
+  { className, autosize = false, disabled, readOnly, onFocus, onBlur, onKeyDown, ...rest },
   ref,
 ) {
+  const groupDisabled = useInputGroupDisabled();
   return (
     <RSuiteTextarea
       ref={ref}
       {...rest}
+      disabled={disabled || groupDisabled}
       autosize={autosize}
       // RSuite doesn't let users resize by default; a fixed-height textarea can be dragged taller.
       resize={autosize ? 'none' : 'vertical'}

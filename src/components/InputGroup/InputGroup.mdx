@@ -46,7 +46,7 @@ Every example is also a story in the sidebar, where you can interact with it.
 
 <Canvas of={InputGroupStories.Basic} sourceState="shown" />
 
-Attached add-ons sit in grey boxes before or after the input.
+Attached add-ons sit before or after the input, separated from it by a line.
 
 ### Icons and buttons
 
@@ -59,7 +59,7 @@ button; give an icon-only one an `aria-label`.
 
 <Canvas of={InputGroupStories.States} sourceState="shown" />
 
-`disabled` on the group disables the input, the add-ons and the buttons together. `aria-invalid="true"` on the input
+`disabled` on the group disables the input, the add-ons and the buttons together, however deeply they are nested. `aria-invalid="true"` on the input
 turns the whole group's border red.
 
 ### Sizes
@@ -79,7 +79,8 @@ quantities with their currency and unit, and a long prefix, which leaves less ro
 
 - **Amounts:** `₹` (or the currency code) before the input, with `inputMode="decimal"`.
 - **Quantities:** the unit after the input (`kg`, `units`, `%`).
-- **Search and filters:** `inside`, a search icon, and a clear button that returns focus to the input.
+- **Search and filters:** `inside`, a search icon, and a clear button that returns focus to the input. In a group,
+  the browser's own clear button on `type="search"` is hidden, so there is only one.
 - **Field actions:** a Search, Apply or Verify button after the input.
 
 ## Do and don't
@@ -103,7 +104,8 @@ quantities with their currency and unit, and a long prefix, which leaves less ro
 - The input keeps its own label. Add-on text is not part of it: repeat what matters in the label, or link the add-on
   with `aria-describedby`.
 - Icons in add-ons are decorative and hidden from screen readers.
-- Buttons are `type="button"`, so they never submit the form by accident.
+- Buttons are `type="button"`, so they never submit the form by accident. Buttons inside the border show their own
+  focus ring, so keyboard users can tell them from the text field.
 - The group's border meets 3:1 contrast in every theme, turns red for an invalid input, and shows the focus ring while
   anything inside has focus.
 
