@@ -118,7 +118,7 @@ The MGS names and merges are **proposals**: each is confirmed in its component's
 | `PinInput`                    | Wrap       | `PinInput`                  | 6     | One-time codes                                                    |
 | `SegmentedControl`            | Wrap       | `SegmentedControl`          | 6     |                                                                   |
 | `Slider`, `RangeSlider`       | Merge      | `Slider`                    | 6     | Single or range value, decided in the proposal                    |
-| `RadioTile`, `RadioTileGroup` | Wrap       | `RadioCard`                 | 1     | Card-style radios; moved up from "later": apps build them by hand |
+| `RadioTile`, `RadioTileGroup` | Wrap       | `RadioCard`                 | 1     | Done, built by MGS; uses `RadioGroup`, no group of its own        |
 | `PasswordStrengthMeter`       | Later      | —                           | 7     |                                                                   |
 | `Rate`                        | Don't need | —                           | —     | Star ratings are rare in business apps                            |
 
@@ -501,7 +501,9 @@ Tick items as they merge into `dev`.
 - [x] `NumberInput` (and the `en-IN` locale)
 - [x] `Checkbox`, `CheckboxGroup`
 - [x] `Radio`, `RadioGroup`
-- [ ] `RadioCard` proposal (card-style radios; moved up from phase 7: both existing apps build them by hand)
+- [x] `RadioCard` (card-style radios, in the existing `RadioGroup`; moved up from phase 7: both existing apps build
+      them by hand). Later, by proposal: cards with a checkbox; a badge ("Current plan", "Recommended") and content
+      at the end of the card (a price), which the hand-built plan cards have
 - [ ] `Switch`
 - [ ] `Select`
 - [ ] `MultiSelect`

@@ -96,13 +96,13 @@ MGS component styles (read semantic tokens only)  +  RSuite internals (read --rs
 
 **What components may read.** MGS components use semantic MGS tokens for every design value:
 
-| Kind       | Tokens                                                                        | Defined in    |
-| ---------- | ----------------------------------------------------------------------------- | ------------- |
-| Colour     | `--mgs-color-*` (primary, danger, text, surface, border, link, ...)           | `themes.scss` |
-| Spacing    | `--mgs-space-xs` … `--mgs-space-xl`                                           | `tokens.scss` |
-| Radius     | `--mgs-radius-sm` … `--mgs-radius-full`                                       | `tokens.scss` |
-| Typography | `--mgs-font-family`, `--mgs-font-size-sm` … `--mgs-font-size-lg`              | `tokens.scss` |
-| Focus      | `--mgs-color-focus-ring`, `--mgs-focus-ring-width`, `--mgs-focus-ring-offset` | both          |
+| Kind       | Tokens                                                                                     | Defined in    |
+| ---------- | ------------------------------------------------------------------------------------------ | ------------- |
+| Colour     | `--mgs-color-*` (primary, danger, text, surface, border, link, ...)                        | `themes.scss` |
+| Spacing    | `--mgs-space-xs` … `--mgs-space-xl`                                                        | `tokens.scss` |
+| Radius     | `--mgs-radius-sm` … `--mgs-radius-full`                                                    | `tokens.scss` |
+| Typography | `--mgs-font-family`, `--mgs-font-size-sm` … `--mgs-font-size-lg`, `--mgs-font-weight-bold` | `tokens.scss` |
+| Focus      | `--mgs-color-focus-ring`, `--mgs-focus-ring-width`, `--mgs-focus-ring-offset`              | both          |
 
 - **No hard-coded design values** in component styles: no colours, pixel sizes, radii, font sizes or font families.
   Layout keywords (`display: inline-flex`) are fine.
@@ -130,7 +130,8 @@ MGS component styles (read semantic tokens only)  +  RSuite internals (read --rs
   `.mgs-<component>__<part>`. It never targets `.rs-*` classes or sets `--rs-*` variables; a colour fix for an RSuite
   element goes in the bridge.
 - Shared rules are Sass mixins in `src/styles/_mixins.scss` (`@include mixins.focus-ring;`). Components that are the
-  same kind of control share one mixin: `choice-control` (Checkbox, Radio) and `choice-group` (their groups).
+  same kind of control share one mixin: `choice-control` (Checkbox, Radio, RadioCard), `radio-circle` (Radio,
+  RadioCard) and `choice-group` (the groups).
 - Component styles load after `rsuite.css` (see `src/index.ts`), so a `.mgs-*` rule wins over an RSuite rule of the
   same specificity.
 

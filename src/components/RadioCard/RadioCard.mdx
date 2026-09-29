@@ -1,0 +1,143 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as RadioCardStories from './RadioCard.stories';
+
+<Meta of={RadioCardStories} />
+
+# RadioCard
+
+One option of a [RadioGroup](?path=/docs/components-radiogroup--docs), shown as a card: a title, with an optional
+description and icon. The whole card can be clicked. It behaves like a [Radio](?path=/docs/components-radio--docs).
+
+**Component:** MGS-owned, built by MGS on a native `<input type="radio">` · Related:
+[RadioGroup](?path=/docs/components-radiogroup--docs), [Radio](?path=/docs/components-radio--docs)
+
+## When to use
+
+- For a choice of 2 to about 5 options that each need a line of explanation: a plan with what it includes, a user
+  type with what it means.
+- For an important choice that deserves room on the page.
+- **Not for short options that explain themselves** ("Low, Normal, High"). Use [Radio](?path=/docs/components-radio--docs).
+- **Not when several options can be chosen.** Use a [CheckboxGroup](?path=/docs/components-checkboxgroup--docs).
+- **Not as a link or a button.** Selecting a card only changes the group's value; the form's button does the action.
+- **Not on its own.** A RadioCard outside a `RadioGroup` has no value to report, and a warning in the console says so.
+
+## Import
+
+```tsx
+import { RadioCard, RadioGroup } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<RadioGroup aria-label="Plan" value={plan} onChange={setPlan}>
+  <RadioCard value="basic" description="5 users, 10 GB storage">
+    Basic
+  </RadioCard>
+  <RadioCard value="team" description="25 users, 100 GB storage">
+    Team
+  </RadioCard>
+</RadioGroup>
+```
+
+⚠️ **Every card needs a title.** The text inside `<RadioCard>` names the radio for screen readers; the description
+alone is not a name. A warning in the console tells you when it is missing.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={RadioCardStories.Basic} sourceState="shown" />
+
+`value`, `onChange`, `name` and `required` belong to the group. In a vertical group, the cards fill the width of their
+container: set the width with the layout around the group.
+
+### States
+
+<Canvas of={RadioCardStories.States} sourceState="shown" />
+
+| State    | How                                        | Use it for                                          |
+| -------- | ------------------------------------------ | --------------------------------------------------- |
+| Selected | The group's `value` is this card's `value` | The chosen option                                   |
+| Disabled | `disabled`, on the card or on the group    | An option that isn't available; say why in the text |
+| Invalid  | `aria-invalid="true"` on the `RadioGroup`  | A required choice without an answer                 |
+
+### With icon
+
+<Canvas of={RadioCardStories.WithIcon} sourceState="shown" />
+
+`icon` is decorative and hidden from screen readers: the title says what the option is. Give every card of a group an
+icon, or none.
+
+### Title only
+
+<Canvas of={RadioCardStories.TitleOnly} sourceState="shown" />
+
+`description` is optional. When no card needs one, consider plain [radios](?path=/docs/components-radio--docs): they
+take less room.
+
+### Horizontal
+
+<Canvas of={RadioCardStories.Horizontal} sourceState="shown" />
+
+With `orientation="horizontal"` on the group, the cards share the row equally and wrap onto the next line when the row
+gets too narrow.
+
+### Advanced examples
+
+<Canvas of={RadioCardStories.Advanced} sourceState="shown" />
+
+- **Options from an array:** render the cards with `.map()`.
+- **Validation:** the error is text under the group, linked to the group with `aria-describedby`; `aria-invalid` on
+  the group turns the borders of its cards red.
+
+### Common usage
+
+- **Plans, roles and types:** the name as the title, what it includes as the description.
+- **Rich descriptions:** `description` takes any content (a price in bold, two lines). Keep links and buttons out of
+  it: the whole card is one radio.
+- **Own layout:** cards can be nested in other elements (a grid with columns); the group still reaches them.
+- **Forms:** as for [RadioGroup](?path=/docs/components-radiogroup--docs).
+
+## Do and don't
+
+| Do                                                     | Don't                                              |
+| ------------------------------------------------------ | -------------------------------------------------- |
+| Put every RadioCard in a `RadioGroup`                  | Use a card as a button that does something at once |
+| Keep the title short, and the details in `description` | Put the whole text in the title                    |
+| Give all cards of a group the same parts               | Mix cards with and without icons or descriptions   |
+| Say in the description why a card is disabled          | Hide options the user expects to see               |
+| Use plain radios for short, obvious options            | Use cards for more than about 5 options            |
+| Make every option of a group a card                    | Mix cards and plain radios in one group            |
+
+## Accessibility
+
+<Canvas of={RadioCardStories.Accessibility} sourceState="shown" />
+
+The keyboard works on the group: see [RadioGroup → Accessibility](?path=/docs/components-radiogroup--docs).
+
+- Renders a native `<input type="radio">` inside a `<label>`: the whole card is the click and touch target.
+- The title is the radio's name and the description its description, so screen readers read "Team, radio button, 2 of
+  3", then the details. An `aria-label` or `aria-labelledby` you set replaces the title as the name.
+- The focus ring is around the whole card.
+- The card's border, the selected fill and the error border reach 3:1 contrast in every theme. Selection is shown by
+  the radio circle and by a thicker border, never by colour alone.
+- In forced-colors mode (Windows High Contrast) the dot in the circle shows the selected card, and a disabled card
+  uses the system's grey.
+
+## API
+
+<Canvas of={RadioCardStories.Playground} sourceState="shown" />
+<Controls of={RadioCardStories.Playground} />
+
+`className` and `style` go to the root element (the `<label>`). Every other native `<input>` attribute and event goes
+to the `<input>` (`id`, `onFocus`, `onBlur`, `aria-*`, `data-*`), and `ref` points at the `<input>`. `checked`,
+`onChange`, `name` and `required` are not available: they belong to the `RadioGroup`.
+
+## Customizing
+
+Colours come from the MGS tokens `--mgs-color-primary` and `--mgs-color-on-primary` (selected),
+`--mgs-color-border-control`, `--mgs-color-border-error`, `--mgs-color-text-secondary` (description and icon) and
+`--mgs-color-focus-ring`. Override tokens in your app's stylesheet, never the component's classes.

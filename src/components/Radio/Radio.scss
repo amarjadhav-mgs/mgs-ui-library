@@ -1,49 +1,14 @@
 // MGS Radio: a native <input type="radio">, invisible, on top of the circle that is drawn. The layout, the 24px target,
-// the label, the disabled look and the focus ring are shared with Checkbox (the choice-control mixin); this file draws
-// the circle and its dot.
+// the label, the disabled look and the focus ring are shared with Checkbox (the choice-control mixin), and the circle
+// and its dot with RadioCard (the radio-circle mixin). This file adds the hover and invalid borders.
 @use '../../styles/mixins';
 
 @include mixins.choice-control('mgs-radio', 'circle');
+@include mixins.radio-circle('mgs-radio');
 
-.mgs-radio__circle {
-  display: inline-flex;
-  box-sizing: border-box;
-  align-items: center;
-  justify-content: center;
-  width: var(--mgs-space-lg);
-  height: var(--mgs-space-lg);
-  // 3:1 or more on the page in every theme (themes.scss).
-  border: 1px solid var(--mgs-color-border-control);
-  border-radius: var(--mgs-radius-full);
-  color: var(--mgs-color-on-primary);
-
-  // The dot, shown when selected: 6px in the 16px circle. Drawn with borders (3px on every side of an empty box), not
-  // a background: forced-colors mode (Windows High Contrast) replaces backgrounds, and a selected radio would look
-  // like an unselected one. Borders stay, in the system's text colour.
-  &::after {
-    display: none;
-    box-sizing: content-box;
-    width: 0;
-    height: 0;
-    border: calc(var(--mgs-space-lg) * 0.1875) solid currentColor;
-    border-radius: var(--mgs-radius-full);
-    content: '';
-  }
-}
-
+// Hover: the primary border, the colour a selected radio already has.
 .mgs-radio:hover .mgs-radio__input:not(:disabled) + .mgs-radio__circle {
   border-color: var(--mgs-color-primary);
-}
-
-// Selected: the primary fill (3:1 or more on the page) with the dot in the colour of text on primary (4.5:1 or more on
-// the fill).
-.mgs-radio__input:checked + .mgs-radio__circle {
-  border-color: var(--mgs-color-primary);
-  background-color: var(--mgs-color-primary);
-
-  &::after {
-    display: block;
-  }
 }
 
 // Invalid (aria-invalid="true" on the RadioGroup): the same error border as the text fields, on every radio of the

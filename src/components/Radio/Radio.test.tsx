@@ -12,6 +12,7 @@ import * as stories from './Radio.stories';
 
 const allStories = composeStories(stories);
 const styles = styleSource('src/components/Radio/Radio.scss');
+const mixins = styleSource('src/styles/_mixins.scss');
 
 // Type-level test, never rendered: `npm run typecheck` fails if any of these becomes accepted.
 const rejectedProps = () => (
@@ -229,7 +230,10 @@ describe('Radio', () => {
   });
 
   it('the dot is drawn with borders, which forced-colors mode keeps (read from the styles)', () => {
-    const dot = declarationsOf('&::after');
+    expect(styles).toContain("@include mixins.radio-circle('mgs-radio')");
+    const circle = mixins.slice(mixins.indexOf('@mixin radio-circle'));
+    const after = circle.slice(circle.indexOf('&::after {'));
+    const dot = after.slice(0, after.indexOf('}'));
     expect(dot).toContain('solid currentColor');
     expect(dot).not.toContain('background');
   });

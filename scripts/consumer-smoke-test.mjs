@@ -76,6 +76,7 @@ import {
   PasswordInput,
   PlusIcon,
   Radio,
+  RadioCard,
   RadioGroup,
   Textarea,
   TrashIcon,
@@ -110,6 +111,9 @@ function App() {
       <RadioGroup aria-label="Delivery" value={delivery} onChange={setDelivery}>
         <Radio value="standard">Standard</Radio>
         <Radio value="express">Express</Radio>
+        <RadioCard value="pickup" description="Ready in 2 hours" icon={<PlusIcon />}>
+          Pick up
+        </RadioCard>
       </RadioGroup>
       <DatePicker label="Due date" />
       <Button leftIcon={<PlusIcon />}>

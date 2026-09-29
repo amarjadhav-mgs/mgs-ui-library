@@ -1,0 +1,154 @@
+// MGS RadioCard: a Radio drawn as a card. The native <input>, its 24px target, the circle and its dot are the same as
+// Radio's (the choice-control and radio-circle mixins). This file draws the card around them.
+@use '../../styles/mixins';
+
+@include mixins.choice-control('mgs-radio-card', 'circle');
+@include mixins.radio-circle('mgs-radio-card');
+
+// Selected: a 2px border. The second pixel is drawn inside (a shadow), so the card keeps its size.
+@mixin selected-border($colour) {
+  border-color: $colour;
+  box-shadow: inset 0 0 0 1px $colour;
+}
+
+// Disabled: the border fades like the circle does (half as strong), so the card doesn't look like one that can be
+// chosen. Browsers without color-mix() keep the full border; the faded circle and text still show it.
+@function faded($colour) {
+  @return color-mix(in srgb, $colour 50%, transparent);
+}
+
+@mixin focus-ring {
+  outline: var(--mgs-focus-ring-width) solid var(--mgs-color-focus-ring);
+  outline-offset: var(--mgs-focus-ring-offset);
+}
+
+.mgs-radio-card {
+  display: flex;
+  box-sizing: border-box;
+  // Fills the width of a vertical group.
+  align-self: stretch;
+  gap: var(--mgs-space-md);
+  padding: var(--mgs-space-md) var(--mgs-space-lg);
+  // 3:1 or more on the page in every theme (themes.scss).
+  border: 1px solid var(--mgs-color-border-control);
+  border-radius: var(--mgs-radius-md);
+
+  &:hover:not([data-disabled]) {
+    border-color: var(--mgs-color-primary);
+  }
+
+  &[data-disabled] {
+    border-color: faded(var(--mgs-color-border-control));
+  }
+
+  // The selected border and the focus ring come from the <input> itself, like the circle does, so the two signs of
+  // "selected" can't disagree.
+  &:has(.mgs-radio-card__input:checked) {
+    @include selected-border(var(--mgs-color-primary));
+  }
+
+  &[data-disabled]:has(.mgs-radio-card__input:checked) {
+    @include selected-border(faded(var(--mgs-color-primary)));
+  }
+
+  &:has(.mgs-radio-card__input:focus-visible) {
+    @include focus-ring;
+  }
+
+  // Browsers without :has(): the selected border comes from the value React knows, and the focus ring shows on any
+  // focus inside the card, also after a click.
+  @supports not selector(:has(*)) {
+    &[data-checked] {
+      @include selected-border(var(--mgs-color-primary));
+    }
+
+    &[data-disabled][data-checked] {
+      @include selected-border(faded(var(--mgs-color-primary)));
+    }
+
+    &:focus-within {
+      @include focus-ring;
+    }
+  }
+}
+
+// Not around the circle too: the card has the ring.
+.mgs-radio-card__input:focus-visible + .mgs-radio-card__circle {
+  outline: none;
+}
+
+// In a horizontal group the cards share the row equally, and wrap when they get narrower than 8 × 24px = 192px.
+.mgs-radio-group[data-orientation='horizontal'] > .mgs-radio-card {
+  flex: 1 1 calc(var(--mgs-space-xl) * 8);
+}
+
+// More room between cards than between plain radios. Only the variable the group reads is set here, so this rule
+// never competes with the group's own rules. Browsers without :has() keep the group's spacing.
+.mgs-radio-group:has(.mgs-radio-card) {
+  --mgs-choice-gap: var(--mgs-space-sm);
+}
+
+// Invalid (aria-invalid="true" on the RadioGroup): the error border on every card that isn't disabled. More specific
+// than the hover and selected rules above, so neither replaces it.
+.mgs-radio-group[aria-invalid='true'] .mgs-radio-card:not([data-disabled]) {
+  border-color: var(--mgs-color-border-error);
+
+  // A selected card keeps its thicker border, in the error colour.
+  &:has(.mgs-radio-card__input:checked) {
+    @include selected-border(var(--mgs-color-border-error));
+  }
+
+  @supports not selector(:has(*)) {
+    &[data-checked] {
+      @include selected-border(var(--mgs-color-border-error));
+    }
+  }
+}
+
+// As high as one line of the title, so the icon is centred on it. The icon itself is larger than the text: its size
+// is set on the icon, not here, where it would change the height of the line.
+.mgs-radio-card__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: 1lh;
+  color: var(--mgs-color-text-secondary);
+
+  > * {
+    font-size: var(--mgs-font-size-lg);
+  }
+}
+
+.mgs-radio-card__label {
+  display: grid;
+  flex: 1;
+  gap: var(--mgs-space-xs);
+}
+
+.mgs-radio-card__title {
+  font-weight: var(--mgs-font-weight-bold);
+}
+
+.mgs-radio-card__description {
+  color: var(--mgs-color-text-secondary);
+}
+
+.mgs-radio-card[data-disabled] {
+  .mgs-radio-card__icon,
+  .mgs-radio-card__description {
+    color: var(--mgs-color-text-disabled);
+  }
+}
+
+// Forced colours (Windows High Contrast): the system replaces the colours above, and a disabled card would look like
+// the others. The system's own grey for disabled things says it.
+@media (forced-colors: active) {
+  .mgs-radio-card[data-disabled] {
+    border-color: GrayText;
+
+    .mgs-radio-card__icon,
+    .mgs-radio-card__description {
+      color: GrayText;
+    }
+  }
+}

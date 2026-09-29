@@ -70,20 +70,75 @@
     outline: var(--mgs-focus-ring-width) solid var(--mgs-color-focus-ring);
     outline-offset: var(--mgs-focus-ring-offset);
   }
+
+  // Forced colours (Windows High Contrast): the system replaces the colours above, so disabled text would look like
+  // any other text. The system's own grey for disabled things says it, on the label and on the mark.
+  @media (forced-colors: active) {
+    .#{$block}[data-disabled] {
+      color: GrayText;
+    }
+
+    .#{$block}__input:disabled + .#{$block}__#{$mark} {
+      border-color: GrayText;
+      color: GrayText;
+      opacity: 1;
+    }
+  }
+}
+
+// The circle of a radio (Radio, RadioCard) and its dot. Use with choice-control($block, 'circle').
+@mixin radio-circle($block) {
+  .#{$block}__circle {
+    display: inline-flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    width: var(--mgs-space-lg);
+    height: var(--mgs-space-lg);
+    // 3:1 or more on the page in every theme (themes.scss).
+    border: 1px solid var(--mgs-color-border-control);
+    border-radius: var(--mgs-radius-full);
+    color: var(--mgs-color-on-primary);
+
+    // The dot, shown when selected: 6px in the 16px circle. Drawn with borders (3px on every side of an empty box),
+    // not a background: forced-colors mode (Windows High Contrast) replaces backgrounds, and a selected radio would
+    // look like an unselected one. Borders stay, in the system's text colour.
+    &::after {
+      display: none;
+      box-sizing: content-box;
+      width: 0;
+      height: 0;
+      border: calc(var(--mgs-space-lg) * 0.1875) solid currentColor;
+      border-radius: var(--mgs-radius-full);
+      content: '';
+    }
+  }
+
+  // Selected: the primary fill (3:1 or more on the page) with the dot in the colour of text on primary (4.5:1 or more
+  // on the fill).
+  .#{$block}__input:checked + .#{$block}__circle {
+    border-color: var(--mgs-color-primary);
+    background-color: var(--mgs-color-primary);
+
+    &::after {
+      display: block;
+    }
+  }
 }
 
 // A group of choice controls (CheckboxGroup, RadioGroup): only the layout. Each control styles itself.
+// A control that needs other spacing (RadioCard) sets --mgs-choice-gap on the group; it is not a token for apps.
 @mixin choice-group($block) {
   .#{$block} {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--mgs-space-xs);
+    gap: var(--mgs-choice-gap, var(--mgs-space-xs));
 
     // Next to each other; a row that is full wraps onto the next line.
     &[data-orientation='horizontal'] {
       flex-flow: row wrap;
-      column-gap: var(--mgs-space-xl);
+      column-gap: var(--mgs-choice-gap, var(--mgs-space-xl));
     }
   }
 }
