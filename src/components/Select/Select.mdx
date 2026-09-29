@@ -1,0 +1,165 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as SelectStories from './Select.stories';
+
+<Meta of={SelectStories} />
+
+# Select
+
+A field that opens a list to choose one option from. Its value is the chosen option's `value`, or `null`. It follows
+the MGS size scale, so it lines up with inputs and buttons.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `SelectPicker` · Related:
+[RadioGroup](?path=/docs/components-radiogroup--docs) (a few options, all visible),
+[Input](?path=/docs/components-input--docs)
+
+## When to use
+
+- For choosing one option from a list of about 5 or more: a status, a customer, a country.
+- In filters and toolbars, where there is no room to show the options.
+- **Not for 2 to 4 options in a form.** Use a [RadioGroup](?path=/docs/components-radiogroup--docs): the user sees
+  the options without opening anything.
+- **Not for several values.** Use a multi-select.
+- **Not for free text with suggestions.** Use an autocomplete.
+- **Not for actions** ("Export as…"). Use a menu.
+
+## Import
+
+```tsx
+import { Select, type SelectOption } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<span id="status-label">Status</span>
+<Select aria-labelledby="status-label" options={statuses} value={status} onChange={setStatus} />
+```
+
+⚠️ **Name the field** with `aria-labelledby` (the `id` of its visible label) or `aria-label`. A `<label htmlFor>`
+can't name a Select, because the field is not a native form control. A placeholder is not a label. A warning in the
+console tells you when the name is missing.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={SelectStories.Basic} sourceState="shown" />
+
+`options` is a list of `{ value, label }`. Values are strings, and different for every option. With `name`, a form
+submits the chosen value.
+
+### States
+
+<Canvas of={SelectStories.States} sourceState="shown" />
+
+| State      | Focusable | Opens | Submitted with a form | Use it for                                           |
+| ---------- | --------- | ----- | --------------------- | ---------------------------------------------------- |
+| `readOnly` | Yes       | No    | Yes                   | A value users should see, not change                 |
+| `disabled` | No        | No    | No                    | A field that doesn't apply right now                 |
+| `loading`  | Yes       | Yes   | Yes                   | The options are being loaded                         |
+| Invalid    | Yes       | Yes   | Yes                   | A value that fails validation: see Advanced examples |
+
+**Invalid** isn't a prop: set `aria-invalid="true"` on the Select, which gives it the error border, and link the error
+text with `aria-describedby`.
+
+### Sizes
+
+<Canvas of={SelectStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`, the same heights as Input and Button. A Select is full width: control the width
+with the layout (a grid column, or a `maxWidth` on the form).
+
+### Searchable
+
+<Canvas of={SelectStories.Searchable} sourceState="shown" />
+
+`searchable` adds a search box above the list. Use it for lists too long to scan (more than about 8 options).
+`emptyText` is shown when nothing matches.
+
+### Clearable
+
+<Canvas of={SelectStories.Clearable} sourceState="shown" />
+
+`clearable` adds a button that removes the value; `onChange` then receives `null`. Use it for filters and optional
+fields, not for required ones.
+
+### Groups
+
+<Canvas of={SelectStories.Groups} sourceState="shown" />
+
+### Disabled options
+
+<Canvas of={SelectStories.DisabledOptions} sourceState="shown" />
+
+### Controlled
+
+<Canvas of={SelectStories.Controlled} sourceState="shown" />
+
+`onChange` receives the **value first**, then the event: `onChange={setStatus}` works directly. The value is a
+`string`, or `null` when nothing is chosen. Use `value` with `onChange` (controlled) or `defaultValue`
+(uncontrolled), not both.
+
+### Advanced examples
+
+<Canvas of={SelectStories.Advanced} sourceState="shown" />
+
+- **Selects that depend on each other:** when the first changes, set the second to `null` and give it the new
+  options. Disable the second until the first has a value, and say so in its placeholder.
+- **Validation:** the error is text under the field, linked with `aria-describedby`; `aria-invalid` turns the border
+  red.
+
+### Common usage
+
+- **Options from the server:** set `loading` while they load, and `emptyText` to say what happened when there are
+  none ("No projects found", "Couldn't load the projects").
+- **Search on the server:** `searchable` with `onSearch`. `onSearch` is called on every key: wait until the user
+  stops typing (about 300 ms) before asking the server. The Select also filters the options it has by their label.
+- **Long lists:** a list of more than 100 options draws only the options in view, so it opens fast.
+- **Forms:** with React Hook Form, use `Controller` (`value={field.value}`, `onChange={field.onChange}`,
+  `onBlur={field.onBlur}`); with Formik, `value={values.status}`,
+  `onChange={(value) => setFieldValue('status', value)}` and `onBlur={() => setFieldTouched('status')}`.
+- **Numbers as values** (a page size): use strings (`'25'`) and convert in the app.
+
+## Do and don't
+
+| Do                                                            | Don't                                         |
+| ------------------------------------------------------------- | --------------------------------------------- |
+| Give the field a visible label, linked with `aria-labelledby` | Use the placeholder as the label              |
+| Use radio buttons for 2 to 4 options in a form                | Hide two options behind a Select              |
+| Add `searchable` when the list is long                        | Make users scroll through hundreds of options |
+| Say in a disabled option's label why it is disabled           | Remove options the user expects to see        |
+| Show errors as text, linked with `aria-describedby`           | Rely on the red border alone                  |
+
+## Accessibility
+
+<Canvas of={SelectStories.Accessibility} sourceState="shown" />
+
+| Key               | Action                                                         |
+| ----------------- | -------------------------------------------------------------- |
+| `Tab` / `⇧ Tab`   | Move to the next / previous field                              |
+| `Enter` / `Space` | Open the list; in the list, choose the focused option          |
+| `↓` / `↑`         | Open the list; in the list, move to the next / previous option |
+| `Esc`             | Close the list and keep the value                              |
+| `Backspace`       | Remove the value, when the Select is `clearable`               |
+| Typing            | With `searchable`, filters the options                         |
+
+- The field is a combobox (WAI-ARIA) and the list a listbox; screen readers hear the name, the chosen value, and
+  whether the list is open.
+- After choosing, focus goes back to the field.
+- The border reaches 3:1 contrast in every theme, and the error border does too.
+- `id`, `aria-*`, `onFocus`, `onBlur` and `ref` go to the field.
+
+## API
+
+<Canvas of={SelectStories.Playground} sourceState="shown" />
+<Controls of={SelectStories.Playground} />
+
+`className` and `style` go to the root element. Every other native attribute and event goes to the field (`id`,
+`onFocus`, `onBlur`, `onKeyDown`, `aria-*`, `data-*`), and `ref` points at the field.
+
+## Customizing
+
+Borders and focus colours come from the MGS tokens `--mgs-color-border-control`, `--mgs-color-border-error` and
+`--mgs-color-focus-ring`. Override tokens in your app's stylesheet, never `.rs-*` classes or `--rs-*` variables.

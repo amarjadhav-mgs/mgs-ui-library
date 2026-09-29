@@ -1,0 +1,167 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as DateRangePickerStories from './DateRangePicker.stories';
+
+<Meta of={DateRangePickerStories} />
+
+# DateRangePicker
+
+A field for a start and an end day that belong together, typed or chosen from a calendar. Its value is
+`[start, end]`, or `null` when empty. It follows the MGS size scale, so it lines up with inputs and buttons.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `DateRangePicker` · Related:
+[DatePicker](?path=/docs/components-datepicker--docs), [FormField](?path=/docs/patterns-formfield--docs),
+[MgsProvider](?path=/docs/foundation-mgsprovider--docs) (sets the date format)
+
+## When to use
+
+- For a period: the days of a report, a leave, a stay, a campaign.
+- In filters, with shortcuts ("Last 7 days", "This month").
+- **Not for one date.** Use a [DatePicker](?path=/docs/components-datepicker--docs).
+- **Not for two dates that are asked separately** (a start now, an end maybe later). Use two DatePickers, where the
+  start is the `minDate` of the end.
+
+## Import
+
+```tsx
+import { DateRangePicker, dateRangePresets, type DateRange, type DateRangePreset } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<label htmlFor="period">Period</label>
+<DateRangePicker id="period" value={period} onChange={setPeriod} presets={dateRangePresets()} />
+```
+
+Name the field with a `<label htmlFor>`, with `aria-label`, or put it in a
+[FormField](?path=/docs/patterns-formfield--docs). A placeholder is not a label.
+
+**The format comes from the locale** of `MgsProvider`: `18/09/2026 – 24/09/2026` in `en-GB` and `en-IN`,
+`09/18/2026 – 09/24/2026` in `en-US`. There is no format prop.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={DateRangePickerStories.Basic} sourceState="shown" />
+
+The user chooses the first and the last day, then OK. While empty, the field shows its format. With `name`, a form
+submits the range as `2026-09-18/2026-09-24`: always the same, whatever the locale, and the days the user sees, in
+their own time zone.
+
+### States
+
+<Canvas of={DateRangePickerStories.States} sourceState="shown" />
+
+| State      | Focusable | Opens | Submitted with a form | Use it for                                            |
+| ---------- | --------- | ----- | --------------------- | ----------------------------------------------------- |
+| `readOnly` | Yes       | No    | Yes                   | A period users should see, not change                 |
+| `disabled` | No        | No    | No                    | A field that doesn't apply right now                  |
+| `loading`  | Yes       | No    | Yes                   | The period is being loaded                            |
+| Invalid    | Yes       | Yes   | Yes                   | A period that fails validation: see Advanced examples |
+
+**Invalid** isn't a prop: a [FormField](?path=/docs/patterns-formfield--docs) with an `error` sets it. Without a
+FormField, set `aria-invalid="true"` and link the error text with `aria-describedby`.
+
+### Sizes
+
+<Canvas of={DateRangePickerStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`, the same heights as Input and Button. A DateRangePicker is full width: control
+the width with the layout. It needs about 240px to show a whole range.
+
+### Presets and clear
+
+<Canvas of={DateRangePickerStories.PresetsAndClear} sourceState="shown" />
+
+`dateRangePresets()` gives the usual shortcuts of a report: Today, Yesterday, Last 7 days, Last 30 days, This month
+and Last month. "Last 7 days" ends today and includes it. Call it while rendering, not once at the top of a file: an
+app left open overnight would keep yesterday's "Today".
+
+`clearable` adds a button that empties the field; `onChange` then receives `null`.
+
+### Custom presets
+
+<Canvas of={DateRangePickerStories.CustomPresets} sourceState="shown" />
+
+`presets` is a list of `{ label, value }`. A preset that starts or ends on a day that can't be chosen is left out.
+
+### Min, max and disabled days
+
+<Canvas of={DateRangePickerStories.MinAndMax} sourceState="shown" />
+
+`minDate` is the first day that can be chosen and `maxDate` the last; both days themselves can be chosen.
+`isDateDisabled` disables days by a rule. A typed range that starts or ends on such a day is marked invalid and not
+given to `onChange`. Days inside a range are not checked: a leave from Friday to Monday includes the weekend.
+
+### Controlled
+
+<Canvas of={DateRangePickerStories.Controlled} sourceState="shown" />
+
+`onChange` receives the **value first**, then the event: `onChange={setPeriod}` works directly. The start is the
+first moment of its day (00:00) and the end the last moment of its day (23:59:59.999), so
+`date >= start && date <= end` includes the whole last day.
+
+### Advanced examples
+
+<Canvas of={DateRangePickerStories.Advanced} sourceState="shown" />
+
+- **A report filter:** the usual presets, `maxDate` today so the period can't reach into the future, and a
+  `FormField` for the label, the help text and the error.
+
+### Common usage
+
+- **Sending a range to the server:** send the days as text (`2026-09-18` and `2026-09-24`), which is what `name`
+  submits. Don't use `date.toISOString()` for a day: it converts to UTC, and in India midnight of the 18th becomes
+  the 17th.
+- **Small screens:** below 640px the field shows one calendar instead of two, with the shortcuts under it.
+- **Forms:** with React Hook Form, use `Controller` (`value={field.value}`, `onChange={field.onChange}`,
+  `onBlur={field.onBlur}`); with Formik, `value={values.period}`,
+  `onChange={(value) => setFieldValue('period', value)}` and `onBlur={() => setFieldTouched('period')}`.
+
+## Do and don't
+
+| Do                                                     | Don't                                            |
+| ------------------------------------------------------ | ------------------------------------------------ |
+| Give the field a visible label                         | Use the placeholder as the label                 |
+| Offer presets for the periods users choose most        | Make users click two days for "this month"       |
+| Use `maxDate` when the future makes no sense (reports) | Accept any period and reject it after submitting |
+| Use two DatePickers when the end is optional           | Ask for a range when one date may stay empty     |
+| Show errors as text, with a `FormField`                | Rely on the red border alone                     |
+
+## Accessibility
+
+<Canvas of={DateRangePickerStories.Accessibility} sourceState="shown" />
+
+Everything can be done by typing: the keyboard works in the field, and the calendars show the range being typed.
+
+| Key             | Action                                                                                |
+| --------------- | ------------------------------------------------------------------------------------- |
+| `Tab` / `⇧ Tab` | Move to the next / previous field; in an empty field, typing starts at the first part |
+| `0` to `9`      | Type the day, the month, the year; the field moves on, from the start to the end      |
+| `←` / `→`       | Move to the previous / next part, also between the two dates                          |
+| `↑` / `↓`       | One more / one less: the next or previous day, month or year                          |
+| `Backspace`     | Empty the part; with the whole text selected, empty the field                         |
+| `Enter`         | Open the calendars                                                                    |
+| `Esc`           | Close the calendars and keep the value                                                |
+
+- The field is a text input named by its label; screen readers hear the name, the format and the value.
+- **Known limit (RSuite):** the days, the presets and the OK button of the calendars can be reached with the mouse
+  or by touch, not with the keyboard. Keyboard users type the range, which gives the same result.
+- The border reaches 3:1 contrast in every theme, and the error border does too.
+- `id`, `aria-*` and `ref` go to the `<input>`.
+
+## API
+
+<Canvas of={DateRangePickerStories.Playground} sourceState="shown" />
+<Controls of={DateRangePickerStories.Playground} />
+
+`className`, `style` and the other native attributes and events go to the root element; `id`, `aria-*` and `ref` go
+to the `<input>`.
+
+## Customizing
+
+Borders and focus colours come from the MGS tokens `--mgs-color-border-control`, `--mgs-color-border-error` and
+`--mgs-color-focus-ring`. Override tokens in your app's stylesheet, never `.rs-*` classes or `--rs-*` variables.

@@ -1,0 +1,8 @@
+// MGS MultiSelect. The field, its sizes, the list, its checkboxes and the search box come from RSuite's CheckPicker,
+// themed through src/styles/rsuite-bridge.scss (including the border and the error border). This file adds only what
+// MGS owns.
+
+// Read-only values can be focused and read but not changed: the default cursor instead of the pointer.
+.mgs-multi-select [aria-readonly='true'] {
+  cursor: default;
+}

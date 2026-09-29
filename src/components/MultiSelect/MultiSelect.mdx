@@ -1,0 +1,143 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as MultiSelectStories from './MultiSelect.stories';
+
+<Meta of={MultiSelectStories} />
+
+# MultiSelect
+
+A field that opens a list of checkboxes to choose several options from. Its value is the list of the chosen options'
+values. It has the same props as [Select](?path=/docs/components-select--docs), with a list as its value.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `CheckPicker` · Related:
+[Select](?path=/docs/components-select--docs) (one value),
+[CheckboxGroup](?path=/docs/components-checkboxgroup--docs) (a few options, all visible)
+
+## When to use
+
+- For choosing any number of options from a list of about 8 or more: modules, tags, cities.
+- In filters and toolbars, where there is no room to show the options.
+- **Not for a few options in a form.** Use a [CheckboxGroup](?path=/docs/components-checkboxgroup--docs): the user
+  sees the options without opening anything.
+- **Not for one value.** Use a [Select](?path=/docs/components-select--docs).
+- **Not for values the user types** (email addresses, new tags). Use a tag input.
+
+## Import
+
+```tsx
+import { MultiSelect, type SelectOption } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<span id="modules-label">Modules</span>
+<MultiSelect aria-labelledby="modules-label" options={modules} value={chosen} onChange={setChosen} />
+```
+
+⚠️ **Name the field** with `aria-labelledby` (the `id` of its visible label) or `aria-label`. A `<label htmlFor>`
+can't name a MultiSelect, because the field is not a native form control. A warning in the console tells you when the
+name is missing.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={MultiSelectStories.Basic} sourceState="shown" />
+
+The field shows the chosen labels and how many there are. The list stays open while the user chooses, and the options
+keep their place in it. With `name`, a form submits the values in one field, separated by commas.
+
+### States
+
+<Canvas of={MultiSelectStories.States} sourceState="shown" />
+
+| State      | Focusable | Opens | Submitted with a form | Use it for                                           |
+| ---------- | --------- | ----- | --------------------- | ---------------------------------------------------- |
+| `readOnly` | Yes       | No    | Yes                   | Values users should see, not change                  |
+| `disabled` | No        | No    | No                    | A field that doesn't apply right now                 |
+| `loading`  | Yes       | Yes   | Yes                   | The options are being loaded                         |
+| Invalid    | Yes       | Yes   | Yes                   | A value that fails validation: see Advanced examples |
+
+**Invalid** isn't a prop: set `aria-invalid="true"`, which gives the error border, and link the error text with
+`aria-describedby`.
+
+### Sizes
+
+<Canvas of={MultiSelectStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`, the same heights as Input and Button. The field keeps its height however many
+options are chosen: labels that don't fit are cut off, and the count shows how many there are.
+
+### Searchable and clearable
+
+<Canvas of={MultiSelectStories.SearchableAndClearable} sourceState="shown" />
+
+`searchable` adds a search box above the list, and `emptyText` is shown when nothing matches. `clearable` adds a
+button that removes every chosen value; `onChange` then receives `[]`.
+
+### Controlled
+
+<Canvas of={MultiSelectStories.Controlled} sourceState="shown" />
+
+`onChange` receives the **values first**, then the event: `onChange={setChosen}` works directly. The value is a
+`string[]`, in the order the user chose; an empty value is `[]`, never `null`.
+
+### Advanced examples
+
+<Canvas of={MultiSelectStories.Advanced} sourceState="shown" />
+
+A form that needs at least one value: the error is text under the field, linked with `aria-describedby`, and
+`aria-invalid` turns the border red.
+
+### Common usage
+
+- **Options from the server, search on the server, long lists:** as for
+  [Select](?path=/docs/components-select--docs).
+- **Groups and disabled options:** `group` and `disabled` on the options, as for Select.
+- **Forms:** with React Hook Form, use `Controller`; with Formik, `value={values.modules}` and
+  `onChange={(value) => setFieldValue('modules', value)}`.
+
+## Do and don't
+
+| Do                                                            | Don't                                          |
+| ------------------------------------------------------------- | ---------------------------------------------- |
+| Give the field a visible label, linked with `aria-labelledby` | Use the placeholder as the label               |
+| Use a CheckboxGroup for a few options in a form               | Hide three options behind a MultiSelect        |
+| Add `searchable` when the list is long                        | Make users scroll through hundreds of options  |
+| Show the chosen values elsewhere when all of them matter      | Rely on the field to show a long list of names |
+| Show errors as text, linked with `aria-describedby`           | Rely on the red border alone                   |
+
+## Accessibility
+
+<Canvas of={MultiSelectStories.Accessibility} sourceState="shown" />
+
+| Key               | Action                                                          |
+| ----------------- | --------------------------------------------------------------- |
+| `Tab` / `⇧ Tab`   | Move to the next / previous field                               |
+| `Enter` / `Space` | Open the list; in the list, check or uncheck the focused option |
+| `↓` / `↑`         | Open the list; in the list, move to the next / previous option  |
+| `Esc`             | Close the list and keep the values                              |
+| `Backspace`       | Remove every value, when the MultiSelect is `clearable`         |
+| Typing            | With `searchable`, filters the options                          |
+
+- The field is a combobox (WAI-ARIA) and the list a listbox that allows several selected options.
+- The checkboxes in the list have the contrast of the MGS [Checkbox](?path=/docs/components-checkbox--docs): a border
+  of 3:1 or more in every theme.
+- The border of the field reaches 3:1 contrast in every theme, and the error border does too.
+- `id`, `aria-*`, `onFocus`, `onBlur` and `ref` go to the field.
+
+## API
+
+<Canvas of={MultiSelectStories.Playground} sourceState="shown" />
+<Controls of={MultiSelectStories.Playground} />
+
+`className` and `style` go to the root element. Every other native attribute and event goes to the field (`id`,
+`onFocus`, `onBlur`, `onKeyDown`, `aria-*`, `data-*`), and `ref` points at the field.
+
+## Customizing
+
+Colours come from the MGS tokens `--mgs-color-border-control`, `--mgs-color-border-error`, `--mgs-color-focus-ring`
+and, for the checked boxes in the list, `--mgs-color-primary`. Override tokens in your app's stylesheet, never
+`.rs-*` classes or `--rs-*` variables.

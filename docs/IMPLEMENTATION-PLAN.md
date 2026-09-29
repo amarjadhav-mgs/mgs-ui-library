@@ -132,15 +132,16 @@ The MGS names and merges are **proposals**: each is confirmed in its component's
 
 ### Date and time
 
-| RSuite                                                                                                                    | Decision | MGS                                               | Phase | Notes                                                              |
-| ------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------------------------------- | ----- | ------------------------------------------------------------------ |
-| `DatePicker`                                                                                                              | Wrap     | `DatePicker`                                      | 2     | Uses the MGS date format from `MgsProvider`                        |
-| `DateRangePicker`                                                                                                         | Wrap     | `DateRangePicker`                                 | 2     | Includes range presets (Today, Last 7 days, This month…)           |
-| `DateInput`, `DateRangeInput`                                                                                             | Wrap     | `DateInput`, `DateRangeInput`                     | 2     | Typed dates without a popup; keep or merge decided in the proposal |
-| `TimePicker`, `TimeRangePicker`                                                                                           | Wrap     | `TimePicker`, `TimeRangePicker`                   | 2     |                                                                    |
-| `Calendar`                                                                                                                | Wrap     | `Calendar`                                        | 2     | Inline month view                                                  |
-| Date helpers (`after`, `afterToday`, `allowedDays`, `allowedMaxDays`, `allowedRange`, `before`, `beforeToday`, `combine`) | Merge    | MGS props (`minDate`, `maxDate`, `maxRangeDays`…) | 2     | Simple props instead of RSuite's function helpers                  |
-| `DateRange` type                                                                                                          | Merge    | MGS `DateRange` type                              | 2     |                                                                    |
+| RSuite                                                                                                                    | Decision | MGS                                                | Phase | Notes                                                    |
+| ------------------------------------------------------------------------------------------------------------------------- | -------- | -------------------------------------------------- | ----- | -------------------------------------------------------- |
+| `DatePicker`                                                                                                              | Wrap     | `DatePicker`                                       | 2     | Uses the MGS date format from `MgsProvider`              |
+| `DateRangePicker`                                                                                                         | Wrap     | `DateRangePicker`                                  | 2     | Includes range presets (Today, Last 7 days, This month…) |
+| `DateInput`, `DateRangeInput`                                                                                             | Merge    | `DatePicker`, `DateRangePicker`                    | 2     | The pickers can be typed into                            |
+| `TimePicker`                                                                                                              | Wrap     | `TimePicker`                                       | 2     | The value is 24-hour text (`'14:30'`)                    |
+| `TimeRangePicker`                                                                                                         | Merge    | two `TimePicker`                                   | 2     |                                                          |
+| `Calendar`                                                                                                                | Wrap     | `Calendar`                                         | 2     | Inline month view                                        |
+| Date helpers (`after`, `afterToday`, `allowedDays`, `allowedMaxDays`, `allowedRange`, `before`, `beforeToday`, `combine`) | Merge    | MGS props (`minDate`, `maxDate`, `isDateDisabled`) | 2     | Simple props instead of RSuite's function helpers        |
+| `DateRange` type                                                                                                          | Merge    | MGS `DateRange` type                               | 2     |                                                          |
 
 ### Data display
 
@@ -504,21 +505,36 @@ Tick items as they merge into `dev`.
 - [x] `RadioCard` (card-style radios, in the existing `RadioGroup`; moved up from phase 7: both existing apps build
       them by hand). Later, by proposal: cards with a checkbox; a badge ("Current plan", "Recommended") and content
       at the end of the card (a price), which the hand-built plan cards have
-- [ ] `Switch`
-- [ ] `Select`
-- [ ] `MultiSelect`
-- [ ] `AutoComplete`
-- [ ] `ButtonGroup`, `Stack`
-- [ ] `FormField` pattern
-- [ ] ERP form example story
+- [x] `Switch` (built by MGS; replaces `Toggle`). Later, by proposal: text inside the track ("On" / "Off"), which
+      both existing apps use in a few places
+- [x] `Select` (on RSuite `SelectPicker`). Later, by proposal, all used in the existing apps: custom option and
+      value rendering (a colour dot, a flag), a footer in the list ("+ Create new…"), a `container` for lists inside
+      the apps' own drawers, number values (page size)
+- [x] `MultiSelect` (on RSuite `CheckPicker`; the checkboxes in the list get a 3:1 border through the bridge).
+      Later, by proposal: the chosen values shown as tags
+- [x] `AutoComplete` (on RSuite `AutoComplete`; neither existing app uses one yet)
+- [x] `ButtonGroup` (migrated), `Stack` (built by MGS); `ButtonToolbar` removed: a toolbar is a `Stack` with
+      `role="toolbar"`
+- [x] `FormField` pattern (in `src/patterns/`; error text colour owned by MGS in every theme). `FormLayout` is not
+      needed: a form is FormFields in a `Stack`
+- [x] Form example story (`Patterns/FormField` → Advanced examples: a whole form from `@mgs/ui` only). Examples
+      with React Hook Form and Formik are in the docs as text: neither is installed in this repo
 
 **Phase 2: date and time**
 
-- [ ] `DatePicker`, `DateInput`
-- [ ] `DateRangePicker`, `DateRangeInput`
-- [ ] `TimePicker`, `TimeRangePicker`
-- [ ] `Calendar`
-- [ ] Date helpers replaced
+- [x] `DatePicker` (on RSuite `DatePicker`; format from the locale; typing after Tab fixed). Known limit of RSuite:
+      the calendar can't be reached with the keyboard, the date is typed. Later, by proposal: a `container` for
+      calendars inside the apps' own drawers and modals, which both existing apps use
+- [x] `DateInput`, `DateRangeInput`: removed, not wrapped. The pickers can be typed into, and neither existing app
+      uses them
+- [x] `DateRangePicker` (on RSuite `DateRangePicker`; `dateRangePresets()` for the usual shortcuts; one calendar below
+      640px). Later, by proposal: a longest range (`allowedMaxDays`), a `container`, a range with times
+- [x] `TimePicker` (on RSuite `DatePicker` with a time format; the value is 24-hour text, `'14:30'`).
+      `TimeRangePicker` removed: two TimePickers. Later, by proposal: seconds, a first and a last time
+      (`minTime`, `maxTime`)
+- [x] `Calendar` (on RSuite `Calendar`; only the chosen day looks selected). Known limit of RSuite: days can't be
+      chosen with the keyboard. Later, by proposal: disabled days, the first day of the week
+- [x] Date helpers replaced by `minDate`, `maxDate` and `isDateDisabled`; MGS owns the `DateRange` type
 - [ ] First release published; pilot started
 
 **Phase 3: data display**

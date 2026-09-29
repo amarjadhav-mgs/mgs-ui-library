@@ -1,0 +1,7 @@
+// MGS Select. The field, its sizes, the list and the search box come from RSuite's SelectPicker, themed through
+// src/styles/rsuite-bridge.scss (including the border and the error border). This file adds only what MGS owns.
+
+// Read-only values can be focused and read but not changed: the default cursor instead of the pointer.
+.mgs-select [aria-readonly='true'] {
+  cursor: default;
+}

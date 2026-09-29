@@ -67,8 +67,8 @@ export const Playground: Story = {
   render: (args, { globals }) => (
     <MgsProvider {...args} theme={toolbarTheme(globals)}>
       <Row>
-        <DatePicker label="Due date" />
-        <TimePicker label="Start time" />
+        <DatePicker aria-label="Due date" />
+        <TimePicker aria-label="Start time" />
       </Row>
     </MgsProvider>
   ),
@@ -87,7 +87,7 @@ createRoot(document.getElementById('root')!).render(
   render: (_args, { globals }) => (
     <MgsProvider theme={toolbarTheme(globals)} locale="en-GB">
       <Row>
-        <DatePicker label="Due date" />
+        <DatePicker aria-label="Due date" />
         <Button variant="primary" leftIcon={<PlusIcon />}>
           New order
         </Button>
@@ -117,8 +117,8 @@ const { theme, locale } = useUserSettings();
           </h3>
           <MgsProvider theme={toolbarTheme(globals)} locale={locale}>
             <Row>
-              <DatePicker label={`Due date (${locale})`} />
-              <TimePicker label={`Start time (${locale})`} />
+              <DatePicker aria-label={`Due date (${locale})`} />
+              <TimePicker aria-label={`Start time (${locale})`} />
             </Row>
           </MgsProvider>
         </section>
@@ -133,11 +133,11 @@ const { theme, locale } = useUserSettings();
  */
 export const Accessibility: Story = {
   parameters: source(`<MgsProvider locale="en-US">
-  <DatePicker label="Due date" />
+  <DatePicker aria-label="Due date" />
 </MgsProvider>`),
   render: (_args, { globals }) => (
     <MgsProvider theme={toolbarTheme(globals)} locale="en-US">
-      <DatePicker label="Due date" />
+      <DatePicker aria-label="Due date" />
     </MgsProvider>
   ),
   play: async ({ canvasElement }) => {

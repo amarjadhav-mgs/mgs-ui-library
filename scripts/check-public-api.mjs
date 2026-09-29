@@ -6,35 +6,6 @@ import { join, relative } from 'node:path';
 
 /** Names dist/index.d.ts may still export from 'rsuite' (ARCHITECTURE.md → Migrating the RSuite re-exports). */
 const pendingRsuiteExports = new Set([
-  // Phase 1: button groups
-  'ButtonGroup',
-  'ButtonGroupProps',
-  'ButtonToolbar',
-  'ButtonToolbarProps',
-  // Phase 2: date and time
-  'Calendar',
-  'CalendarProps',
-  'DateInput',
-  'DateInputProps',
-  'DatePicker',
-  'DatePickerProps',
-  'DateRangeInput',
-  'DateRangeInputProps',
-  'DateRangePicker',
-  'DateRangePickerProps',
-  'TimePicker',
-  'TimePickerProps',
-  'TimeRangePicker',
-  'TimeRangePickerProps',
-  'DateRange',
-  'after',
-  'afterToday',
-  'allowedDays',
-  'allowedMaxDays',
-  'allowedRange',
-  'before',
-  'beforeToday',
-  'combine',
   // Phase 3: badge and avatar
   'Badge',
   'BadgeProps',

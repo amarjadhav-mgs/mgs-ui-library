@@ -1,0 +1,116 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as StackStories from './Stack.stories';
+
+<Meta of={StackStories} />
+
+# Stack
+
+Lays out its children in a column or a row, with the same space between them. It has no look of its own: no colour,
+border or padding. The space comes from the MGS spacing scale, so layouts match across an app.
+
+**Component:** MGS-owned, built by MGS (flexbox) · Related:
+[ButtonGroup](?path=/docs/components-buttongroup--docs) (buttons joined into one block)
+
+## When to use
+
+- For the fields of a form, under each other.
+- For buttons in a row: Cancel and Save, the actions of a toolbar.
+- For any few elements that need even space between them, in one direction.
+- **Not for a page layout with columns of set widths.** Use a grid.
+- **Not for buttons that are one thing to the user** (a view switcher). Use a
+  [ButtonGroup](?path=/docs/components-buttongroup--docs).
+
+## Import
+
+```tsx
+import { Stack } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<Stack direction="row" gap="sm" justify="end">
+  <Button>Cancel</Button>
+  <Button variant="primary">Save</Button>
+</Stack>
+```
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={StackStories.Basic} sourceState="shown" />
+
+`direction`: `column` (default) puts the children under each other, `row` next to each other.
+
+### Gaps
+
+<Canvas of={StackStories.Gaps} sourceState="shown" />
+
+| `gap`          | Space | Use it for                                 |
+| -------------- | ----- | ------------------------------------------ |
+| `none`         | 0     | Children that bring their own space        |
+| `xs`           | 4px   | An icon and its text; a field and its hint |
+| `sm`           | 8px   | Buttons in a row                           |
+| `md` (default) | 12px  | The fields of a form                       |
+| `lg`           | 16px  | Groups of fields                           |
+| `xl`           | 24px  | Sections of a page                         |
+
+### Align and justify
+
+<Canvas of={StackStories.AlignAndJustify} sourceState="shown" />
+
+| Prop      | Works                | Values                                                    |
+| --------- | -------------------- | --------------------------------------------------------- |
+| `align`   | across the direction | `start`, `center`, `end`, `stretch` (default), `baseline` |
+| `justify` | along the direction  | `start` (default), `center`, `end`, `between`             |
+
+In a row, `align` is the vertical position and `justify` the horizontal one; in a column it is the other way round.
+With `align="stretch"`, the children of a column fill its width: use `align="start"` for children that should keep
+their own width, like a single button.
+
+### Wrap
+
+<Canvas of={StackStories.Wrap} sourceState="shown" />
+
+### Advanced examples
+
+<Canvas of={StackStories.Advanced} sourceState="shown" />
+
+Stacks can be put inside each other: a column for the form, a row for two fields that share the width, a row for the
+buttons. For children of a row that should share the width, give each `flex: 1`.
+
+### Common usage
+
+- **Forms:** one column with `gap="md"` for the fields, `gap="lg"` between groups of fields.
+- **Form buttons:** a row with `gap="sm"` and `justify="end"`.
+- **Page headers:** a row with `align="center"` and `justify="between"`: the title at the start, the main action at
+  the end.
+- **Toolbars:** a row with `role="toolbar"` and an `aria-label`.
+
+## Do and don't
+
+| Do                                                 | Don't                                           |
+| -------------------------------------------------- | ----------------------------------------------- |
+| Use the `gap` steps for space between elements     | Add margins to the children for space           |
+| Put Stacks inside each other for forms and headers | Build a whole page grid out of Stacks           |
+| Keep the order in the code the order on screen     | Change the order with CSS: Tab follows the code |
+| Give a toolbar `role="toolbar"` and a name         | Add a role to a Stack that is only layout       |
+
+## Accessibility
+
+<Canvas of={StackStories.Accessibility} sourceState="shown" />
+
+- A Stack is a plain `<div>`: it adds nothing for screen readers, and the children keep their order.
+- Tab follows the order in the code, which is the order on screen.
+- In right-to-left languages, a row starts at the right.
+
+## API
+
+<Canvas of={StackStories.Playground} sourceState="shown" />
+<Controls of={StackStories.Playground} />
+
+Every native `<div>` attribute and event also works (`id`, `role`, `aria-*`, `data-*`, `className`, `style`), and
+`ref` points at the `<div>`.

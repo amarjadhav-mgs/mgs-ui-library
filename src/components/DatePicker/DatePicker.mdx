@@ -1,0 +1,180 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as DatePickerStories from './DatePicker.stories';
+
+<Meta of={DatePickerStories} />
+
+# DatePicker
+
+A field for one date, typed or chosen from a calendar. Its value is a `Date`, or `null` when empty. With `withTime`
+it also asks for the time. It follows the MGS size scale, so it lines up with inputs and buttons.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `DatePicker` · Related:
+[FormField](?path=/docs/patterns-formfield--docs), [Input](?path=/docs/components-input--docs),
+[MgsProvider](?path=/docs/foundation-mgsprovider--docs) (sets the date format)
+
+## When to use
+
+- For one date: a due date, a date of birth, the day of a meeting.
+- For a date with a time (`withTime`): a follow-up, an appointment.
+- **Not for a start and an end that belong together** (a report period). Use a date range picker.
+- **Not for a time alone.** Use a time picker.
+- **Not for a year or a month alone.** Use a [Select](?path=/docs/components-select--docs).
+
+## Import
+
+```tsx
+import { DatePicker, type DatePreset } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<label htmlFor="due">Due date</label>
+<DatePicker id="due" value={due} onChange={setDue} minDate={new Date()} />
+```
+
+Name the field with a `<label htmlFor>`, with `aria-label`, or put it in a
+[FormField](?path=/docs/patterns-formfield--docs). A placeholder is not a label.
+
+**The format comes from the locale** of `MgsProvider`, so every date in an app looks the same. There is no format
+prop.
+
+| Locale           | Date         | Date and time         |
+| ---------------- | ------------ | --------------------- |
+| `en-GB`, `en-IN` | `24/09/2026` | `24/09/2026 14:30`    |
+| `en-US`          | `09/24/2026` | `09/24/2026 02:30 PM` |
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={DatePickerStories.Basic} sourceState="shown" />
+
+While empty, the field shows its format. With `name`, a form submits the date as `2026-09-24` (and
+`2026-09-24T14:30` with a time): always the same, whatever the locale, and the day the user sees, in their own time
+zone.
+
+### States
+
+<Canvas of={DatePickerStories.States} sourceState="shown" />
+
+| State      | Focusable | Opens | Submitted with a form | Use it for                                          |
+| ---------- | --------- | ----- | --------------------- | --------------------------------------------------- |
+| `readOnly` | Yes       | No    | Yes                   | A date users should see, not change                 |
+| `disabled` | No        | No    | No                    | A field that doesn't apply right now                |
+| `loading`  | Yes       | No    | Yes                   | The date is being loaded                            |
+| Invalid    | Yes       | Yes   | Yes                   | A date that fails validation: see Advanced examples |
+
+**Invalid** isn't a prop: a [FormField](?path=/docs/patterns-formfield--docs) with an `error` sets it. Without a
+FormField, set `aria-invalid="true"` and link the error text with `aria-describedby`.
+
+### Sizes
+
+<Canvas of={DatePickerStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`, the same heights as Input and Button. A DatePicker is full width: control the
+width with the layout (a grid column, or a `maxWidth` on the form).
+
+### With time
+
+<Canvas of={DatePickerStories.WithTime} sourceState="shown" />
+
+`withTime` adds hours and minutes: 24-hour, or 12-hour with AM and PM in `en-US`. The calendar then stays open until
+the user presses OK.
+
+### Min and max
+
+<Canvas of={DatePickerStories.MinAndMax} sourceState="shown" />
+
+`minDate` is the first day that can be chosen and `maxDate` the last; both days themselves can be chosen. Only the
+day counts, not the time of the `Date` you pass. A typed date outside them is marked invalid and not given to
+`onChange`.
+
+### Disabled days
+
+<Canvas of={DatePickerStories.DisabledDays} sourceState="shown" />
+
+`isDateDisabled` disables days by a rule. It works together with `minDate` and `maxDate`.
+
+### Presets and clear
+
+<Canvas of={DatePickerStories.PresetsAndClear} sourceState="shown" />
+
+`presets` are shortcuts in the calendar, for the dates users choose most. A preset on a day that can't be chosen is
+left out. `clearable` adds a button that empties the field; `onChange` then receives `null`. Use it for filters and
+optional fields, not for required ones.
+
+### Controlled
+
+<Canvas of={DatePickerStories.Controlled} sourceState="shown" />
+
+`onChange` receives the **value first**, then the event: `onChange={setDue}` works directly. It is called when the
+date is whole, not for every key while the user types. Use `value` with `onChange` (controlled) or `defaultValue`
+(uncontrolled), not both.
+
+### Advanced examples
+
+<Canvas of={DatePickerStories.Advanced} sourceState="shown" />
+
+- **Dates that depend on each other:** the start is the `minDate` of the end; when the start moves past the end,
+  empty the end.
+- **Validation:** `FormField` shows the error under the field and links it; the border turns red.
+
+### Common usage
+
+- **Sending a date to the server:** send the day as text (`2026-09-24`), which is what `name` submits. Don't use
+  `date.toISOString()` for a day: it converts to UTC, and in India midnight of the 24th becomes the 23rd.
+- **Reading a date from the server:** `new Date('2026-09-24')` is midnight in UTC, which is the day before in time
+  zones behind UTC. Build the date from its parts: `new Date(2026, 8, 24)`.
+- **"Not in the past":** `minDate={new Date()}`. **"Not in the future":** `maxDate={new Date()}`.
+- **Forms:** with React Hook Form, use `Controller` (`value={field.value}`, `onChange={field.onChange}`,
+  `onBlur={field.onBlur}`); with Formik, `value={values.due}`, `onChange={(value) => setFieldValue('due', value)}`
+  and `onBlur={() => setFieldTouched('due')}`.
+
+## Do and don't
+
+| Do                                                  | Don't                                           |
+| --------------------------------------------------- | ----------------------------------------------- |
+| Give the field a visible label                      | Use the placeholder as the label                |
+| Let the locale set the format                       | Format dates by hand next to the field          |
+| Use `minDate` and `maxDate` for the days that apply | Accept any day and reject it after submitting   |
+| Say in the label or the help text which days apply  | Leave users to find the disabled days by trying |
+| Show errors as text, with a `FormField`             | Rely on the red border alone                    |
+
+## Accessibility
+
+<Canvas of={DatePickerStories.Accessibility} sourceState="shown" />
+
+Everything can be done by typing: the keyboard works in the field, and the calendar shows the date being typed.
+
+| Key             | Action                                                                 |
+| --------------- | ---------------------------------------------------------------------- |
+| `Tab` / `⇧ Tab` | Move to the next / previous field; typing starts at the first part     |
+| `0` to `9`      | Type the day, the month, the year; the field moves on to the next part |
+| `←` / `→`       | Move to the previous / next part of the date                           |
+| `↑` / `↓`       | One more / one less: the next or previous day, month or year           |
+| `Backspace`     | Empty the part; with the whole text selected, empty the field          |
+| `Enter`         | Open the calendar                                                      |
+| `Esc`           | Close the calendar and keep the value                                  |
+
+- The field is a text input named by its label; screen readers hear the name, the format and the value.
+- **Known limit (RSuite):** the days, the presets and the OK button of the calendar can be reached with the mouse or
+  by touch, not with the keyboard. Keyboard users type the date, which gives the same result.
+- A date that can't be chosen is marked with `aria-invalid` when typed.
+- The border reaches 3:1 contrast in every theme, and the error border does too.
+- `id`, `aria-*` and `ref` go to the `<input>`.
+
+## API
+
+<Canvas of={DatePickerStories.Playground} sourceState="shown" />
+<Controls of={DatePickerStories.Playground} />
+
+`className`, `style` and the other native attributes and events go to the root element; `id`, `aria-*` and `ref` go
+to the `<input>`.
+
+## Customizing
+
+Borders and focus colours come from the MGS tokens `--mgs-color-border-control`, `--mgs-color-border-error` and
+`--mgs-color-focus-ring`. Override tokens in your app's stylesheet, never `.rs-*` classes or `--rs-*` variables.

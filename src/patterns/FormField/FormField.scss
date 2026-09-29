@@ -1,0 +1,47 @@
+// MGS FormField: a label, a control, an error message and a help text under each other. The control styles itself.
+
+.mgs-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mgs-space-xs);
+  // Children can shrink below the width of their content, so a long label wraps instead of widening the form.
+  min-width: 0;
+  color: var(--mgs-color-text);
+}
+
+.mgs-form-field__label {
+  // As wide as its text: a click next to the label doesn't focus the control.
+  align-self: flex-start;
+  font-size: var(--mgs-font-size-sm);
+  overflow-wrap: anywhere;
+}
+
+// Decorative: the control says "required" to screen readers itself.
+.mgs-form-field__required {
+  color: var(--mgs-color-text-error);
+}
+
+.mgs-form-field__error,
+.mgs-form-field__help {
+  margin: 0;
+  font-size: var(--mgs-font-size-sm);
+  overflow-wrap: anywhere;
+}
+
+// The icon and the text say it is an error, not the colour alone. 4.5:1 or more on the page in every theme.
+.mgs-form-field__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mgs-space-xs);
+  color: var(--mgs-color-text-error);
+
+  // As high as one line of the text, so the icon sits next to the first line when the message wraps.
+  > svg {
+    flex: none;
+    height: 1lh;
+  }
+}
+
+.mgs-form-field__help {
+  color: var(--mgs-color-text-secondary);
+}

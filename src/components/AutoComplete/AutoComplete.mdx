@@ -1,0 +1,129 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as AutoCompleteStories from './AutoComplete.stories';
+
+<Meta of={AutoCompleteStories} />
+
+# AutoComplete
+
+A text field that suggests texts while the user types. The value is the text in the field: the user can choose a
+suggestion, or type something else.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `AutoComplete` · Related:
+[Input](?path=/docs/components-input--docs) (no suggestions),
+[Select](?path=/docs/components-select--docs) (a choice from a fixed list)
+
+## When to use
+
+- For free text where suggestions save typing: a city, a job title, an email address.
+- When values other than the suggestions are allowed.
+- **Not when the value must be one of a list.** Use a [Select](?path=/docs/components-select--docs), with `searchable`
+  for long lists.
+- **Not for searching and opening a record.** Use a search field with its own results.
+
+## Import
+
+```tsx
+import { AutoComplete } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<label htmlFor="city">City</label>
+<AutoComplete id="city" suggestions={cities} value={city} onChange={setCity} />
+```
+
+⚠️ **Always label the field**: a visible `<label htmlFor>` linked to the field's `id`, or `aria-label` when a visible
+label isn't possible. A placeholder is not a label.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={AutoCompleteStories.Basic} sourceState="shown" />
+
+`suggestions` is a list of texts. While the user types, the list shows the ones that contain the typed text, whatever
+the case. With `name`, a form submits the text.
+
+### States
+
+<Canvas of={AutoCompleteStories.States} sourceState="shown" />
+
+| State      | Focusable | Editable | Submitted with a form | Use it for                                   |
+| ---------- | --------- | -------- | --------------------- | -------------------------------------------- |
+| `readOnly` | Yes       | No       | Yes                   | Values users should see and copy, not change |
+| `disabled` | No        | No       | No                    | Fields that don't apply right now            |
+| Invalid    | Yes       | Yes      | Yes                   | A value that fails validation                |
+
+**Invalid** isn't a prop: set `aria-invalid="true"`, which gives the error border, and link the error text with
+`aria-describedby`.
+
+### Sizes
+
+<Canvas of={AutoCompleteStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`, the same heights as Input and Button. The field is full width: control the width
+with the layout.
+
+### Controlled
+
+<Canvas of={AutoCompleteStories.Controlled} sourceState="shown" />
+
+`onChange` receives the **text first**, then the event, on every key and when a suggestion is chosen:
+`onChange={setCity}` works directly. `onSelect` is called only when a suggestion is chosen.
+
+### Advanced examples
+
+<Canvas of={AutoCompleteStories.Advanced} sourceState="shown" />
+
+Suggestions made from what the user types. With `filter={false}` the list shows every suggestion the app gives: use
+it when the app, or the server, already picks the right ones for the text.
+
+### Common usage
+
+- **Suggestions from the server:** in `onChange`, wait until the user stops typing (about 300 ms), ask the server,
+  and set `suggestions`. Use `filter={false}`.
+- **Forms:** as for [Input](?path=/docs/components-input--docs); the value is a `string`.
+- **Browser autofill** is off for this field, so its list doesn't cover the suggestions.
+
+## Do and don't
+
+| Do                                                         | Don't                                       |
+| ---------------------------------------------------------- | ------------------------------------------- |
+| Label every field with `<label htmlFor>`                   | Use the placeholder as the label            |
+| Use it where other values than the suggestions are allowed | Use it when the value must be one of a list |
+| Keep the suggestions short and different from each other   | Suggest dozens of texts that look alike     |
+| Show errors as text, linked with `aria-describedby`        | Rely on the red border alone                |
+
+## Accessibility
+
+<Canvas of={AutoCompleteStories.Accessibility} sourceState="shown" />
+
+| Key             | Action                                      |
+| --------------- | ------------------------------------------- |
+| `Tab` / `⇧ Tab` | Move to the next / previous field           |
+| Typing          | Shows the suggestions that match            |
+| `↓` / `↑`       | Move to the next / previous suggestion      |
+| `Enter`         | Choose the suggestion the arrow keys are on |
+| `Esc`           | Close the list and keep the typed text      |
+
+- Renders a native `<input>` that is a combobox (WAI-ARIA) with a listbox: screen readers hear the name, the text,
+  and the suggestion the arrow keys are on.
+- `id`, `aria-*`, `required` and `ref` all go to the `<input>`, so `<label htmlFor>` works.
+- The border reaches 3:1 contrast in every theme, and the error border does too.
+
+## API
+
+<Canvas of={AutoCompleteStories.Playground} sourceState="shown" />
+<Controls of={AutoCompleteStories.Playground} />
+
+`className` and `style` go to the root element. Every native `<input>` attribute and event goes to the `<input>`
+(`id`, `name`, `placeholder`, `maxLength`, `required`, `onFocus`, `onBlur`, `onKeyDown`, `aria-*`), and `ref` points
+at the `<input>`.
+
+## Customizing
+
+Borders and focus colours come from the MGS tokens `--mgs-color-border-control`, `--mgs-color-border-error` and
+`--mgs-color-focus-ring`. Override tokens in your app's stylesheet, never `.rs-*` classes or `--rs-*` variables.

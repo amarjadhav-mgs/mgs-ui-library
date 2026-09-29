@@ -1,0 +1,141 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as SwitchStories from './Switch.stories';
+
+<Meta of={SwitchStories} />
+
+# Switch
+
+An on/off control for something that takes effect at once: a setting, a status, a feature. It has a `loading` state
+for the moment the change is being saved.
+
+**Component:** MGS-owned, built by MGS on a native `<input type="checkbox" role="switch">` · Related:
+[Checkbox](?path=/docs/components-checkbox--docs) (a choice saved with a form)
+
+## When to use
+
+- For a setting that is on or off and changes as soon as the user flips it: "Email notifications", "Account active".
+- For turning rows of a table on and off.
+- **Not for a choice that is saved with the rest of a form.** Use a [Checkbox](?path=/docs/components-checkbox--docs):
+  users expect a switch to act at once.
+- **Not for choosing between two different things** ("Monthly / Yearly"). Use radio buttons.
+- **Not for an action** ("Send now"). Use a button.
+
+## Import
+
+```tsx
+import { Switch } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<Switch checked={notify} onChange={setNotify}>
+  Email notifications
+</Switch>
+```
+
+⚠️ **Every switch needs a name that says what it switches**, not its state: "Email notifications", not "On". The text
+inside `<Switch>` is its label. Without visible text (a table row), set `aria-label` or `aria-labelledby`; a warning
+in the console tells you when one is missing.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={SwitchStories.Basic} sourceState="shown" />
+
+Clicking the label flips the switch. With `name`, a form submits `name=value` when it is on (`on` when `value` isn't
+set), and nothing when it is off.
+
+### States
+
+<Canvas of={SwitchStories.States} sourceState="shown" />
+
+| State    | How                   | Use it for                                                  |
+| -------- | --------------------- | ----------------------------------------------------------- |
+| On       | `checked`             | The setting is active                                       |
+| Disabled | `disabled`            | A setting that can't be changed now; say why near it        |
+| Loading  | `loading`             | The change is being saved: see Loading                      |
+| Invalid  | `aria-invalid="true"` | A setting that must be on, with the error text linked to it |
+
+There is no read-only switch in HTML: use `disabled`, or show the state as text.
+
+### Sizes
+
+<Canvas of={SwitchStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`. Use `sm` in tables and toolbars. The click target is at least 24px high in every
+size.
+
+### Controlled
+
+<Canvas of={SwitchStories.Controlled} sourceState="shown" />
+
+`onChange` receives the **new state first**, then the event: `onChange={setNotify}` works directly. Use `checked` with
+`onChange` (controlled) or `defaultChecked` (uncontrolled), not both.
+
+### Loading
+
+<Canvas of={SwitchStories.Loading} sourceState="shown" />
+
+While `loading`, the switch shows a spinner, keeps keyboard focus, and ignores clicks and keys. Keep `checked` at the
+saved state until the server answers: a switch that flips and then flips back is confusing.
+
+### Advanced examples
+
+<Canvas of={SwitchStories.Advanced} sourceState="shown" />
+
+In a table, each switch has an `aria-label` that says what it switches ("Reports module"). Screen readers add "on" or
+"off" themselves.
+
+### Common usage
+
+- **Settings pages:** one switch per setting, with the setting's name as the label, saved on change.
+- **Tables:** `size="sm"` with an `aria-label` per row, and `loading` on the row being saved.
+- **A change that needs confirmation** (deactivating an account): keep `checked` controlled, open a confirm dialog in
+  `onChange`, and change `checked` only after the user confirms.
+- **Forms that are saved with a button:** use a [Checkbox](?path=/docs/components-checkbox--docs).
+
+## Do and don't
+
+| Do                                                   | Don't                                                   |
+| ---------------------------------------------------- | ------------------------------------------------------- |
+| Name the switch after what it switches               | Name it "On", "Off", "Enable" or "Disable"              |
+| Apply the change at once                             | Wait for a Save button                                  |
+| Use `loading` while the change is saved              | Disable the switch while saving: it loses focus         |
+| Give a switch without visible text an `aria-label`   | Leave table row switches without a name                 |
+| Use a Checkbox in forms that are saved with a button | Mix switches and checkboxes for the same kind of choice |
+
+## Accessibility
+
+<Canvas of={SwitchStories.Accessibility} sourceState="shown" />
+
+| Key             | Action                                                |
+| --------------- | ----------------------------------------------------- |
+| `Tab` / `⇧ Tab` | Move to the next / previous switch, skipping disabled |
+| `Space`         | Turn on or off                                        |
+
+- Renders a native checkbox with `role="switch"`: screen readers announce "Email notifications, switch, on".
+- `loading` sets `aria-busy` and keeps the switch focusable, so keyboard and screen reader users don't lose their
+  place.
+- The state is shown by where the thumb is, not only by colour.
+- The click and touch target is the whole track, at least 24px high, in every size.
+- The track reaches 3:1 contrast on the page in every theme, off and on; the focus ring is drawn outside the track.
+- In forced-colors mode (Windows High Contrast) the track and thumb are drawn with borders, which that mode keeps.
+- With reduced motion, the thumb moves without animation and the spinner turns slowly.
+
+## API
+
+<Canvas of={SwitchStories.Playground} sourceState="shown" />
+<Controls of={SwitchStories.Playground} />
+
+`className` and `style` go to the root element (the `<label>`). Every other native `<input>` attribute and event goes
+to the `<input>` (`id`, `name`, `onFocus`, `onBlur`, `aria-*`, `data-*`), and `ref` points at the `<input>`.
+
+## Customizing
+
+Colours come from the MGS tokens `--mgs-color-primary` and `--mgs-color-on-primary` (on),
+`--mgs-color-border-control` (off), `--mgs-color-border-error` and `--mgs-color-focus-ring`. Override tokens in your
+app's stylesheet, never the component's classes.

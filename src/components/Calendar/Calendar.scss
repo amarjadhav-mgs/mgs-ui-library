@@ -1,0 +1,7 @@
+// MGS Calendar. The month, its header and its days come from RSuite's Calendar, themed through
+// src/styles/rsuite-bridge.scss. This file adds only what MGS owns.
+
+.mgs-calendar {
+  // The border of a card, not of a control: a calendar is content.
+  border-radius: var(--mgs-radius-md);
+}

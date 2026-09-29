@@ -20,7 +20,6 @@
   --mgs-color-text: var(--rs-text-primary);
   --mgs-color-text-secondary: var(--rs-text-secondary);
   --mgs-color-text-disabled: var(--rs-text-disabled);
-  --mgs-color-text-error: var(--rs-text-error);
   --mgs-color-surface: var(--rs-body);
   --mgs-color-border: var(--rs-border-primary);
 }
@@ -46,6 +45,8 @@
   --mgs-color-border-control: var(--rs-gray-500);
   /* Border of an invalid field: 4.8:1 on white. */
   --mgs-color-border-error: var(--mgs-color-danger);
+  /* Text of an error message: 6.5:1 on white. RSuite's error text is 3.7:1. */
+  --mgs-color-text-error: var(--mgs-red-700);
   /* Background of a read-only field: quieter than an editable one (white); text stays at full contrast. */
   --mgs-color-surface-readonly: var(--rs-gray-50);
 }
@@ -64,6 +65,8 @@
   --mgs-color-border-control: var(--rs-gray-400);
   /* Border of an invalid field: 3.5:1 on the dark input background. */
   --mgs-color-border-error: var(--mgs-color-danger);
+  /* Text of an error message: a light red, 7.9:1 on the dark page. */
+  --mgs-color-text-error: var(--rs-red-300);
   /* Read-only field: the page colour, darker than editable (gray-800) and disabled (gray-700) fields. */
   --mgs-color-surface-readonly: var(--rs-gray-900);
 }
@@ -89,6 +92,8 @@
   /* Border of an invalid field: RSuite's own high-contrast red (red-500) is 2.7:1 on the input background; red-300 is
      4.8:1. */
   --mgs-color-border-error: var(--rs-red-300);
+  /* Text of an error message: RSuite's own error text (red-500) is 2.9:1 on the page; red-300 is 5.3:1. */
+  --mgs-color-text-error: var(--rs-red-300);
   /* Read-only field: the page colour, darker than editable and disabled fields. */
   --mgs-color-surface-readonly: var(--rs-gray-900);
 }

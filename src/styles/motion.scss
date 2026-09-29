@@ -20,7 +20,8 @@
   .rs-btn-spin::after,
   .rs-loader-spin::after,
   .rs-icon-spin,
-  .rs-icon-pulse {
+  .rs-icon-pulse,
+  .mgs-switch__thumb::after {
     animation-duration: 1.5s !important;
     animation-iteration-count: infinite !important;
   }

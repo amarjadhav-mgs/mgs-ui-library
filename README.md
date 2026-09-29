@@ -28,14 +28,14 @@ defaults `light` and `en-GB`).
 
 ### Available components
 
-- **MGS components:** `MgsProvider`, `Button`, `IconButton`, `Input`, `Textarea`, `PasswordInput`, `NumberInput`,
+- **MGS components:** `MgsProvider`, `Button`, `IconButton`, `ButtonGroup`, `Stack`, `Input`, `Textarea`, `PasswordInput`, `NumberInput`,
   `InputGroup` (with `InputGroupAddon`, `InputGroupButton`), `Checkbox`, `CheckboxGroup`, `Radio`,
-  `RadioGroup`, `RadioCard`, `VisuallyHidden`
+  `RadioGroup`, `RadioCard`, `Switch`, `Select`,
+  `MultiSelect`, `AutoComplete`, `DatePicker`, `DateRangePicker` (with `dateRangePresets`), `TimePicker`, `Calendar`, `VisuallyHidden`
+- **MGS patterns:** `FormField` (a control with its label, help and error)
 - **Icons:** `PlusIcon`, `EditIcon`, `TrashIcon`, `SearchIcon`, ... (see the Icons page in Storybook)
 - **Being migrated to an MGS API** (still RSuite's API for now; expect changes):
-  - General: `ButtonGroup`, `ButtonToolbar`, `Badge`, `Avatar`, `AvatarGroup`
-  - Date & time: `Calendar`, `DateInput`, `DatePicker`, `DateRangeInput`, `DateRangePicker`, `TimePicker`,
-    `TimeRangePicker`, plus the `DateRange` type and date rules (`beforeToday`, `afterToday`, `allowedMaxDays`, ...)
+  - General: `Badge`, `Avatar`, `AvatarGroup`
 
 Each component's `...Props` type is exported too. See
 [ARCHITECTURE.md → Migrating the RSuite re-exports](./ARCHITECTURE.md#migrating-the-rsuite-re-exports) for the order,

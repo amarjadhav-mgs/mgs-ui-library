@@ -1,0 +1,33 @@
+// MGS ButtonGroup. The joined corners, the sizes and the full-width layout come from RSuite's ButtonGroup. This file
+// adds only what MGS owns: one line between the buttons, and a focus ring that isn't covered.
+
+// The focused button is drawn above its neighbours, so they don't cover part of its focus ring (which is outside
+// the button).
+.mgs-button-group > :focus-visible {
+  position: relative;
+  z-index: 1;
+}
+
+// Secondary buttons draw their edge inside themselves (the secondary-edge mixin), so two next to each other would
+// show a line of 2px. Each button after the first moves 1px over the one before it: one line of 1px.
+.mgs-button-group > [data-variant='secondary'] + [data-variant='secondary'] {
+  margin-inline-start: -1px;
+}
+
+.mgs-button-group[data-orientation='vertical']
+  > [data-variant='secondary']
+  + [data-variant='secondary'] {
+  margin-block-start: -1px;
+  margin-inline-start: 0;
+}
+
+// Filled buttons (primary, danger) have no edge, so a group of them would be one block of colour. A line in the
+// colour of their text separates them: 4.5:1 or more on the fill in every theme.
+.mgs-button-group > :is([data-variant='primary'], [data-variant='danger']):not(:first-child) {
+  box-shadow: inset 1px 0 0 currentColor;
+}
+
+.mgs-button-group[data-orientation='vertical']
+  > :is([data-variant='primary'], [data-variant='danger']):not(:first-child) {
+  box-shadow: inset 0 1px 0 currentColor;
+}

@@ -1,0 +1,125 @@
+// MGS Switch: a native <input type="checkbox" role="switch">, invisible, on top of the track that is drawn. The
+// layout, the label, the disabled look and the focus ring are shared with Checkbox and Radio (the choice-control
+// mixin); this file draws the track and its thumb.
+@use '../../styles/mixins';
+
+@include mixins.choice-control('mgs-switch', 'track');
+
+.mgs-switch {
+  // Private sizes, from the tokens. The track is 1.75 times as wide as it is high; the thumb leaves 2px around it.
+  --mgs-switch-height: var(--mgs-space-xl);
+  --mgs-switch-width: calc(var(--mgs-switch-height) * 1.75);
+  --mgs-switch-inset: calc(var(--mgs-space-xs) / 2);
+  --mgs-switch-thumb: calc(var(--mgs-switch-height) - 2 * var(--mgs-switch-inset));
+
+  // As high as the track, and at least 24px (WCAG 2.5.8).
+  padding-block: max(0px, calc((max(var(--mgs-switch-height), var(--mgs-space-xl)) - 1lh) / 2));
+
+  &[data-size='sm'] {
+    --mgs-switch-height: calc(var(--mgs-space-lg) + var(--mgs-space-xs));
+  }
+
+  &[data-size='lg'] {
+    --mgs-switch-height: calc(var(--mgs-space-xl) + var(--mgs-space-xs));
+  }
+
+  &[data-loading] {
+    cursor: progress;
+  }
+}
+
+// The click and touch target: the whole track, and at least 24px high.
+.mgs-switch__input {
+  width: var(--mgs-switch-width);
+  height: max(var(--mgs-switch-height), var(--mgs-space-xl));
+}
+
+.mgs-switch__track {
+  position: relative;
+  display: inline-flex;
+  box-sizing: border-box;
+  width: var(--mgs-switch-width);
+  height: var(--mgs-switch-height);
+  // Invisible, until forced-colors mode (Windows High Contrast) replaces the background: then it is the track's edge.
+  border: 1px solid transparent;
+  border-radius: var(--mgs-radius-full);
+  // Off: 3:1 or more on the page in every theme (themes.scss), the colour of the input borders.
+  background-color: var(--mgs-color-border-control);
+  color: var(--mgs-color-surface);
+  transition: background-color 0.15s;
+}
+
+// The thumb is drawn with borders (half its size on every side of an empty box), not a background: forced-colors mode
+// replaces backgrounds, and borders stay.
+.mgs-switch__thumb {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: calc(var(--mgs-switch-inset) - 1px);
+  box-sizing: content-box;
+  width: 0;
+  height: 0;
+  border: calc(var(--mgs-switch-thumb) / 2) solid currentColor;
+  border-radius: var(--mgs-radius-full);
+  transform: translateY(-50%);
+  transition: inset-inline-start 0.15s;
+}
+
+// On: the primary fill (3:1 or more on the page) with the thumb in the colour of text on primary, at the other end.
+// The position shows the state, not only the colour.
+.mgs-switch__input:checked + .mgs-switch__track {
+  background-color: var(--mgs-color-primary);
+  color: var(--mgs-color-on-primary);
+
+  .mgs-switch__thumb {
+    inset-inline-start: calc(100% - var(--mgs-switch-thumb) - var(--mgs-switch-inset) + 1px);
+  }
+}
+
+// Invalid (aria-invalid="true" on the switch): the error border around the track.
+.mgs-switch__input[aria-invalid='true'] + .mgs-switch__track {
+  border-color: var(--mgs-color-border-error);
+  box-shadow: 0 0 0 1px var(--mgs-color-border-error);
+}
+
+// Loading: a spinner on the thumb, in the colour of the track.
+.mgs-switch[data-loading] .mgs-switch__thumb::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  box-sizing: border-box;
+  width: calc(var(--mgs-switch-thumb) * 0.6);
+  height: calc(var(--mgs-switch-thumb) * 0.6);
+  margin: calc(var(--mgs-switch-thumb) * -0.3);
+  border: 2px solid var(--mgs-color-border-control);
+  border-block-start-color: transparent;
+  border-radius: var(--mgs-radius-full);
+  animation: mgs-switch-spin 0.8s linear infinite;
+  content: '';
+}
+
+.mgs-switch[data-loading]
+  .mgs-switch__input:checked
+  + .mgs-switch__track
+  .mgs-switch__thumb::after {
+  border-color: var(--mgs-color-primary);
+  border-block-start-color: transparent;
+}
+
+@keyframes mgs-switch-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (forced-colors: active) {
+  .mgs-switch__track {
+    border-color: ButtonText;
+  }
+
+  // On: the system's highlight colour for the thumb, and it is at the other end. Not when disabled: then the
+  // system's grey (from the mixin) says so.
+  .mgs-switch__input:checked:not(:disabled) + .mgs-switch__track {
+    border-color: Highlight;
+    color: Highlight;
+  }
+}

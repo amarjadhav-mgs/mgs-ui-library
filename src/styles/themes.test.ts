@@ -25,7 +25,7 @@ describe('themes.scss', () => {
     }
   });
 
-  it.each(['--mgs-color-border-error', '--mgs-color-surface-readonly'])(
+  it.each(['--mgs-color-border-error', '--mgs-color-text-error', '--mgs-color-surface-readonly'])(
     'every theme declares %s (it points at theme-dependent colours)',
     (token) => {
       expect(themes.match(new RegExp(`${token}:`, 'g'))).toHaveLength(3);

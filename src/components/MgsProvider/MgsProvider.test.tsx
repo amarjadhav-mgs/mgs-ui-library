@@ -73,8 +73,8 @@ describe('MgsProvider', () => {
   it('en-GB (the default): dd/MM/yyyy and 24-hour time', () => {
     render(
       <MgsProvider>
-        <DatePicker label="Date" />
-        <TimePicker label="Time" />
+        <DatePicker aria-label="Date" />
+        <TimePicker aria-label="Time" />
       </MgsProvider>,
     );
     expect(screen.getByLabelText('Date')).toHaveAttribute('placeholder', 'dd/MM/yyyy');
@@ -84,8 +84,8 @@ describe('MgsProvider', () => {
   it('en-US: MM/dd/yyyy and 12-hour time', () => {
     render(
       <MgsProvider locale="en-US">
-        <DatePicker label="Date" />
-        <TimePicker label="Time" />
+        <DatePicker aria-label="Date" />
+        <TimePicker aria-label="Time" />
       </MgsProvider>,
     );
     expect(screen.getByLabelText('Date')).toHaveAttribute('placeholder', 'MM/dd/yyyy');
@@ -95,8 +95,8 @@ describe('MgsProvider', () => {
   it('en-IN: dd/MM/yyyy and 24-hour time, like en-GB', () => {
     render(
       <MgsProvider locale="en-IN">
-        <DatePicker label="Date" />
-        <TimePicker label="Time" />
+        <DatePicker aria-label="Date" />
+        <TimePicker aria-label="Time" />
       </MgsProvider>,
     );
     expect(screen.getByLabelText('Date')).toHaveAttribute('placeholder', 'dd/MM/yyyy');

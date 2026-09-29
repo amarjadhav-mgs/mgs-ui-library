@@ -1,0 +1,117 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as ButtonGroupStories from './ButtonGroup.stories';
+
+<Meta of={ButtonGroupStories} />
+
+# ButtonGroup
+
+Joins buttons that belong together into one block: a view switcher, a set of related actions. It works with
+[Button](?path=/docs/components-button--docs) and [IconButton](?path=/docs/components-iconbutton--docs).
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `ButtonGroup` · Related:
+[Stack](?path=/docs/components-stack--docs) (buttons in a row with space between them)
+
+## When to use
+
+- For 2 to about 5 buttons that are one thing to the user: List / Board / Calendar, or Copy / Download / Delete.
+- **Not for buttons that only stand next to each other** (Cancel and Save). Use a
+  [Stack](?path=/docs/components-stack--docs) with `direction="row"`.
+- **Not for choosing a value in a form.** Use radio buttons or a select: a group of buttons is not a form field.
+- **Not for navigation between pages.** Use tabs or links.
+
+## Import
+
+```tsx
+import { Button, ButtonGroup } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<ButtonGroup aria-label="View">
+  <Button>List</Button>
+  <Button>Board</Button>
+</ButtonGroup>
+```
+
+⚠️ **Name the group** with `aria-label` or `aria-labelledby`, so screen readers say what the buttons are for. A
+warning in the console tells you when the name is missing.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={ButtonGroupStories.Basic} sourceState="shown" />
+
+### States
+
+<Canvas of={ButtonGroupStories.States} sourceState="shown" />
+
+`disabled` on the group disables every button in it. To disable one button, set `disabled` on that button.
+
+### Sizes
+
+<Canvas of={ButtonGroupStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`. Set it on the group, not on each button; a button that sets its own size keeps
+it.
+
+### Button variants
+
+<Canvas of={ButtonGroupStories.ButtonVariants} sourceState="shown" />
+
+Use one variant in a group. Icon buttons each need their own `aria-label`.
+
+### Layout
+
+<Canvas of={ButtonGroupStories.Layout} sourceState="shown" />
+
+`orientation="vertical"` puts the buttons under each other. `fullWidth` fills the container with buttons of equal
+width.
+
+### Advanced examples
+
+<Canvas of={ButtonGroupStories.Advanced} sourceState="shown" />
+
+A view switcher: the app keeps which button is chosen, shows it with the `primary` variant, and says it to screen
+readers with `aria-pressed`. In a toolbar, a [Stack](?path=/docs/components-stack--docs) with `role="toolbar"` puts
+space between groups and single buttons.
+
+### Common usage
+
+- **View switchers and filters with a few fixed values:** `aria-pressed` on each button, one of them `true`.
+- **Row actions and toolbars:** icon buttons in a group, each with an `aria-label`.
+- **Narrow screens:** `fullWidth`, or `orientation="vertical"` when the labels are long.
+
+## Do and don't
+
+| Do                                                       | Don't                                              |
+| -------------------------------------------------------- | -------------------------------------------------- |
+| Group buttons that are one thing to the user             | Group Cancel and Save: they are separate actions   |
+| Name the group with `aria-label`                         | Leave the group without a name                     |
+| Use one variant and one size in a group                  | Mix primary, danger and ghost buttons in one group |
+| Show the chosen button with `aria-pressed` and a variant | Show the chosen button by colour alone             |
+| Keep the labels short                                    | Put more than about 5 buttons in a group           |
+
+## Accessibility
+
+<Canvas of={ButtonGroupStories.Accessibility} sourceState="shown" />
+
+| Key               | Action                                                        |
+| ----------------- | ------------------------------------------------------------- |
+| `Tab` / `⇧ Tab`   | Move to the next / previous button, skipping disabled buttons |
+| `Enter` / `Space` | Press the focused button                                      |
+
+- Renders `role="group"`: screen readers announce the group's name when the user enters it.
+- Each button is a Tab stop; there are no arrow keys.
+- The focus ring of a button is drawn above its neighbours, so no part of it is covered.
+
+## API
+
+<Canvas of={ButtonGroupStories.Playground} sourceState="shown" />
+<Controls of={ButtonGroupStories.Playground} />
+
+Every native `<div>` attribute and event also works (`id`, `aria-*`, `data-*`, `className`, `style`), and `ref` points
+at the group's `<div>`.

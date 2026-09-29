@@ -1,0 +1,126 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as FormFieldStories from './FormField.stories';
+
+<Meta of={FormFieldStories} />
+
+# FormField
+
+A control with its label, help text and error message, connected for screen readers: the label names the control, the
+help and the error describe it, and an error marks it invalid. With it, a form needs no `id`, `htmlFor` or `aria-*`
+written by hand.
+
+**Component:** MGS pattern, built by MGS · Related: [Stack](?path=/docs/components-stack--docs) (the layout of a form),
+and every control: [Input](?path=/docs/components-input--docs), [Select](?path=/docs/components-select--docs),
+[RadioGroup](?path=/docs/components-radiogroup--docs), …
+
+## When to use
+
+- For every field of a form: one FormField around one control.
+- For fields in dialogs, drawers and filter panels.
+- **Not for a control without a visible label** (a search box in a toolbar, a checkbox in a table row). Use the
+  control alone, with `aria-label`.
+- **Not for the layout of the form.** Put the FormFields in a [Stack](?path=/docs/components-stack--docs).
+- **Not for validation.** The app, or its form library, decides what the error is; the FormField shows it.
+
+## Import
+
+```tsx
+import { FormField } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<FormField label="Email" help="We use it for invoices" error={errors.email} required>
+  <Input type="email" value={email} onChange={setEmail} />
+</FormField>
+```
+
+⚠️ **Put exactly one MGS control inside**, and don't set `id`, `aria-labelledby`, `aria-describedby`, `aria-invalid`
+or `required` on it: the FormField does. To choose the `id` yourself, set `controlId`.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={FormFieldStories.Basic} sourceState="shown" />
+
+### Validation
+
+<Canvas of={FormFieldStories.Validation} sourceState="shown" />
+
+| Prop       | What it shows                     | What it does for screen readers                       |
+| ---------- | --------------------------------- | ----------------------------------------------------- |
+| `required` | A `*` after the label             | The control says "required"                           |
+| `help`     | A hint under the control          | Read after the label                                  |
+| `error`    | The message, with an icon, in red | The control says "invalid"; the message is read first |
+
+The help stays while there is an error: the user still needs it to fix the value. Set `error` to the message, and to
+nothing (`undefined` or `''`) when the value is right.
+
+### Controls
+
+<Canvas of={FormFieldStories.Controls} sourceState="shown" />
+
+| Control                                                             | How the label is connected                                               |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `Input`, `Textarea`, `PasswordInput`, `NumberInput`, `AutoComplete` | A `<label>` for the field; a click on it focuses the field               |
+| `Select`, `MultiSelect`                                             | The label names the field; a click on it focuses the field               |
+| `RadioGroup`, `CheckboxGroup`                                       | The label is the heading of the group                                    |
+| `Checkbox`, `Switch`                                                | The control keeps its own label; the field's label is a heading above it |
+
+### Advanced examples
+
+<Canvas of={FormFieldStories.Advanced} sourceState="shown" />
+
+A whole form built from `@mgs/ui` only. It validates on submit, shows each error on its field, and moves focus to the
+first field with an error, so keyboard and screen reader users land where the problem is.
+
+### Common usage
+
+- **React Hook Form:** `<FormField label="Email" error={errors.email?.message}>` around the control, with
+  `Controller` or `register` on the control.
+- **Formik:** `error={touched.email ? errors.email : undefined}`.
+- **Layout:** FormFields under each other in a `Stack` with `gap="lg"`; two fields next to each other in a
+  `Stack direction="row"`, each in a `<div style={{ flex: 1 }}>`.
+- **Errors from the server:** set `error` on the fields the server names; show errors that belong to no field above
+  the form.
+
+## Do and don't
+
+| Do                                                           | Don't                                            |
+| ------------------------------------------------------------ | ------------------------------------------------ |
+| Say in the error how to fix it: "Enter a date after 1 April" | Say only "Invalid value"                         |
+| Put the format in `help`: "Like name@company.com"            | Put the format in the placeholder: it disappears |
+| Mark the required fields, or the optional ones if fewer      | Leave users to find out on submit                |
+| Validate on submit, or when the user leaves the field        | Show an error while the user is still typing     |
+| Move focus to the first field with an error on submit        | Leave focus on the submit button                 |
+
+## Accessibility
+
+<Canvas of={FormFieldStories.Accessibility} sourceState="shown" />
+
+- The label names the control; a click on it focuses the control, also for `Select` and `MultiSelect`.
+- The error and the help describe the control (`aria-describedby`), the error first. Screen readers read them when
+  the control gets focus.
+- An error sets `aria-invalid` on the control, which also gives it the error border. A `CheckboxGroup` has no invalid
+  state in ARIA: its error is read as its description.
+- `required` sets `required` on the control, or `aria-required` where there is no native control. The `*` is hidden
+  from screen readers.
+- The error message is shown with an icon and as text, never by colour alone. Its colour reaches 4.5:1 contrast in
+  every theme.
+
+## API
+
+<Canvas of={FormFieldStories.Playground} sourceState="shown" />
+<Controls of={FormFieldStories.Playground} />
+
+Every native `<div>` attribute and event also works (`id`, `data-*`, `className`, `style`), and `ref` points at the
+root `<div>`.
+
+## Customizing
+
+Colours come from the MGS tokens `--mgs-color-text`, `--mgs-color-text-secondary` (help) and
+`--mgs-color-text-error` (error and `*`). Override tokens in your app's stylesheet, never the component's classes.

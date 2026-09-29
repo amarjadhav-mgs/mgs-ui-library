@@ -15,6 +15,9 @@ import './styles/motion.scss';
 export * from './components/MgsProvider';
 export * from './components/Button';
 export * from './components/IconButton';
+export * from './components/ButtonGroup';
+export * from './components/Calendar';
+export * from './components/Stack';
 export * from './components/Input';
 export * from './components/Textarea';
 export * from './components/PasswordInput';
@@ -25,48 +28,21 @@ export * from './components/CheckboxGroup';
 export * from './components/Radio';
 export * from './components/RadioGroup';
 export * from './components/RadioCard';
+export * from './components/Switch';
+export * from './components/Select';
+export * from './components/MultiSelect';
+export * from './components/AutoComplete';
+export * from './components/DatePicker';
+export * from './components/DateRangePicker';
+export * from './components/TimePicker';
 export * from './components/VisuallyHidden';
+
+// MGS patterns
+export * from './patterns/FormField';
 
 // MGS icons
 export * from './icons';
 
 // RSuite re-exports waiting for migration to an MGS API (ARCHITECTURE.md → Migrating the RSuite re-exports).
-export {
-  Avatar,
-  AvatarGroup,
-  Badge,
-  ButtonGroup,
-  ButtonToolbar,
-  Calendar,
-  DateInput,
-  DatePicker,
-  DateRangeInput,
-  DateRangePicker,
-  TimePicker,
-  TimeRangePicker,
-} from 'rsuite';
-export type {
-  AvatarGroupProps,
-  AvatarProps,
-  BadgeProps,
-  ButtonGroupProps,
-  ButtonToolbarProps,
-  CalendarProps,
-  DateInputProps,
-  DatePickerProps,
-  DateRangeInputProps,
-  DateRangePickerProps,
-  TimePickerProps,
-  TimeRangePickerProps,
-} from 'rsuite';
-export {
-  after,
-  afterToday,
-  allowedDays,
-  allowedMaxDays,
-  allowedRange,
-  before,
-  beforeToday,
-  combine,
-} from 'rsuite';
-export type { DateRange } from 'rsuite';
+export { Avatar, AvatarGroup, Badge } from 'rsuite';
+export type { AvatarGroupProps, AvatarProps, BadgeProps } from 'rsuite';

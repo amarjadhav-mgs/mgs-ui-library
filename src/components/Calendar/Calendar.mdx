@@ -1,0 +1,117 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as CalendarStories from './Calendar.stories';
+
+<Meta of={CalendarStories} />
+
+# Calendar
+
+A month shown on the page, to look at days and what happens on them, and to choose one. Its value is a `Date`, or
+`null` when no day is chosen.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `Calendar` · Related:
+[DatePicker](?path=/docs/components-datepicker--docs) (a date in a form),
+[DateRangePicker](?path=/docs/components-daterangepicker--docs)
+
+## When to use
+
+- To show what happens on the days of a month: events, due dates, leave.
+- To choose a day when the calendar is the page: the day whose bookings are listed beside it.
+- **Not for a date in a form.** Use a [DatePicker](?path=/docs/components-datepicker--docs): it takes one line and
+  the date can be typed.
+- **Not for a plan of a week or a day with times.** A Calendar shows months.
+
+## Import
+
+```tsx
+import { Calendar } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<Calendar aria-label="Team calendar" value={day} onChange={setDay} />
+```
+
+Name the calendar with `aria-label`, or with `aria-labelledby` and the `id` of its heading.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={CalendarStories.Basic} sourceState="shown" />
+
+A Calendar fills the width it gets. It shows the month of its value, or the month of today. Today has a filled
+circle; the chosen day has an outline. The header moves between months, and "Today" goes back to this month.
+
+### Compact
+
+<Canvas of={CalendarStories.Compact} sourceState="shown" />
+
+`compact` makes the days smaller, for sidebars and cards. Give it a width of 280px or more.
+
+### Day content
+
+<Canvas of={CalendarStories.DayContent} sourceState="shown" />
+
+`renderDay` returns what a day shows under its number. A day has room for about two short lines: show the first
+events or a count, and the whole list beside the calendar (see Advanced examples). Not for a `compact` calendar,
+which has no room for it.
+
+### Controlled
+
+<Canvas of={CalendarStories.Controlled} sourceState="shown" />
+
+`onChange` receives the day the user chose: `onChange={setDay}` works directly. It is not called when the user only
+moves to another month; `onMonthChange` is, with the first day of that month. Use `value` with `onChange`
+(controlled) or `defaultValue` (uncontrolled), not both.
+
+### Advanced examples
+
+<Canvas of={CalendarStories.Advanced} sourceState="shown" />
+
+- **A calendar with a list:** the calendar chooses the day, the list beside it shows that day. The list is a live
+  region (`aria-live="polite"`), so screen readers hear the new events.
+
+### Common usage
+
+- **Events from the server, month by month:** load the month in `onMonthChange`, and the first month when the page
+  opens.
+- **A day the app sets** (`value`) is shown: the calendar moves to its month.
+
+## Do and don't
+
+| Do                                                     | Don't                                        |
+| ------------------------------------------------------ | -------------------------------------------- |
+| Name the calendar with `aria-label`                    | Leave it without a name                      |
+| Keep day content to a few words                        | Put buttons or long text into a day          |
+| Show the whole list of a day beside the calendar       | Rely on text that is cut off in the day      |
+| Use a DatePicker in forms                              | Put a Calendar into a form to ask for a date |
+| Use colour together with text for the kind of an event | Tell kinds of events apart by colour alone   |
+
+## Accessibility
+
+<Canvas of={CalendarStories.Accessibility} sourceState="shown" />
+
+| Key               | Action                                                                              |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| `Tab` / `⇧ Tab`   | Move through the header (previous month, month, next month, Today), then to the day |
+| `Enter` / `Space` | On a button of the header: press it                                                 |
+
+- The days are a grid (WAI-ARIA); each day says its whole date ("24 Sep 2026").
+- **Known limits (RSuite):** the arrow keys don't move between days, and a day can't be chosen with the keyboard:
+  days are chosen with the mouse or by touch. When the user changes the month, screen readers hear the same day of
+  the new month as selected, although only the chosen day looks selected. Where keyboard users must choose a day,
+  offer a [DatePicker](?path=/docs/components-datepicker--docs) as well.
+- `className`, `style`, the other native attributes and `ref` go to the root element.
+
+## API
+
+<Canvas of={CalendarStories.Playground} sourceState="shown" />
+<Controls of={CalendarStories.Playground} />
+
+## Customizing
+
+Colours come from the MGS tokens through the theme. Override tokens in your app's stylesheet, never `.rs-*` classes
+or `--rs-*` variables.

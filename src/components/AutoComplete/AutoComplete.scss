@@ -1,0 +1,13 @@
+// MGS AutoComplete. The field, its sizes and the list come from RSuite's AutoComplete and Input, themed through
+// src/styles/rsuite-bridge.scss (including the border, the read-only background and the error border). This file
+// adds only what MGS owns.
+
+// Full width, like Input: the layout sets the width.
+.mgs-auto-complete {
+  display: block;
+}
+
+// Read-only values can be selected and copied but not typed into: the default cursor instead of the text cursor.
+.mgs-auto-complete [readonly] {
+  cursor: default;
+}

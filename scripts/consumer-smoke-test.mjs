@@ -65,19 +65,28 @@ try {
 import { createRoot } from 'react-dom/client';
 import '@mgs/ui/styles.css';
 import {
+  AutoComplete,
   Button,
+  Calendar,
   Checkbox,
   CheckboxGroup,
   DatePicker,
+  DateRangePicker,
+  dateRangePresets,
+  TimePicker,
+  FormField,
   IconButton,
   Input,
   MgsProvider,
+  MultiSelect,
   NumberInput,
   PasswordInput,
   PlusIcon,
   Radio,
   RadioCard,
   RadioGroup,
+  Select,
+  Switch,
   Textarea,
   TrashIcon,
   VisuallyHidden,
@@ -98,16 +107,36 @@ function App() {
     <MgsProvider theme={theme} locale="en-IN">
       <label htmlFor="name">Name</label>
       <Input id="name" value={name} onChange={setName} />
+      <FormField label="Company" help="As on the invoice" error={name ? undefined : 'Enter a name'} required>
+        <Input value={name} onChange={setName} />
+      </FormField>
+      <AutoComplete aria-label="City" suggestions={['Pune', 'Mumbai']} value={name} onChange={setName} />
       <PasswordInput aria-label="Password" />
       <NumberInput aria-label="Price" prefix="₹" decimals={2} value={price} onChange={setPrice} />
       <Textarea aria-label="Notes" autosize maxRows={4} />
       <Checkbox checked={updates} onChange={setUpdates}>
         Send me updates
       </Checkbox>
+      <Switch size="sm" loading={false} checked={updates} onChange={setUpdates}>
+        Updates
+      </Switch>
       <CheckboxGroup aria-label="Notify me by" value={channels} onChange={setChannels}>
         <Checkbox value="email">Email</Checkbox>
         <Checkbox value="sms">SMS</Checkbox>
       </CheckboxGroup>
+      <Select
+        aria-label="Delivery"
+        options={[{ value: 'standard', label: 'Standard' }]}
+        value={delivery}
+        onChange={setDelivery}
+        clearable
+      />
+      <MultiSelect
+        aria-label="Channels"
+        options={[{ value: 'email', label: 'Email' }]}
+        value={channels}
+        onChange={setChannels}
+      />
       <RadioGroup aria-label="Delivery" value={delivery} onChange={setDelivery}>
         <Radio value="standard">Standard</Radio>
         <Radio value="express">Express</Radio>
@@ -115,7 +144,10 @@ function App() {
           Pick up
         </RadioCard>
       </RadioGroup>
-      <DatePicker label="Due date" />
+      <DatePicker aria-label="Due date" minDate={new Date()} withTime clearable />
+      <DateRangePicker aria-label="Period" maxDate={new Date()} presets={dateRangePresets()} />
+      <TimePicker aria-label="Start time" defaultValue="09:00" minuteStep={15} />
+      <Calendar aria-label="Team calendar" defaultValue={new Date()} compact />
       <Button leftIcon={<PlusIcon />}>
         Add <VisuallyHidden>order</VisuallyHidden>
       </Button>

@@ -1,0 +1,42 @@
+// MGS Stack: flexbox with the MGS spacing scale. It has no colours, borders or padding of its own.
+
+.mgs-stack {
+  display: flex;
+  flex-direction: column;
+  // Children can shrink below the width of their content, so long text wraps instead of widening the page.
+  min-width: 0;
+
+  &[data-direction='row'] {
+    flex-direction: row;
+  }
+
+  &[data-wrap] {
+    flex-wrap: wrap;
+  }
+
+  &[data-gap='none'] {
+    gap: 0;
+  }
+
+  @each $step in (xs, sm, md, lg, xl) {
+    &[data-gap='#{$step}'] {
+      gap: var(--mgs-space-#{$step});
+    }
+  }
+
+  @each $name,
+    $value
+      in (start: flex-start, center: center, end: flex-end, stretch: stretch, baseline: baseline)
+  {
+    &[data-align='#{$name}'] {
+      align-items: $value;
+    }
+  }
+
+  @each $name, $value in (start: flex-start, center: center, end: flex-end, between: space-between)
+  {
+    &[data-justify='#{$name}'] {
+      justify-content: $value;
+    }
+  }
+}

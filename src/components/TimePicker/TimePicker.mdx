@@ -1,0 +1,157 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as TimePickerStories from './TimePicker.stories';
+
+<Meta of={TimePickerStories} />
+
+# TimePicker
+
+A field for a time of day, typed or chosen from lists of hours and minutes. Its value is 24-hour text (`'14:30'`),
+or `null` when empty. It follows the MGS size scale, so it lines up with inputs and buttons.
+
+**Component:** MGS-owned, built on RSuite 6.2.4 `DatePicker` with a time format · Related:
+[DatePicker](?path=/docs/components-datepicker--docs) (`withTime` for a date with a time),
+[FormField](?path=/docs/patterns-formfield--docs),
+[MgsProvider](?path=/docs/foundation-mgsprovider--docs) (sets the time format)
+
+## When to use
+
+- For a time without a day: opening hours, the start of a shift, a daily reminder.
+- **Not for a time on a day** (an appointment). Use a [DatePicker](?path=/docs/components-datepicker--docs) with
+  `withTime`.
+- **Not for a length of time** ("2 hours 30 minutes"). Use a
+  [NumberInput](?path=/docs/components-numberinput--docs) with a unit.
+- **Not for a few fixed slots** ("09:00", "11:00", "14:00"). Use a [Select](?path=/docs/components-select--docs) or
+  a [RadioGroup](?path=/docs/components-radiogroup--docs).
+
+## Import
+
+```tsx
+import { TimePicker } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<label htmlFor="start">Start time</label>
+<TimePicker id="start" value={start} onChange={setStart} minuteStep={15} />
+```
+
+Name the field with a `<label htmlFor>`, with `aria-label`, or put it in a
+[FormField](?path=/docs/patterns-formfield--docs). A placeholder is not a label.
+
+**The value is always 24-hour text; the locale only sets what the user sees.**
+
+| Locale           | Value     | The field shows |
+| ---------------- | --------- | --------------- |
+| `en-GB`, `en-IN` | `'14:30'` | `14:30`         |
+| `en-US`          | `'14:30'` | `02:30 PM`      |
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={TimePickerStories.Basic} sourceState="shown" />
+
+The user chooses the hour and the minutes, then OK. While empty, the field shows its format. With `name`, a form
+submits the time as `14:30`, whatever the locale.
+
+### States
+
+<Canvas of={TimePickerStories.States} sourceState="shown" />
+
+| State      | Focusable | Opens | Submitted with a form | Use it for                                          |
+| ---------- | --------- | ----- | --------------------- | --------------------------------------------------- |
+| `readOnly` | Yes       | No    | Yes                   | A time users should see, not change                 |
+| `disabled` | No        | No    | No                    | A field that doesn't apply right now                |
+| `loading`  | Yes       | No    | Yes                   | The time is being loaded                            |
+| Invalid    | Yes       | Yes   | Yes                   | A time that fails validation: see Advanced examples |
+
+**Invalid** isn't a prop: a [FormField](?path=/docs/patterns-formfield--docs) with an `error` sets it. Without a
+FormField, set `aria-invalid="true"` and link the error text with `aria-describedby`.
+
+### Sizes
+
+<Canvas of={TimePickerStories.Sizes} sourceState="shown" />
+
+`size`: `sm | md` (default) `| lg`, the same heights as Input and Button. A TimePicker is full width: control the
+width with the layout.
+
+### Minute step and clear
+
+<Canvas of={TimePickerStories.MinuteStep} sourceState="shown" />
+
+`minuteStep={15}` offers 00, 15, 30 and 45 in the list, which is shorter to scan. Other minutes can still be typed:
+check the value in `onChange` when only the steps are allowed. `clearable` adds a button that empties the field;
+`onChange` then receives `null`.
+
+### Controlled
+
+<Canvas of={TimePickerStories.Controlled} sourceState="shown" />
+
+`onChange` receives the **value first**, then the event: `onChange={setStart}` works directly. Use `value` with
+`onChange` (controlled) or `defaultValue` (uncontrolled), not both.
+
+### Advanced examples
+
+<Canvas of={TimePickerStories.Advanced} sourceState="shown" />
+
+- **Two times that depend on each other:** 24-hour text compares like text, so `closes <= opens` is all the
+  validation needs.
+- **Validation:** `FormField` shows the error under the field and links it; the border turns red.
+
+### Common usage
+
+- **Sending a time to the server:** send the text as it is (`'14:30'`), which is what `name` submits.
+- **A time from a `Date`:** `` `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}` ``.
+- **Text that is not a time** (`'25:00'`, `'2:30 PM'`) as the value shows an empty field.
+- **Forms:** with React Hook Form, use `Controller` (`value={field.value}`, `onChange={field.onChange}`,
+  `onBlur={field.onBlur}`); with Formik, `value={values.start}`,
+  `onChange={(value) => setFieldValue('start', value)}` and `onBlur={() => setFieldTouched('start')}`.
+
+## Do and don't
+
+| Do                                                  | Don't                                          |
+| --------------------------------------------------- | ---------------------------------------------- |
+| Give the field a visible label                      | Use the placeholder as the label               |
+| Keep and send the time as 24-hour text              | Keep the text the field shows ("02:30 PM")     |
+| Use `minuteStep` when times are on the quarter hour | Make users scroll through 60 minutes           |
+| Use a DatePicker with `withTime` for an appointment | Put a DatePicker and a TimePicker side by side |
+| Show errors as text, with a `FormField`             | Rely on the red border alone                   |
+
+## Accessibility
+
+<Canvas of={TimePickerStories.Accessibility} sourceState="shown" />
+
+Everything can be done by typing: the keyboard works in the field, and the lists show the time being typed.
+
+| Key             | Action                                                        |
+| --------------- | ------------------------------------------------------------- |
+| `Tab` / `⇧ Tab` | Move to the next / previous field; typing starts at the hours |
+| `0` to `9`      | Type the hours, then the minutes                              |
+| `A` / `P`       | AM or PM, in a 12-hour locale                                 |
+| `←` / `→`       | Move between hours, minutes and AM or PM                      |
+| `↑` / `↓`       | One more / one less hour or minute                            |
+| `Backspace`     | Empty the part; with the whole text selected, empty the field |
+| `Enter`         | Open the lists                                                |
+| `Esc`           | Close the lists and keep the value                            |
+
+- The field is a text input named by its label; screen readers hear the name, the format and the value.
+- **Known limit (RSuite):** the lists and the OK button can be reached with the mouse or by touch, not with the
+  keyboard. Keyboard users type the time, which gives the same result.
+- The border reaches 3:1 contrast in every theme, and the error border does too.
+- `id`, `aria-*` and `ref` go to the `<input>`.
+
+## API
+
+<Canvas of={TimePickerStories.Playground} sourceState="shown" />
+<Controls of={TimePickerStories.Playground} />
+
+`className`, `style` and the other native attributes and events go to the root element; `id`, `aria-*` and `ref` go
+to the `<input>`.
+
+## Customizing
+
+Borders and focus colours come from the MGS tokens `--mgs-color-border-control`, `--mgs-color-border-error` and
+`--mgs-color-focus-ring`. Override tokens in your app's stylesheet, never `.rs-*` classes or `--rs-*` variables.
