@@ -61,6 +61,7 @@ src/
 ├── components/        components, one folder each
 ├── patterns/          patterns, one folder each
 ├── icons/             curated icon exports
+├── internal/          helpers shared by components (dev-only warnings, …); never exported from index.ts
 ├── stories/           shared story helpers (shared.tsx); docs of the re-exports until they are migrated
 └── index.ts           the public API: nothing is public unless it's exported here
 ```
@@ -206,11 +207,15 @@ If you know `Button`, you should already know the basics of every other MGS comp
 
 - **Booleans are plain adjectives** (`disabled`, `loading`, `fullWidth`), default `false`, never `isX`/`hasX`.
 - **Native attributes pass through** to the root element (`id`, `aria-*`, `data-*`, event handlers). **`ref` is
-  forwarded** to the root DOM element.
+  forwarded** to the root DOM element. When the root is a wrapper around a form control (`Checkbox`'s `<label>`,
+  `NumberInput`'s group), `className` and `style` go to the root, and the other attributes and `ref` go to the
+  control (the `<input>`): that is what labels, forms and form libraries need.
 - **Values:**
-  - **Input-like components** (text inputs, selects, pickers, checkboxes, switches) use `value` / `defaultValue` for
+  - **Input-like components** (text inputs, selects, pickers, checkbox groups) use `value` / `defaultValue` for
     controlled and uncontrolled use, and `onChange(value, event)`. This matches RSuite's signature, so components built on
     RSuite inputs pass it straight through.
+  - **On/off controls** (checkboxes, switches) use `checked` / `defaultChecked` and `onChange(checked, event)`, as in
+    HTML. Their `value` is the string a form submits, or that stands for them in a group.
   - **Other components** use native event signatures: `onClick(event)`, `onFocus(event)`, `onBlur(event)`.
   - **Open/close state** uses `open` / `defaultOpen` / `onOpenChange(open)`.
 - **Event names** are `on` + verb (`onChange`, `onOpenChange`, `onClose`), and props that hold content are nouns
@@ -220,6 +225,8 @@ If you know `Button`, you should already know the basics of every other MGS comp
   names.
 - **Icon-only controls require an accessible name:** the TypeScript types require `aria-label`. `aria-labelledby` may
   also point at visible text (it takes precedence). Props types are interfaces, not unions, so apps can extend them.
+- **Where the types can't require a name** (a `Checkbox`, whose label is optional; a `CheckboxGroup`), the component
+  warns in the console in development (`useDevWarning` in `src/internal/`). Each message is logged once, and production builds log nothing.
 
 ### Accessibility baseline
 

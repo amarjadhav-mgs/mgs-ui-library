@@ -66,6 +66,8 @@ import { createRoot } from 'react-dom/client';
 import '@mgs/ui/styles.css';
 import {
   Button,
+  Checkbox,
+  CheckboxGroup,
   DatePicker,
   IconButton,
   Input,
@@ -85,6 +87,8 @@ const save: ButtonProps = { variant: 'primary', children: 'Save' };
 function App() {
   const [name, setName] = useState('');
   const [price, setPrice] = useState<number | null>(null);
+  const [updates, setUpdates] = useState(false);
+  const [channels, setChannels] = useState<string[]>([]);
   const [theme] = useState<MgsTheme>('light');
   return (
     <MgsProvider theme={theme} locale="en-IN">
@@ -93,6 +97,13 @@ function App() {
       <PasswordInput aria-label="Password" />
       <NumberInput aria-label="Price" prefix="₹" decimals={2} value={price} onChange={setPrice} />
       <Textarea aria-label="Notes" autosize maxRows={4} />
+      <Checkbox checked={updates} onChange={setUpdates}>
+        Send me updates
+      </Checkbox>
+      <CheckboxGroup aria-label="Notify me by" value={channels} onChange={setChannels}>
+        <Checkbox value="email">Email</Checkbox>
+        <Checkbox value="sms">SMS</Checkbox>
+      </CheckboxGroup>
       <DatePicker label="Due date" />
       <Button leftIcon={<PlusIcon />}>
         Add <VisuallyHidden>order</VisuallyHidden>

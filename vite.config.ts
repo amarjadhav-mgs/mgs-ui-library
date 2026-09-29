@@ -38,7 +38,8 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
-    // No CSS in tests (jsdom can't lay it out), except the theme source that themes.test.ts reads.
-    css: { include: [/themes\.scss/] },
+    // No CSS in tests (jsdom can't lay it out), except the sources that tests read as text: themes.test.ts, and
+    // Checkbox.test.tsx (the hover rule).
+    css: { include: [/themes\.scss/, /Checkbox\.scss/] },
   },
 });

@@ -20,6 +20,8 @@ export * from './components/Textarea';
 export * from './components/PasswordInput';
 export * from './components/NumberInput';
 export * from './components/InputGroup';
+export * from './components/Checkbox';
+export * from './components/CheckboxGroup';
 export * from './components/VisuallyHidden';
 
 // MGS icons

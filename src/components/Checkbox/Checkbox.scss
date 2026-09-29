@@ -1,0 +1,108 @@
+// MGS Checkbox: a native <input type="checkbox">, invisible, on top of the box that is drawn. Every state comes from
+// the input itself (:checked, :indeterminate, :disabled, :focus-visible), so the look can't differ from what the
+// browser and screen readers know.
+
+.mgs-checkbox {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--mgs-space-sm);
+  // At least 24px high (WCAG 2.5.8), also when the text line is shorter.
+  padding-block: max(0px, calc((var(--mgs-space-xl) - 1lh) / 2));
+  color: var(--mgs-color-text);
+  cursor: pointer;
+
+  &[data-disabled] {
+    color: var(--mgs-color-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+// As high as one line of the label, so the box stays next to the first line when the label wraps.
+.mgs-checkbox__control {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: 1lh;
+}
+
+// The click and touch target: 24 × 24px around the centre of the 16px box, without taking space in the layout.
+.mgs-checkbox__input {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--mgs-space-xl);
+  height: var(--mgs-space-xl);
+  margin: 0;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  cursor: inherit;
+}
+
+.mgs-checkbox__box {
+  display: inline-flex;
+  box-sizing: border-box;
+  width: var(--mgs-space-lg);
+  height: var(--mgs-space-lg);
+  // 3:1 or more on the page in every theme (themes.scss).
+  border: 1px solid var(--mgs-color-border-control);
+  border-radius: var(--mgs-radius-sm);
+  color: var(--mgs-color-on-primary);
+
+  > svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.mgs-checkbox__mark {
+  display: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+// A long word or code without spaces wraps instead of making the page scroll sideways.
+.mgs-checkbox__label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+// Not on an invalid checkbox: this rule is more specific than the invalid one, and would replace the error border
+// while the pointer is over the checkbox.
+.mgs-checkbox:hover
+  .mgs-checkbox__input:not(:disabled, [aria-invalid='true'])
+  + .mgs-checkbox__box {
+  border-color: var(--mgs-color-primary);
+}
+
+// Checked and indeterminate: the primary fill (3:1 or more on the page) with the mark in the colour of text on primary
+// (4.5:1 or more on the fill).
+.mgs-checkbox__input:is(:checked, :indeterminate) + .mgs-checkbox__box {
+  border-color: var(--mgs-color-primary);
+  background-color: var(--mgs-color-primary);
+}
+
+.mgs-checkbox__input:checked:not(:indeterminate) + .mgs-checkbox__box .mgs-checkbox__mark--check,
+.mgs-checkbox__input:indeterminate + .mgs-checkbox__box .mgs-checkbox__mark--dash {
+  display: block;
+}
+
+// Invalid (aria-invalid="true" on the checkbox): the same error border as the text fields.
+.mgs-checkbox__input[aria-invalid='true'] + .mgs-checkbox__box {
+  border-color: var(--mgs-color-border-error);
+}
+
+// Disabled: the same box, faded, so it reads as disabled in every theme, checked or not, with or without a label.
+// (No theme has one border colour that is quieter than the enabled border: high contrast's is as bright.)
+.mgs-checkbox__input:disabled + .mgs-checkbox__box {
+  opacity: 0.5;
+}
+
+// Outside the box, so it shows on the checked fill too.
+.mgs-checkbox__input:focus-visible + .mgs-checkbox__box {
+  outline: var(--mgs-focus-ring-width) solid var(--mgs-color-focus-ring);
+  outline-offset: var(--mgs-focus-ring-offset);
+}

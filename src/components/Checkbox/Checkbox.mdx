@@ -1,0 +1,142 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as CheckboxStories from './Checkbox.stories';
+
+<Meta of={CheckboxStories} />
+
+# Checkbox
+
+A box to check or uncheck, with its label. Use one for a single yes/no choice, several in a
+[CheckboxGroup](?path=/docs/components-checkboxgroup--docs) for a list of options, and one per row to select rows of a
+table.
+
+**Component:** MGS-owned, built by MGS on a native `<input type="checkbox">` · Related:
+[CheckboxGroup](?path=/docs/components-checkboxgroup--docs) (several options, one value)
+
+## When to use
+
+- For one choice that is on or off and is saved with the rest of the form: "Send me product updates".
+- For selecting rows of a table or items of a list, with "Select all".
+- **Not for several options that answer one question.** Put the checkboxes in a
+  [CheckboxGroup](?path=/docs/components-checkboxgroup--docs).
+- **Not for choosing exactly one option.** Use radio buttons or a select.
+- **Not for a setting that takes effect immediately.** Use a switch; a checkbox is saved with its form.
+
+## Import
+
+```tsx
+import { Checkbox } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<Checkbox checked={subscribed} onChange={setSubscribed}>
+  Send me product updates
+</Checkbox>
+```
+
+⚠️ **Every checkbox needs a name.** The text inside `<Checkbox>` is its label. Without visible text (a table row), set
+`aria-label` or `aria-labelledby`; a warning in the console tells you when one is missing.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={CheckboxStories.Basic} sourceState="shown" />
+
+Clicking the label toggles the checkbox. Set `name` for forms: a checked checkbox submits `name=value` (`on` when
+`value` isn't set), and an unchecked one submits nothing.
+
+### States
+
+<Canvas of={CheckboxStories.States} sourceState="shown" />
+
+| State         | How                   | Use it for                                                       |
+| ------------- | --------------------- | ---------------------------------------------------------------- |
+| Checked       | `checked`             | The choice is on                                                 |
+| Indeterminate | `indeterminate`       | "Select all" when some, not all, items are selected              |
+| Disabled      | `disabled`            | A choice that doesn't apply right now; not submitted with a form |
+| Invalid       | `aria-invalid="true"` | A required checkbox that isn't checked: see Advanced examples    |
+
+`indeterminate` changes only the look and what screen readers announce ("mixed"); `checked` stays what you set.
+There is no read-only checkbox in HTML: use `disabled`, or show the value as text.
+
+### Controlled
+
+<Canvas of={CheckboxStories.Controlled} sourceState="shown" />
+
+`onChange` receives the **new state first**, then the event: `onChange={setSubscribed}` works directly. Use `checked`
+with `onChange` (controlled) or `defaultChecked` (uncontrolled), not both.
+
+### Long label
+
+<Canvas of={CheckboxStories.LongLabel} sourceState="shown" />
+
+A label can wrap and can contain links. The box stays next to the first line, and a long word without spaces wraps
+too. Underline a link inside the label: colour alone doesn't tell it apart from the text in every theme.
+
+### Select all
+
+<Canvas of={CheckboxStories.SelectAll} sourceState="shown" />
+
+In a table, each checkbox has an `aria-label` that says which row it selects. "Select all" is `checked` when every row
+is selected and `indeterminate` when only some are.
+
+### Advanced examples
+
+<Canvas of={CheckboxStories.Advanced} sourceState="shown" />
+
+A form that validates on submit: the error is text under the checkbox, linked with `aria-describedby`, and
+`aria-invalid` turns the border red.
+
+### Common usage
+
+- **Forms:** one `Checkbox` per yes/no field, with `name`. With React Hook Form, use `Controller`
+  (`checked={field.value}`, `onChange={field.onChange}`); with Formik, `checked={values.updates}` and
+  `onChange={(checked) => setFieldValue('updates', checked)}`.
+- **Tables and lists:** one checkbox per row with an `aria-label`, and "Select all" in the header.
+- **Several options for one question:** a [CheckboxGroup](?path=/docs/components-checkboxgroup--docs).
+
+## Do and don't
+
+| Do                                                            | Don't                                                |
+| ------------------------------------------------------------- | ---------------------------------------------------- |
+| Write the label as a statement: "Send me product updates"     | Write it as a question or a negative ("Don't send…") |
+| Give a checkbox without visible text an `aria-label`          | Leave table row checkboxes without a name            |
+| Use `indeterminate` for "Select all" with some items selected | Use `indeterminate` as a third value of its own      |
+| Show errors as text, linked with `aria-describedby`           | Rely on the red border alone                         |
+| Use radio buttons when only one option can be chosen          | Use checkboxes and uncheck the others in code        |
+
+## Accessibility
+
+<Canvas of={CheckboxStories.Accessibility} sourceState="shown" />
+
+| Key             | Action                                                  |
+| --------------- | ------------------------------------------------------- |
+| `Tab` / `⇧ Tab` | Move to the next / previous checkbox, skipping disabled |
+| `Space`         | Check or uncheck                                        |
+
+- Renders a native `<input type="checkbox">` inside a `<label>`: screen readers, forms and the keyboard work as usual,
+  and no ARIA repeats what the input already says.
+- `indeterminate` is announced as "mixed" (partially checked).
+- The click and touch target is at least 24 × 24px, also without a label.
+- The border of the box, the checked fill and the error border reach 3:1 contrast in every theme; the check mark
+  reaches 4.5:1 on the fill.
+- The focus ring is drawn outside the box, so it shows when the box is checked.
+
+## API
+
+<Canvas of={CheckboxStories.Playground} sourceState="shown" />
+<Controls of={CheckboxStories.Playground} />
+
+`className` and `style` go to the root element (the `<label>`). Every other native `<input>` attribute and event goes
+to the `<input>` (`id`, `name`, `required`, `onFocus`, `onBlur`, `aria-*`, `data-*`), and `ref` points at the
+`<input>`.
+
+## Customizing
+
+Colours come from the MGS tokens `--mgs-color-primary` and `--mgs-color-on-primary` (checked),
+`--mgs-color-border-control`, `--mgs-color-border-error` and `--mgs-color-focus-ring`. Override tokens in your app's
+stylesheet, never the component's classes.

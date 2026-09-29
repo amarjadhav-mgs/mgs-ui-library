@@ -107,7 +107,7 @@ The MGS names and merges are **proposals**: each is confirmed in its component's
 | `PasswordInput`               | Wrap       | `PasswordInput`             | 1     | Show/hide toggle                                                  |
 | `InputGroup`                  | Wrap       | `InputGroup`                | 1     | Addons (prefix, suffix, buttons)                                  |
 | `InputNumber`, `NumberInput`  | Merge      | `NumberInput`               | 1     | Locale-aware number formatting                                    |
-| `Checkbox`, `CheckboxGroup`   | Wrap       | `Checkbox`, `CheckboxGroup` | 1     |                                                                   |
+| `Checkbox`, `CheckboxGroup`   | Wrap       | `Checkbox`, `CheckboxGroup` | 1     | Done, built by MGS: `checked`, `onChange(checked, event)`         |
 | `Radio`, `RadioGroup`         | Wrap       | `Radio`, `RadioGroup`       | 1     |                                                                   |
 | `Toggle`                      | Wrap       | `Switch`                    | 1     | Common name for an on/off control                                 |
 | `SelectPicker`, `InputPicker` | Merge      | `Select`                    | 1     | One value; searchable option                                      |
@@ -244,7 +244,7 @@ Every ERP screen is a form or a table; forms come first.
 | `Input`, `Textarea`, `PasswordInput` | M    | Migrations of existing re-exports                                                                                                                                                                                                                                                                                                                                                                                             |
 | `InputGroup`                         | S    | Migration                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `NumberInput`                        | M    | Locale-aware formatting; decimal and currency behaviour decided in proposal                                                                                                                                                                                                                                                                                                                                                   |
-| `Checkbox`, `CheckboxGroup`          | M    |                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `Checkbox`, `CheckboxGroup`          | M    | Built by MGS on the native checkbox. Later, by proposal: `readOnly`, `size`, a group `options` prop. The checkboxes RSuite draws inside its pickers still use RSuite's colours (border 1.4:1 in light): set `--rs-checkbox-*` in the bridge with `MultiSelect`                                                                                                                                                                |
 | `Radio`, `RadioGroup`                | M    |                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `Switch`                             | S    |                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `Select`                             | L    | Search, async options, clearable; keyboard and screen reader behaviour                                                                                                                                                                                                                                                                                                                                                        |
@@ -495,11 +495,11 @@ Tick items as they merge into `dev`.
 
 **Phase 1: form inputs**
 
-- [ ] Shared internals
+- [ ] Shared internals (started in `src/internal/`: dev-only warnings; id generation comes with `FormField`)
 - [x] `Input`, `Textarea`, `PasswordInput`
 - [x] `InputGroup`
 - [x] `NumberInput` (and the `en-IN` locale)
-- [ ] `Checkbox`, `CheckboxGroup`
+- [x] `Checkbox`, `CheckboxGroup`
 - [ ] `Radio`, `RadioGroup`
 - [ ] `Switch`
 - [ ] `Select`
@@ -574,3 +574,5 @@ Tick items as they merge into `dev`.
 - [ ] Axe in a real browser, in all three themes, for every story (jsdom can't check contrast or hover and pressed
       states)
 - [ ] Report to RSuite: its published types reference `Chai` and `NodeJS` without shipping them
+- [ ] Forced colours (Windows High Contrast, `forced-colors: active`), for every component: never checked so far.
+      `Checkbox` keeps its mark and border there, but its checked fill is likely replaced by the system background

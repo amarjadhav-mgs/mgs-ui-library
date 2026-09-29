@@ -1,0 +1,126 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as CheckboxGroupStories from './CheckboxGroup.stories';
+
+<Meta of={CheckboxGroupStories} />
+
+# CheckboxGroup
+
+Several [checkboxes](?path=/docs/components-checkbox--docs) that answer one question. The group has one value: the
+list of the checked checkboxes.
+
+**Component:** MGS-owned, built by MGS · Related: [Checkbox](?path=/docs/components-checkbox--docs)
+
+## When to use
+
+- For a question with several options, where any number can be chosen: "Notify me by: Email, SMS, Push notification".
+- **Not for one yes/no choice.** Use a single [Checkbox](?path=/docs/components-checkbox--docs).
+- **Not when only one option can be chosen.** Use radio buttons or a select.
+- **Not for long lists** (more than about 7 options). Use a select with several values.
+- **Not for selecting table rows.** Use a [Checkbox](?path=/docs/components-checkbox--docs) per row.
+
+## Import
+
+```tsx
+import { Checkbox, CheckboxGroup } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<p id="channels">Notify me by</p>
+<CheckboxGroup aria-labelledby="channels" value={channels} onChange={setChannels}>
+  <Checkbox value="email">Email</Checkbox>
+  <Checkbox value="sms">SMS</Checkbox>
+</CheckboxGroup>
+```
+
+⚠️ **Name the group** with `aria-labelledby` (the `id` of its visible heading) or `aria-label`, and give every checkbox
+a `value`. A warning in the console tells you when the name is missing.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={CheckboxGroupStories.Basic} sourceState="shown" />
+
+With `name`, a form submits one `name=value` for each checked checkbox.
+
+### States
+
+<Canvas of={CheckboxGroupStories.States} sourceState="shown" />
+
+`disabled` on the group disables every checkbox in it. To disable one option, set `disabled` on that checkbox, and
+say why in its label when the reason isn't obvious.
+
+### Horizontal
+
+<Canvas of={CheckboxGroupStories.Horizontal} sourceState="shown" />
+
+`orientation`: `vertical` (default) is the easiest to read. Use `horizontal` for a few short options; a row that is
+full wraps onto the next line.
+
+### Controlled
+
+<Canvas of={CheckboxGroupStories.Controlled} sourceState="shown" />
+
+`onChange` receives the **new values first**, then the event: `onChange={setChannels}` works directly. The values are
+in the order the user checked them. Use `value` with `onChange` (controlled) or `defaultValue` (uncontrolled), not
+both.
+
+### Advanced examples
+
+<Canvas of={CheckboxGroupStories.Advanced} sourceState="shown" />
+
+- **Options from an array:** render the checkboxes with `.map()`.
+- **Select all:** a checkbox **without** a `value` isn't part of the group's value; control it yourself with `checked`,
+  `indeterminate` and `onChange`.
+- **Validation:** the error is text under the group, linked to the group with `aria-describedby`; `aria-invalid` on
+  each checkbox turns its border red.
+
+### Common usage
+
+- **Forms:** the value is a `string[]`. With React Hook Form, use `Controller` (`value={field.value}`,
+  `onChange={field.onChange}`); with Formik, `value={values.channels}` and
+  `onChange={(value) => setFieldValue('channels', value)}`.
+- **Filters:** a vertical group per filter, with the filter's name as the heading.
+- **Layout inside the group:** checkboxes can be nested in other elements (columns, sections); the group still reaches
+  them.
+- **Reset:** a form's Reset button puts an uncontrolled group back to its `defaultValue`. A controlled group keeps the
+  `value` the app gives it.
+
+⚠️ **The group doesn't know which values its checkboxes have.** A value in `value` or `defaultValue` that no checkbox
+has stays in the value, also after an option is removed or its `value` changes: remove it in the app. Give every
+checkbox a different `value`; two with the same one are checked together.
+
+## Do and don't
+
+| Do                                                       | Don't                                           |
+| -------------------------------------------------------- | ----------------------------------------------- |
+| Give the group a visible heading, linked with its `id`   | Leave the group without a name                  |
+| Keep the options under each other when labels are long   | Put long labels next to each other              |
+| Give every checkbox in the group a `value`               | Set `checked` on checkboxes that have a `value` |
+| Link the error text to the group with `aria-describedby` | Rely on red borders alone                       |
+| Use radio buttons when only one option can be chosen     | Use a group and uncheck the others in code      |
+
+## Accessibility
+
+<Canvas of={CheckboxGroupStories.Accessibility} sourceState="shown" />
+
+| Key             | Action                                                       |
+| --------------- | ------------------------------------------------------------ |
+| `Tab` / `⇧ Tab` | Move to the next / previous checkbox, skipping disabled ones |
+| `Space`         | Check or uncheck the focused checkbox                        |
+
+- Renders `role="group"`: screen readers announce the group's name when the user enters it, then each checkbox.
+- Each checkbox is a Tab stop (arrow keys are for radio buttons, where only one can be chosen).
+- Everything in [Checkbox → Accessibility](?path=/docs/components-checkbox--docs) applies to the checkboxes.
+
+## API
+
+<Canvas of={CheckboxGroupStories.Playground} sourceState="shown" />
+<Controls of={CheckboxGroupStories.Playground} />
+
+Every native `<div>` attribute and event also works (`id`, `aria-*`, `data-*`, `className`, `style`), and `ref` points
+at the group's `<div>`. The checkboxes are documented in [Checkbox](?path=/docs/components-checkbox--docs).
