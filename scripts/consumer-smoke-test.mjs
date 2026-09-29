@@ -75,6 +75,8 @@ import {
   NumberInput,
   PasswordInput,
   PlusIcon,
+  Radio,
+  RadioGroup,
   Textarea,
   TrashIcon,
   VisuallyHidden,
@@ -89,6 +91,7 @@ function App() {
   const [price, setPrice] = useState<number | null>(null);
   const [updates, setUpdates] = useState(false);
   const [channels, setChannels] = useState<string[]>([]);
+  const [delivery, setDelivery] = useState<string | null>(null);
   const [theme] = useState<MgsTheme>('light');
   return (
     <MgsProvider theme={theme} locale="en-IN">
@@ -104,6 +107,10 @@ function App() {
         <Checkbox value="email">Email</Checkbox>
         <Checkbox value="sms">SMS</Checkbox>
       </CheckboxGroup>
+      <RadioGroup aria-label="Delivery" value={delivery} onChange={setDelivery}>
+        <Radio value="standard">Standard</Radio>
+        <Radio value="express">Express</Radio>
+      </RadioGroup>
       <DatePicker label="Due date" />
       <Button leftIcon={<PlusIcon />}>
         Add <VisuallyHidden>order</VisuallyHidden>

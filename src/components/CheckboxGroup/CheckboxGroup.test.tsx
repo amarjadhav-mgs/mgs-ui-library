@@ -1,6 +1,6 @@
 import { createRef } from 'react';
 import { composeStories } from '@storybook/react-vite';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Checkbox, CheckboxGroup } from '@mgs/ui';
@@ -41,6 +41,9 @@ const rejectedProps = () => (
     <CheckboxGroup aria-label="Group" role="radiogroup" />
   </>
 );
+
+/** The group follows a reset a moment after the event, once it is known that nothing cancelled it. */
+const afterReset = () => act(() => new Promise<void>((resolve) => setTimeout(resolve, 0)));
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -194,12 +197,33 @@ describe('CheckboxGroup', () => {
     await userEvent.click(sms);
     expect(onChange).toHaveBeenLastCalledWith(['email', 'sms'], expect.anything());
     await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+    await afterReset();
     expect(email).toBeChecked();
     expect(sms).not.toBeChecked();
     // The next change starts from what the screen shows, not from the value before the reset.
     await userEvent.click(email);
     expect(onChange).toHaveBeenLastCalledWith([], expect.anything());
     expect(sms).not.toBeChecked();
+  });
+
+  it("a cancelled Reset (preventDefault) leaves the group's value alone", async () => {
+    const onChange = vi.fn();
+    render(
+      <form onReset={(event) => event.preventDefault()}>
+        <CheckboxGroup aria-label="Notify me by" defaultValue={['email']} onChange={onChange}>
+          <Checkbox value="email">Email</Checkbox>
+          <Checkbox value="sms">SMS</Checkbox>
+        </CheckboxGroup>
+        <button type="reset">Reset</button>
+      </form>,
+    );
+    const sms = screen.getByRole('checkbox', { name: 'SMS' });
+    await userEvent.click(sms);
+    await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+    await afterReset();
+    expect(sms).toBeChecked();
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Email' }));
+    expect(onChange).toHaveBeenLastCalledWith(['sms'], expect.anything());
   });
 
   it('keeps values that no checkbox has: the group does not know which values its checkboxes have', async () => {

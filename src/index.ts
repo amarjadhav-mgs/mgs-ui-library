@@ -22,6 +22,8 @@ export * from './components/NumberInput';
 export * from './components/InputGroup';
 export * from './components/Checkbox';
 export * from './components/CheckboxGroup';
+export * from './components/Radio';
+export * from './components/RadioGroup';
 export * from './components/VisuallyHidden';
 
 // MGS icons

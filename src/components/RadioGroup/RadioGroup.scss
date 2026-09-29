@@ -1,0 +1,5 @@
+// MGS RadioGroup: only the layout of the radios, shared with CheckboxGroup. Each Radio styles itself, including the
+// error border when the group is invalid.
+@use '../../styles/mixins';
+
+@include mixins.choice-group('mgs-radio-group');

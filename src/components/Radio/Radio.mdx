@@ -1,0 +1,111 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as RadioStories from './Radio.stories';
+
+<Meta of={RadioStories} />
+
+# Radio
+
+One option of a [RadioGroup](?path=/docs/components-radiogroup--docs): a circle to select, with its label. The group
+holds the value; a Radio only says which value it stands for.
+
+**Component:** MGS-owned, built by MGS on a native `<input type="radio">` · Related:
+[RadioGroup](?path=/docs/components-radiogroup--docs), [Checkbox](?path=/docs/components-checkbox--docs)
+
+## When to use
+
+- For each option of a [RadioGroup](?path=/docs/components-radiogroup--docs). See there for when to use radios at all.
+- **Not on its own.** A Radio outside a `RadioGroup` has no value to report, and a warning in the console says so. For
+  one yes/no choice, use a [Checkbox](?path=/docs/components-checkbox--docs).
+
+## Import
+
+```tsx
+import { Radio, RadioGroup } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<RadioGroup aria-label="Delivery" value={delivery} onChange={setDelivery}>
+  <Radio value="standard">Standard</Radio>
+  <Radio value="express">Express</Radio>
+</RadioGroup>
+```
+
+⚠️ **Every radio needs a name.** The text inside `<Radio>` is its label. Without visible text (a table row), set
+`aria-label` or `aria-labelledby`; a warning in the console tells you when one is missing.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={RadioStories.Basic} sourceState="shown" />
+
+Clicking the label selects the radio. `value`, `onChange` and `name` belong to the group.
+
+### States
+
+<Canvas of={RadioStories.States} sourceState="shown" />
+
+| State    | How                                         | Use it for                               |
+| -------- | ------------------------------------------- | ---------------------------------------- |
+| Selected | The group's `value` is this radio's `value` | The chosen option                        |
+| Disabled | `disabled`                                  | An option that isn't available right now |
+| Invalid  | `aria-invalid="true"` on the `RadioGroup`   | A required question without an answer    |
+
+### Long label
+
+<Canvas of={RadioStories.LongLabel} sourceState="shown" />
+
+A label can wrap, and a long word without spaces wraps too. The circle stays next to the first line.
+
+### Advanced examples
+
+<Canvas of={RadioStories.Advanced} sourceState="shown" />
+
+One row of a table is the default. The `RadioGroup` is around the table and reaches the radios inside it; each radio
+has an `aria-label` that says what selecting it means.
+
+### Common usage
+
+- **Forms:** radios with visible labels, in a [RadioGroup](?path=/docs/components-radiogroup--docs) with a heading.
+- **Tables and lists:** one radio per row with an `aria-label`, and the group around the table.
+
+## Do and don't
+
+| Do                                                | Don't                                   |
+| ------------------------------------------------- | --------------------------------------- |
+| Put every Radio in a `RadioGroup`                 | Use a single Radio as an on/off control |
+| Keep labels short and different from each other   | Repeat the question in every label      |
+| Give a radio without visible text an `aria-label` | Leave table row radios without a name   |
+| Say in the label why an option is disabled        | Hide options the user expects to see    |
+
+## Accessibility
+
+<Canvas of={RadioStories.Accessibility} sourceState="shown" />
+
+The keyboard works on the group: see [RadioGroup → Accessibility](?path=/docs/components-radiogroup--docs).
+
+- Renders a native `<input type="radio">` inside a `<label>`: screen readers, forms and the keyboard work as usual, and
+  no ARIA repeats what the input already says.
+- The click and touch target is at least 24 × 24px, also without a label.
+- The border of the circle, the selected fill and the error border reach 3:1 contrast in every theme; the dot reaches
+  4.5:1 on the fill.
+- The focus ring is drawn outside the circle, so it shows when the radio is selected.
+
+## API
+
+<Canvas of={RadioStories.Playground} sourceState="shown" />
+<Controls of={RadioStories.Playground} />
+
+`className` and `style` go to the root element (the `<label>`). Every other native `<input>` attribute and event goes
+to the `<input>` (`id`, `onFocus`, `onBlur`, `aria-*`, `data-*`), and `ref` points at the `<input>`. `checked`,
+`onChange`, `name` and `required` are not available: they belong to the `RadioGroup`.
+
+## Customizing
+
+Colours come from the MGS tokens `--mgs-color-primary` and `--mgs-color-on-primary` (selected),
+`--mgs-color-border-control`, `--mgs-color-border-error` and `--mgs-color-focus-ring`. Override tokens in your app's
+stylesheet, never the component's classes.

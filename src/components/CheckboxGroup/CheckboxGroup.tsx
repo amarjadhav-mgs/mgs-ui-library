@@ -1,6 +1,5 @@
 import {
   forwardRef,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -8,6 +7,7 @@ import {
   type ChangeEvent,
 } from 'react';
 import { useDevWarning } from '../../internal/devWarning';
+import { useFormReset } from '../../internal/useFormReset';
 import { CheckboxGroupContext, type CheckboxGroupContextValue } from './context';
 import type { CheckboxGroupProps } from './types';
 import './CheckboxGroup.scss';
@@ -44,17 +44,10 @@ export const CheckboxGroup = forwardRef<HTMLDivElement, CheckboxGroupProps>(func
   const groupRef = useRef<HTMLDivElement>(null);
   useImperativeHandle(ref, () => groupRef.current as HTMLDivElement, []);
 
-  // A form's Reset button puts the checkboxes back to how they started, without telling React. An uncontrolled group
-  // goes back to its starting value too, so its value stays what the screen shows. (A controlled group's value
-  // belongs to the app.)
+  // A form's Reset button puts the checkboxes back to how they started. An uncontrolled group goes back to its
+  // starting value too, so its value stays what the screen shows. (A controlled group's value belongs to the app.)
   const startValue = useRef(defaultValue);
-  useEffect(() => {
-    const form = groupRef.current?.closest('form');
-    if (!form || controlled) return;
-    const reset = () => setUncontrolledValue(startValue.current);
-    form.addEventListener('reset', reset);
-    return () => form.removeEventListener('reset', reset);
-  }, [controlled]);
+  useFormReset(groupRef, () => setUncontrolledValue(startValue.current), !controlled);
 
   useDevWarning(
     rest['aria-label'] === undefined && rest['aria-labelledby'] === undefined,

@@ -29,7 +29,8 @@ defaults `light` and `en-GB`).
 ### Available components
 
 - **MGS components:** `MgsProvider`, `Button`, `IconButton`, `Input`, `Textarea`, `PasswordInput`, `NumberInput`,
-  `InputGroup` (with `InputGroupAddon`, `InputGroupButton`), `Checkbox`, `CheckboxGroup`, `VisuallyHidden`
+  `InputGroup` (with `InputGroupAddon`, `InputGroupButton`), `Checkbox`, `CheckboxGroup`, `Radio`,
+  `RadioGroup`, `VisuallyHidden`
 - **Icons:** `PlusIcon`, `EditIcon`, `TrashIcon`, `SearchIcon`, ... (see the Icons page in Storybook)
 - **Being migrated to an MGS API** (still RSuite's API for now; expect changes):
   - General: `ButtonGroup`, `ButtonToolbar`, `Badge`, `Avatar`, `AvatarGroup`

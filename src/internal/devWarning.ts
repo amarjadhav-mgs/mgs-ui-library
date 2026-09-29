@@ -7,6 +7,12 @@ declare const process: { env: { NODE_ENV?: string } };
 
 /** Each message is logged once, not once per component: a table of 100 rows gives one warning. */
 const warned = new Set<string>();
+export function devWarning(message: string) {
+  if (process.env.NODE_ENV !== 'production' && !warned.has(message)) {
+    warned.add(message);
+    console.warn(`@mgs/ui: ${message}`);
+  }
+}
 
 /**
  * Warns in the console, in development only, while `problem` is true: for mistakes TypeScript can't catch, like a
@@ -15,10 +21,7 @@ const warned = new Set<string>();
  */
 export function useDevWarning(problem: boolean, message: string) {
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'production' && problem && !warned.has(message)) {
-      warned.add(message);
-      console.warn(`@mgs/ui: ${message}`);
-    }
+    if (problem) devWarning(message);
   }, [problem, message]);
 }
 

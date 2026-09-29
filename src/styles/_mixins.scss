@@ -10,6 +10,84 @@
   }
 }
 
+// A choice control (Checkbox, Radio): a native <input>, invisible, on top of the mark that is drawn (the box or the
+// circle), with its label next to it. Every state comes from the input itself (:checked, :disabled, :focus-visible), so
+// the look can't differ from what the browser and screen readers know.
+//   $block: the component's class ('mgs-checkbox'); $mark: the drawn part ('box' → .mgs-checkbox__box).
+// The component's own file draws the mark and its checked, hover and invalid looks.
+@mixin choice-control($block, $mark) {
+  .#{$block} {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: var(--mgs-space-sm);
+    // At least 24px high (WCAG 2.5.8), also when the text line is shorter.
+    padding-block: max(0px, calc((var(--mgs-space-xl) - 1lh) / 2));
+    color: var(--mgs-color-text);
+    cursor: pointer;
+
+    &[data-disabled] {
+      color: var(--mgs-color-text-disabled);
+      cursor: not-allowed;
+    }
+  }
+
+  // As high as one line of the label, so the mark stays next to the first line when the label wraps.
+  .#{$block}__control {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    height: 1lh;
+  }
+
+  // The click and touch target: 24 × 24px around the centre of the 16px mark, without taking space in the layout.
+  .#{$block}__input {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--mgs-space-xl);
+    height: var(--mgs-space-xl);
+    margin: 0;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    cursor: inherit;
+  }
+
+  // A long word or code without spaces wraps instead of making the page scroll sideways.
+  .#{$block}__label {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  // Disabled: the same mark, faded, so it reads as disabled in every theme, checked or not, with or without a label.
+  // (No theme has one border colour that is quieter than the enabled border: high contrast's is as bright.)
+  .#{$block}__input:disabled + .#{$block}__#{$mark} {
+    opacity: 0.5;
+  }
+
+  // Outside the mark, so it shows on the checked fill too.
+  .#{$block}__input:focus-visible + .#{$block}__#{$mark} {
+    outline: var(--mgs-focus-ring-width) solid var(--mgs-color-focus-ring);
+    outline-offset: var(--mgs-focus-ring-offset);
+  }
+}
+
+// A group of choice controls (CheckboxGroup, RadioGroup): only the layout. Each control styles itself.
+@mixin choice-group($block) {
+  .#{$block} {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--mgs-space-xs);
+
+    // Next to each other; a row that is full wraps onto the next line.
+    &[data-orientation='horizontal'] {
+      flex-flow: row wrap;
+      column-gap: var(--mgs-space-xl);
+    }
+  }
+}
+
 // Visible edge for secondary buttons: RSuite's default button has no border, so it fades into white cards and panels.
 // Drawn inside the button (inset shadow), so sizes don't change; the same colour as input borders, so they match.
 // Disabled buttons get the quieter neutral border, like their faded text. High contrast already draws its own yellow

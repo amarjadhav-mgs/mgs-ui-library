@@ -1,0 +1,145 @@
+import { Canvas, Controls, Meta } from '@storybook/addon-docs/blocks';
+import * as RadioGroupStories from './RadioGroup.stories';
+
+<Meta of={RadioGroupStories} />
+
+# RadioGroup
+
+Several [radios](?path=/docs/components-radio--docs) that answer one question, where exactly one can be selected. The
+group's value is the value of the selected radio.
+
+**Component:** MGS-owned, built by MGS · Related: [Radio](?path=/docs/components-radio--docs),
+[CheckboxGroup](?path=/docs/components-checkboxgroup--docs) (any number of options)
+
+## When to use
+
+- For a question with 2 to about 7 options, where one must be chosen and the user should see them all: "Delivery:
+  Standard, Express, Pick up".
+- **Not when several options can be chosen.** Use a [CheckboxGroup](?path=/docs/components-checkboxgroup--docs).
+- **Not for one yes/no choice that is saved with a form.** Use a [Checkbox](?path=/docs/components-checkbox--docs).
+- **Not for long lists** (more than about 7 options). Use a select.
+- **Not for switching views or filtering a list.** Use tabs or a segmented control.
+
+## Import
+
+```tsx
+import { Radio, RadioGroup } from '@mgs/ui';
+```
+
+## Usage
+
+```tsx
+<p id="delivery">Delivery</p>
+<RadioGroup aria-labelledby="delivery" name="delivery" value={delivery} onChange={setDelivery}>
+  <Radio value="standard">Standard</Radio>
+  <Radio value="express">Express</Radio>
+</RadioGroup>
+```
+
+⚠️ **Name the group** with `aria-labelledby` (the `id` of its visible heading) or `aria-label`. A warning in the
+console tells you when the name is missing.
+
+## Examples
+
+Every example is also a story in the sidebar, where you can interact with it.
+
+### Basic
+
+<Canvas of={RadioGroupStories.Basic} sourceState="shown" />
+
+Set `name` in forms: the form submits `name=value` of the selected radio. Without `name`, the group gives its radios a
+generated one, which the keyboard needs, and a form would submit the value under that generated name.
+
+### States
+
+<Canvas of={RadioGroupStories.States} sourceState="shown" />
+
+| State    | How                                | Use it for                                                   |
+| -------- | ---------------------------------- | ------------------------------------------------------------ |
+| Disabled | `disabled` on the group            | A question that doesn't apply right now                      |
+| Disabled | `disabled` on one `Radio`          | One option that isn't available; say why in its label        |
+| Invalid  | `aria-invalid="true"` on the group | A required question without an answer: see Advanced examples |
+
+There is no read-only radio in HTML: use `disabled`, or show the value as text.
+
+### Horizontal
+
+<Canvas of={RadioGroupStories.Horizontal} sourceState="shown" />
+
+`orientation`: `vertical` (default) is the easiest to read. Use `horizontal` for a few short options; a row that is
+full wraps onto the next line.
+
+### Controlled
+
+<Canvas of={RadioGroupStories.Controlled} sourceState="shown" />
+
+`onChange` receives the **value first**, then the event: `onChange={setDelivery}` works directly. Use `value` with
+`onChange` (controlled) or `defaultValue` (uncontrolled), not both.
+
+### Nothing selected
+
+<Canvas of={RadioGroupStories.NothingSelected} sourceState="shown" />
+
+A controlled group with nothing selected has `value={null}`. Clicking the selected radio again doesn't unselect it, so
+an optional question needs another way to clear the answer: a button, or an option like "No preference". Keep that
+button enabled: one that disables itself when pressed leaves keyboard focus on nothing.
+
+### Advanced examples
+
+<Canvas of={RadioGroupStories.Advanced} sourceState="shown" />
+
+- **Options from an array:** render the radios with `.map()`.
+- **Validation:** the error is text under the group, linked to the group with `aria-describedby`; `aria-invalid` on
+  the group turns the borders of its radios red.
+- **`required`** marks the group for screen readers and lets the browser's own validation work when the form doesn't
+  have `noValidate`.
+
+### Common usage
+
+- **Forms:** the value is a `string`, or `null` for no answer. With React Hook Form, use `Controller`
+  (`value={field.value}`, `onChange={field.onChange}`); with Formik, `value={values.delivery}` and
+  `onChange={(value) => setFieldValue('delivery', value)}`.
+- **Yes or no:** two radios with the values `'yes'` and `'no'`, when the user must choose one explicitly. Values are
+  strings: turn them into a boolean in the app.
+- **Layout inside the group:** radios can be nested in other elements (a table, columns); the group still reaches
+  them.
+- **Reset:** a form's Reset button puts an uncontrolled group back to its `defaultValue`, unless the form's `onReset`
+  cancels the reset. A controlled group keeps the `value` the app gives it: set that value in the form's `onReset`,
+  or the screen shows the starting selection until the next change.
+
+⚠️ Give every radio a different `value`. A `value` no radio has selects nothing.
+
+## Do and don't
+
+| Do                                                         | Don't                                                 |
+| ---------------------------------------------------------- | ----------------------------------------------------- |
+| Give the group a visible heading, linked with its `id`     | Leave the group without a name                        |
+| Preselect the most likely or the safest option             | Preselect an option the user may not notice and want  |
+| Keep the options under each other when labels are long     | Put long labels next to each other                    |
+| Offer "None" or a clear button when the answer is optional | Expect users to unselect a radio by clicking it again |
+| Link the error text to the group with `aria-describedby`   | Rely on red borders alone                             |
+
+## Accessibility
+
+<Canvas of={RadioGroupStories.Accessibility} sourceState="shown" />
+
+| Key             | Action                                                                               |
+| --------------- | ------------------------------------------------------------------------------------ |
+| `Tab` / `⇧ Tab` | Move into the group, to the selected radio (or the first or last one), and out of it |
+| `↓` / `→`       | Select the next radio, skipping disabled ones; from the last one, the first          |
+| `↑` / `←`       | Select the previous radio, skipping disabled ones; from the first one, the last      |
+| `Space`         | Select the focused radio when nothing is selected                                    |
+
+- Renders `role="radiogroup"`: screen readers announce the group's name, and "2 of 3" for each radio.
+- The radios are native and share one `name`, so the browser gives the keyboard behaviour above. The group is one Tab
+  stop.
+- `required` sets `aria-required` on the group.
+- Everything in [Radio → Accessibility](?path=/docs/components-radio--docs) applies to the radios.
+
+## API
+
+<Canvas of={RadioGroupStories.Playground} sourceState="shown" />
+<Controls of={RadioGroupStories.Playground} />
+
+Every native `<div>` attribute and event also works (`id`, `aria-*`, `data-*`, `className`, `style`), and `ref` points
+at the group's `<div>`. The radios are documented in [Radio](?path=/docs/components-radio--docs).

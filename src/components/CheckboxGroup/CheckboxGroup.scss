@@ -1,14 +1,4 @@
-// MGS CheckboxGroup: only the layout of the checkboxes. Each Checkbox styles itself.
+// MGS CheckboxGroup: only the layout of the checkboxes, shared with RadioGroup. Each Checkbox styles itself.
+@use '../../styles/mixins';
 
-.mgs-checkbox-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--mgs-space-xs);
-
-  // Next to each other; a row that is full wraps onto the next line.
-  &[data-orientation='horizontal'] {
-    flex-flow: row wrap;
-    column-gap: var(--mgs-space-xl);
-  }
-}
+@include mixins.choice-group('mgs-checkbox-group');

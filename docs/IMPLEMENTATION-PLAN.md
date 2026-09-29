@@ -108,7 +108,7 @@ The MGS names and merges are **proposals**: each is confirmed in its component's
 | `InputGroup`                  | Wrap       | `InputGroup`                | 1     | Addons (prefix, suffix, buttons)                                  |
 | `InputNumber`, `NumberInput`  | Merge      | `NumberInput`               | 1     | Locale-aware number formatting                                    |
 | `Checkbox`, `CheckboxGroup`   | Wrap       | `Checkbox`, `CheckboxGroup` | 1     | Done, built by MGS: `checked`, `onChange(checked, event)`         |
-| `Radio`, `RadioGroup`         | Wrap       | `Radio`, `RadioGroup`       | 1     |                                                                   |
+| `Radio`, `RadioGroup`         | Wrap       | `Radio`, `RadioGroup`       | 1     | Done, built by MGS: the group holds the value                     |
 | `Toggle`                      | Wrap       | `Switch`                    | 1     | Common name for an on/off control                                 |
 | `SelectPicker`, `InputPicker` | Merge      | `Select`                    | 1     | One value; searchable option                                      |
 | `CheckPicker`, `TagPicker`    | Merge      | `MultiSelect`               | 1     | Several values; display as checks or tags decided in the proposal |
@@ -118,7 +118,7 @@ The MGS names and merges are **proposals**: each is confirmed in its component's
 | `PinInput`                    | Wrap       | `PinInput`                  | 6     | One-time codes                                                    |
 | `SegmentedControl`            | Wrap       | `SegmentedControl`          | 6     |                                                                   |
 | `Slider`, `RangeSlider`       | Merge      | `Slider`                    | 6     | Single or range value, decided in the proposal                    |
-| `RadioTile`, `RadioTileGroup` | Later      | —                           | 7     | Card-style radios                                                 |
+| `RadioTile`, `RadioTileGroup` | Wrap       | `RadioCard`                 | 1     | Card-style radios; moved up from "later": apps build them by hand |
 | `PasswordStrengthMeter`       | Later      | —                           | 7     |                                                                   |
 | `Rate`                        | Don't need | —                           | —     | Star ratings are rare in business apps                            |
 
@@ -500,7 +500,8 @@ Tick items as they merge into `dev`.
 - [x] `InputGroup`
 - [x] `NumberInput` (and the `en-IN` locale)
 - [x] `Checkbox`, `CheckboxGroup`
-- [ ] `Radio`, `RadioGroup`
+- [x] `Radio`, `RadioGroup`
+- [ ] `RadioCard` proposal (card-style radios; moved up from phase 7: both existing apps build them by hand)
 - [ ] `Switch`
 - [ ] `Select`
 - [ ] `MultiSelect`
@@ -574,5 +575,7 @@ Tick items as they merge into `dev`.
 - [ ] Axe in a real browser, in all three themes, for every story (jsdom can't check contrast or hover and pressed
       states)
 - [ ] Report to RSuite: its published types reference `Chai` and `NodeJS` without shipping them
-- [ ] Forced colours (Windows High Contrast, `forced-colors: active`), for every component: never checked so far.
-      `Checkbox` keeps its mark and border there, but its checked fill is likely replaced by the system background
+- [ ] Forced colours (Windows High Contrast, `forced-colors: active`), for every component. Checked so far:
+      `Checkbox` and `Radio` (marks drawn with strokes and borders, which that mode keeps; backgrounds are replaced)
+- [ ] Warn in development when an input switches between controlled and uncontrolled (`value` to `undefined` or
+      back), for every MGS input: today it silently falls back to an old internal value

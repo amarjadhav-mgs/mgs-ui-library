@@ -38,8 +38,8 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
-    // No CSS in tests (jsdom can't lay it out), except the sources that tests read as text: themes.test.ts, and
-    // Checkbox.test.tsx (the hover rule).
-    css: { include: [/themes\.scss/, /Checkbox\.scss/] },
+    // No CSS in tests: jsdom can't lay it out, and real styles would make `toBeVisible()` fail on controls that hide
+    // their native input. Tests that guard a CSS rule read the source with src/test/styleSource.ts.
+    css: false,
   },
 });

@@ -129,7 +129,8 @@ MGS component styles (read semantic tokens only)  +  RSuite internals (read --rs
   bridge. Its `.scss` adds only what MGS owns (for example the focus ring), on its own classes: `.mgs-<component>` and
   `.mgs-<component>__<part>`. It never targets `.rs-*` classes or sets `--rs-*` variables; a colour fix for an RSuite
   element goes in the bridge.
-- Shared rules are Sass mixins in `src/styles/_mixins.scss` (`@include mixins.focus-ring;`).
+- Shared rules are Sass mixins in `src/styles/_mixins.scss` (`@include mixins.focus-ring;`). Components that are the
+  same kind of control share one mixin: `choice-control` (Checkbox, Radio) and `choice-group` (their groups).
 - Component styles load after `rsuite.css` (see `src/index.ts`), so a `.mgs-*` rule wins over an RSuite rule of the
   same specificity.
 
@@ -211,7 +212,7 @@ If you know `Button`, you should already know the basics of every other MGS comp
   `NumberInput`'s group), `className` and `style` go to the root, and the other attributes and `ref` go to the
   control (the `<input>`): that is what labels, forms and form libraries need.
 - **Values:**
-  - **Input-like components** (text inputs, selects, pickers, checkbox groups) use `value` / `defaultValue` for
+  - **Input-like components** (text inputs, selects, pickers, checkbox and radio groups) use `value` / `defaultValue` for
     controlled and uncontrolled use, and `onChange(value, event)`. This matches RSuite's signature, so components built on
     RSuite inputs pass it straight through.
   - **On/off controls** (checkboxes, switches) use `checked` / `defaultChecked` and `onChange(checked, event)`, as in

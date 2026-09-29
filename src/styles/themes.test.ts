@@ -1,8 +1,9 @@
 // jsdom doesn't compute CSS, so these tests read the theme source. They guard rules that browsers would only show as
 // a wrong colour, in one theme, after an app customizes the tokens.
 import { describe, expect, it } from 'vitest';
-// The raw source: vite.config.ts → test.css lets this one stylesheet through (other CSS imports are empty in tests).
-import themes from './themes.scss?raw';
+import { styleSource } from '../test/styleSource';
+
+const themes = styleSource('src/styles/themes.scss');
 
 /** The declarations of the first rule whose selector contains `selector`. */
 function block(selector: string) {

@@ -87,8 +87,9 @@ both.
 - **Filters:** a vertical group per filter, with the filter's name as the heading.
 - **Layout inside the group:** checkboxes can be nested in other elements (columns, sections); the group still reaches
   them.
-- **Reset:** a form's Reset button puts an uncontrolled group back to its `defaultValue`. A controlled group keeps the
-  `value` the app gives it.
+- **Reset:** a form's Reset button puts an uncontrolled group back to its `defaultValue`, unless the form's `onReset`
+  cancels the reset. A controlled group keeps the `value` the app gives it: set that value in the form's `onReset`,
+  or the screen shows the starting selection until the next change.
 
 ⚠️ **The group doesn't know which values its checkboxes have.** A value in `value` or `defaultValue` that no checkbox
 has stays in the value, also after an option is removed or its `value` changes: remove it in the app. Give every

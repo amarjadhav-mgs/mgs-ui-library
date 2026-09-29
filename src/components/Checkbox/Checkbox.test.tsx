@@ -7,11 +7,12 @@ import { Checkbox } from '@mgs/ui';
 import { resetDevWarnings } from '../../internal/devWarning';
 import { axeViolations } from '../../test/axe';
 import { playStory, storiesWithPlay } from '../../test/stories';
-// The raw source: vite.config.ts → test.css lets this stylesheet through (other CSS imports are empty in tests).
-import styles from './Checkbox.scss?raw';
+import { styleSource } from '../../test/styleSource';
 import * as stories from './Checkbox.stories';
 
 const allStories = composeStories(stories);
+const styles = styleSource('src/components/Checkbox/Checkbox.scss');
+const mixins = styleSource('src/styles/_mixins.scss');
 
 // Type-level test, never rendered: `npm run typecheck` fails if any of these becomes accepted.
 const rejectedProps = () => (
@@ -271,8 +272,9 @@ describe('Checkbox', () => {
     expect(hoverRule.slice(0, hoverRule.indexOf('{'))).toContain("[aria-invalid='true']");
   });
 
-  it('a long word in the label wraps (read from the styles)', () => {
-    const labelRule = styles.slice(styles.indexOf('.mgs-checkbox__label {'));
+  it('a long word in the label wraps (read from the styles it shares with Radio)', () => {
+    expect(styles).toContain("@include mixins.choice-control('mgs-checkbox', 'box')");
+    const labelRule = mixins.slice(mixins.indexOf('__label {'));
     expect(labelRule.slice(0, labelRule.indexOf('}'))).toContain('overflow-wrap: anywhere');
   });
 
